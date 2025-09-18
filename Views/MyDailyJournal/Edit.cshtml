@@ -1,0 +1,49 @@
+﻿@model WebAppMVC.Models.MyDailyJournal
+
+<form method="post" asp-controller="MyDailyJournal" asp-action="Edit">
+    <div class="border p-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <h2 class="text-info pl-3">Редактировать запись в журнале</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="LogDate"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="LogDate" class="form-control" />
+                        <span asp-validation-for="LogDate" class="form-control"></span>
+                    </div>
+
+                </div>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Text"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Text" class="form-control" />
+                        <span asp-validation-for="Text" class="form-control"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            <input type="submit" class="btn btn-info w-100" value="Отредактировать запись" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fas fa-step-backward"></i> Назад</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+
+    </div>
+</form>

@@ -13,6 +13,8 @@ namespace WebAppMVC.Controllers
         }
         public IActionResult Index()
         {
+            //_db.Category.
+
             IEnumerable<Category> objList = _db.Category;
             return View(objList);
         }
@@ -99,8 +101,6 @@ namespace WebAppMVC.Controllers
             _db.Category.Remove(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
-            
-            return View();   
         }
 
 

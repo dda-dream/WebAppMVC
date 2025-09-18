@@ -8,10 +8,13 @@ namespace WebAppMVC.Models
         [Key]
         public int Id { get; set; }
  
-        [DisplayName("Дата и время:")]
+
+        [DisplayName("Дата и время")]
+        [Required(ErrorMessage = "Дата и время должно быть заполнено")]
         public DateTime LogDate { get; set; }
 
-        [DisplayName("Сообщение:")]
-        public string? Text { get; set; }
+        [DisplayName("Сообщение")]
+        [Required(ErrorMessage = "Сообщение должно быть заполнено")]
+        public string Text { get; set; }
     }
 }
