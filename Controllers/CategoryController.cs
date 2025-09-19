@@ -15,7 +15,7 @@ namespace WebAppMVC.Controllers
         {
             //_db.Category.
 
-            IEnumerable<Category> objList = _db.Category;
+            IEnumerable<CategoryModel> objList = _db.Category;
             return View(objList);
         }
         
@@ -28,7 +28,7 @@ namespace WebAppMVC.Controllers
         //POST - для CREATE
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Category obj)
+        public IActionResult Create(CategoryModel obj)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace WebAppMVC.Controllers
         //POST - для EDIT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category obj)
+        public IActionResult Edit(CategoryModel obj)
         {
             if (ModelState.IsValid)
             {

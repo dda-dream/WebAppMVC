@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebAppMVC.Models
 {
-    public class Category
+    public class CategoryModel
     {
         [Key]
         public int Id { get; set; }

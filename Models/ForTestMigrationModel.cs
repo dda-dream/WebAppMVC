@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebAppMVC.Models
 {
-    public class ForTestMigration
+    public class ForTestMigrationModel
     {
         [Key]
         public int Id { get; set; }

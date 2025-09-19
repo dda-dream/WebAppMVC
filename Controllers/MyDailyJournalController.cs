@@ -13,24 +13,32 @@ namespace WebAppMVC.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<MyDailyJournal> objList = _db.MyDailyJournal;
+            IEnumerable<MyDailyJournalModel> objList = _db.MyDailyJournal;
             return View(objList);
         }
         
         //GET - для CREATE
         public IActionResult Create()
         {
-            return View();
+            var model = new MyDailyJournalModel
+            {
+                LogDate = DateTime.Now
+            };
+            return View(model);
         }
 
         //POST - для CREATE
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(MyDailyJournal obj)
+        public IActionResult Create(MyDailyJournalModel obj)
         {
-            _db.MyDailyJournal.Add(obj);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                _db.MyDailyJournal.Add(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(obj);
         }
 
 
@@ -49,13 +57,15 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
+            
+
             return View(obj);
         }
 
         //POST - для EDIT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(MyDailyJournal obj)
+        public IActionResult Edit(MyDailyJournalModel obj)
         {
             if (ModelState.IsValid)
             {
