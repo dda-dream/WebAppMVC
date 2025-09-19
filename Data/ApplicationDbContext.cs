@@ -10,7 +10,11 @@ namespace WebAppMVC.Data
 
         }
         public DbSet<CategoryModel> Category { get; set; }
+         public DbSet<ProductModel> Product { get; set; }
+
+
+
         public DbSet<MyDailyJournalModel> MyDailyJournal { get; set; }
-        public DbSet<ForTestMigrationModel> ForTestMigration { get; set; }
+        public DbSet<TestForMigrationModel> TestForMigration_1 { get; set; }
     }
 }

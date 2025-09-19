@@ -1,50 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WebAppMVC.Data;
 using WebAppMVC.Models;
 
 namespace WebAppMVC.Controllers
 {
-    public class MyDailyJournalController : Controller
+    public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public MyDailyJournalController(ApplicationDbContext db)
+        public ProductController(ApplicationDbContext db)
         {
             _db = db;
         }
         public IActionResult Index()
         {
-            IEnumerable<MyDailyJournalModel> objList = _db.MyDailyJournal;
+            //_db.Category.
+
+            IEnumerable<CategoryModel> objList = _db.Category;
             return View(objList);
         }
         
         //GET - для CREATE
         public IActionResult Create()
         {
-            var model = new MyDailyJournalModel
-            {
-                LogDate = DateTime.Now
-            };
-            return View(model);
+            return View();
         }
 
         //POST - для CREATE
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(MyDailyJournalModel obj)
+        public IActionResult Create(CategoryModel obj)
         {
             if (ModelState.IsValid)
             {
-                obj.CreatedDateTime = DateTime.Now;
-                obj.ModifiedDateTime = DateTime.Now;
-                _db.MyDailyJournal.Add(obj);
+                _db.Category.Add(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(obj);
+            return View(obj);   
         }
-
-
 
         //GET - для EDIT
         public IActionResult Edit(int? id)
@@ -54,13 +47,11 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = _db.MyDailyJournal.Find(id);
+            var obj = _db.Category.Find(id);
             if (obj == null) 
             { 
                 return NotFound();
             }
-
-            
 
             return View(obj);
         }
@@ -68,14 +59,11 @@ namespace WebAppMVC.Controllers
         //POST - для EDIT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(MyDailyJournalModel obj)
+        public IActionResult Edit(CategoryModel obj)
         {
             if (ModelState.IsValid)
             {
-                var objPrev = _db.MyDailyJournal.AsNoTracking().FirstOrDefault(_ => _.Id == obj.Id);
-                obj.CreatedDateTime = objPrev.CreatedDateTime;
-                obj.ModifiedDateTime = DateTime.Now;
-                _db.MyDailyJournal.Update(obj);
+                _db.Category.Update(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -91,7 +79,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = _db.MyDailyJournal.Find(id);
+            var obj = _db.Category.Find(id);
             if (obj == null) 
             { 
                 return NotFound();
@@ -105,15 +93,16 @@ namespace WebAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.MyDailyJournal.Find(id);
+            var obj = _db.Category.Find(id);
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.MyDailyJournal.Remove(obj);
+            _db.Category.Remove(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
+
 
 
     }
