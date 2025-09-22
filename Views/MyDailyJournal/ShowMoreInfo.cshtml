@@ -1,0 +1,65 @@
+﻿@model WebAppMVC.Models.MyDailyJournalModel
+
+<div class="container p-3">
+	<h1 class="text-primary ">Мой ежедневник</h1>
+</div>
+
+<br>
+
+<div class="text-center caption-top">
+	<b>Просмотр дополнительной информации о записи<b>
+</div>
+
+<br>
+<br>
+
+@{
+	<li id="id0001">
+		<b>Дата создания  : @this.Model.CreatedDateTime</b>
+	</li>
+	<li id="id0002">
+		<b>Дата изменения :	@this.Model.ModifiedDateTime</b>
+	</li>
+	<br>
+}
+
+<br>
+<div class="col">
+	<a asp-action="Index" class="btn btn-success w-100"><i class="fas fa-step-backward"></i> Назад</a>
+</div>
+
+
+<ul id="myList" class="list-group">
+	<!-- Список будет заполнен JavaScript -->
+</ul>
+
+@section Scripts {
+    <script>
+        function updateElementText(elementId, newText) 
+		{
+			document.getElementById( elementId ).innerText = newText + " " + document.getElementById( elementId ).innerText;
+        }
+
+		updateElementText("id0001", " - ");
+		updateElementText("id0002", " - ");
+
+
+		function initializeList() 
+		{
+			const list = document.getElementById('myList');
+			list.innerHTML = ''; // Очищаем список (если нужно)
+
+			for(i = 1; i<100; i++)
+			{
+				document.write(i+";");
+				const li = document.createElement('li');
+				li.classList.add('list-group-item');
+				li.textContent = i;
+				list.appendChild(li);
+			}
+		}
+
+		initializeList();
+
+	</script>
+}

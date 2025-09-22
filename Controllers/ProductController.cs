@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WebAppMVC.Data;
 using WebAppMVC.Models;
 
@@ -13,63 +15,65 @@ namespace WebAppMVC.Controllers
         }
         public IActionResult Index()
         {
-            //_db.Category.
+            IEnumerable<ProductModel> objList = _db.Product;
 
-            IEnumerable<CategoryModel> objList = _db.Category;
+            foreach (ProductModel obj in objList)
+            {
+                obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.CategoryId);
+            }
+
             return View(objList);
         }
         
-        //GET - для CREATE
-        public IActionResult Create()
+//---------------------------------------------------------------------------------------------------
+
+        //GET - для UPDATEORINSERT
+        public IActionResult UpdateOrInsert(int? id)
         {
-            return View();
+            IEnumerable<SelectListItem> CategoryDropDown = _db.Category.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString(),
+            });
+            ViewBag.CategoryDropDown = CategoryDropDown;
+            var list = CategoryDropDown.ToList();
+            ViewBag.CategoryDropDown_List = list;
+            ViewData["CategoryDropDown"] = CategoryDropDown;
+            //TempData["CategoryDropDown"] = CategoryDropDown;
+
+
+            ProductModel productModel = new ProductModel();
+            if (id == null)
+            { //do CREATE
+                return View(productModel);
+            }
+            else
+            { //do UPDATE
+                productModel = _db.Product.Find(id);
+                if (productModel == null)
+                {
+                    return NotFound();
+                }
+
+                return View(productModel);
+            }
         }
 
-        //POST - для CREATE
+        //POST - для UPDATEORINSERT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CategoryModel obj)
+        public IActionResult UpdateOrInsert(ProductModel obj)
         {
             if (ModelState.IsValid)
             {
-                _db.Category.Add(obj);
+                _db.Product.Add(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(obj);   
         }
 
-        //GET - для EDIT
-        public IActionResult Edit(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
-            var obj = _db.Category.Find(id);
-            if (obj == null) 
-            { 
-                return NotFound();
-            }
-
-            return View(obj);
-        }
-
-        //POST - для EDIT
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(CategoryModel obj)
-        {
-            if (ModelState.IsValid)
-            {
-                _db.Category.Update(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(obj);   
-        }
-
+//---------------------------------------------------------------------------------------------------
 
         //GET - для DELETE
         public IActionResult Delete(int? id)

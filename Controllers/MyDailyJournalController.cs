@@ -18,6 +18,8 @@ namespace WebAppMVC.Controllers
             return View(objList);
         }
         
+//---------------------------------------------------------------------------------------------------
+
         //GET - для CREATE
         public IActionResult Create()
         {
@@ -44,7 +46,7 @@ namespace WebAppMVC.Controllers
             return View(obj);
         }
 
-
+//---------------------------------------------------------------------------------------------------
 
         //GET - для EDIT
         public IActionResult Edit(int? id)
@@ -58,9 +60,7 @@ namespace WebAppMVC.Controllers
             if (obj == null) 
             { 
                 return NotFound();
-            }
-
-            
+            }            
 
             return View(obj);
         }
@@ -82,6 +82,7 @@ namespace WebAppMVC.Controllers
             return View(obj);   
         }
 
+//---------------------------------------------------------------------------------------------------
 
         //GET - для DELETE
         public IActionResult Delete(int? id)
@@ -113,6 +114,25 @@ namespace WebAppMVC.Controllers
             _db.MyDailyJournal.Remove(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+//---------------------------------------------------------------------------------------------------
+
+        //GET - для ShowMoreInfo
+        public IActionResult ShowMoreInfo(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var obj = _db.MyDailyJournal.Find(id);
+            if (obj == null) 
+            { 
+                return NotFound();
+            }            
+
+            return View(obj);
         }
 
 
