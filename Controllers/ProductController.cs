@@ -1,17 +1,27 @@
 ﻿using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using WebAppMVC.Data;
 using WebAppMVC.Models;
+using WebAppMVC.Models.ViewModels;
+using static System.Net.WebRequestMethods;
 
 namespace WebAppMVC.Controllers
 {
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public ProductController(ApplicationDbContext db)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+
+        public ProductController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -30,6 +40,7 @@ namespace WebAppMVC.Controllers
         //GET - для UPDATEORINSERT
         public IActionResult UpdateOrInsert(int? id)
         {
+            /*
             IEnumerable<SelectListItem> CategoryDropDown = _db.Category.Select(i => new SelectListItem
             {
                 Text = i.Name,
@@ -38,39 +49,99 @@ namespace WebAppMVC.Controllers
             ViewBag.CategoryDropDown = CategoryDropDown;
             var list = CategoryDropDown.ToList();
             ViewBag.CategoryDropDown_List = list;
+            ViewBag.CategoryDropDown_List1 = CategoryDropDown.ToList();
+
             ViewData["CategoryDropDown"] = CategoryDropDown;
-            //TempData["CategoryDropDown"] = CategoryDropDown;
+            TempData["CategoryDropDown"] = CategoryDropDown;
+            */
 
+            //ProductModel productModel = new ProductModel();
+            ProductViewModel productViewModel = new ProductViewModel();
+            productViewModel.Product = new ProductModel();
+            productViewModel.CategorySelectList = _db.Category.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString(),
+            });
 
-            ProductModel productModel = new ProductModel();
             if (id == null)
             { //do CREATE
-                return View(productModel);
+                return View(productViewModel);
             }
             else
             { //do UPDATE
-                productModel = _db.Product.Find(id);
-                if (productModel == null)
+                productViewModel.Product = _db.Product.Find(id);
+                if (productViewModel.Product == null)
                 {
                     return NotFound();
                 }
 
-                return View(productModel);
+                return View(productViewModel);
             }
         }
 
         //POST - для UPDATEORINSERT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateOrInsert(ProductModel obj)
+        public IActionResult UpdateOrInsert(ProductViewModel productViewModel)
         {
+            ModelState.Remove("CategorySelectList");
+            ModelState.Remove("Product.Image");
+            ModelState.Remove("Product.Category");
+
             if (ModelState.IsValid)
             {
-                _db.Product.Add(obj);
+                var files = HttpContext.Request.Form.Files;
+                string webRootPath = _webHostEnvironment.WebRootPath;
+
+                if (productViewModel.Product.Id == 0)
+                { //Create
+                    string uploadPath = webRootPath + WebConstants.ImagePath;
+                    string fileName = Guid.NewGuid().ToString();
+                    string fileExt = Path.GetExtension(files[0].FileName);
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName + fileExt), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+
+                    productViewModel.Product.Image = fileName + fileExt;
+
+                    _db.Product.Add(productViewModel.Product);
+                }
+                else
+                { // Update                    
+                    var productModel = _db.Product.Find(productViewModel.Product.Id);
+
+                    productModel.Name = productViewModel.Product.Name;
+                    productModel.Price = productViewModel.Product.Price;
+                    productModel.Description = productViewModel.Product.Description;
+                    productModel.CategoryId = productViewModel.Product.CategoryId;
+
+                    if (files.Count > 0)
+                    {
+                        string uploadPath = webRootPath + WebConstants.ImagePath;
+                        string fileName = Guid.NewGuid().ToString();
+                        string fileExt = Path.GetExtension(files[0].FileName);
+
+                        var oldFile = Path.Combine(uploadPath, productModel.Image);
+
+                        if (System.IO.File.Exists(oldFile))
+                            System.IO.File.Delete(oldFile);
+
+                        using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName + fileExt), FileMode.Create))
+                        {
+                            files[0].CopyTo(fileStream);
+                        }
+
+                        productModel.Image = fileName + fileExt;
+                    }
+
+                    _db.Product.Update(productModel);
+                }
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(obj);   
+            return View(productViewModel);   
         }
 
 //---------------------------------------------------------------------------------------------------

@@ -6,27 +6,22 @@
 
 <br>
 
-<div class="text-center caption-top">
-	<b>Просмотр дополнительной информации о записи<b>
-</div>
+
+<div class="table shadow ">
+	<div class="text-center caption-top col-4">
+		<b>Просмотр дополнительной информации о записи<b>
+	</div>
+	<div id="id0001" class="col-4">
+		<b>Дата создания  :</b> @this.Model.CreatedDateTime
+	</div>
+	<div id="id0002" class="col-4">
+		<b>Дата изменения :</b>	@this.Model.ModifiedDateTime
+	</div>
+	<div class="col-4">
+		<a asp-action="Index" class="btn btn-success w-100"><i class="fas fa-step-backward"></i> Назад</a>
+	</div>
 
 <br>
-<br>
-
-@{
-	<li id="id0001">
-		<b>Дата создания  : @this.Model.CreatedDateTime</b>
-	</li>
-	<li id="id0002">
-		<b>Дата изменения :	@this.Model.ModifiedDateTime</b>
-	</li>
-	<br>
-}
-
-<br>
-<div class="col">
-	<a asp-action="Index" class="btn btn-success w-100"><i class="fas fa-step-backward"></i> Назад</a>
-</div>
 
 
 <ul id="myList" class="list-group">
@@ -59,7 +54,7 @@
 			}
 		}
 
-		initializeList();
+		//initializeList();
 
 	</script>
 }

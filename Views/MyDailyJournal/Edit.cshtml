@@ -24,7 +24,7 @@
                         <label asp-for="Text"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Text" class="form-control" />
+                        <textarea asp-for="Text" class="form-control summernote"></textarea>
                         <span asp-validation-for="Text" class="form-control"></span>
                     </div>
                 </div>
@@ -47,3 +47,15 @@
 
     </div>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            $('.summernote').summernote({
+                height:150
+            });
+
+        });
+    </script>
+}

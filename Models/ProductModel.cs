@@ -18,6 +18,7 @@ namespace WebAppMVC.Models
 
         [Display(Name="Category Type")]
         public int CategoryId {get; set;}
+
         [ForeignKey("CategoryId")]
         public virtual CategoryModel Category {get; set;}
     }
