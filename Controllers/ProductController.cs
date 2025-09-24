@@ -23,16 +23,17 @@ namespace WebAppMVC.Controllers
             _db = db;
             _webHostEnvironment = webHostEnvironment;
         }
+//---------------------------------------------------------------------------------------------------
         public IActionResult Index()
-        {
-            IEnumerable<ProductModel> objList = _db.Product;
+        {            
+            IEnumerable<ProductModel> products = _db.Product;
 
-            foreach (ProductModel obj in objList)
+            foreach (ProductModel obj in products)
             {
                 obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.CategoryId);
             }
-
-            return View(objList);
+            
+            return View(products);
         }
         
 //---------------------------------------------------------------------------------------------------
@@ -112,7 +113,7 @@ namespace WebAppMVC.Controllers
                 { // Update                    
                     var productModel = _db.Product.Find(productViewModel.Product.Id);
 
-                    productModel.Name = productViewModel.Product.Name;
+                    productModel. Name = productViewModel.Product.Name;
                     productModel.Price = productViewModel.Product.Price;
                     productModel.Description = productViewModel.Product.Description;
                     productModel.CategoryId = productViewModel.Product.CategoryId;
@@ -141,6 +142,12 @@ namespace WebAppMVC.Controllers
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            productViewModel.CategorySelectList = _db.Category.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString(),
+            });
+
             return View(productViewModel);   
         }
 
@@ -154,13 +161,19 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = _db.Category.Find(id);
-            if (obj == null) 
+
+            var product = _db.Product.Find(id);
+            if (product == null) 
             { 
                 return NotFound();
             }
 
-            return View(obj);
+            product.Category = _db.Category.FirstOrDefault(u => u.Id == product.CategoryId);
+
+            var productViewModel= new ProductViewModel();
+            productViewModel.Product = product;
+
+            return View(productViewModel);
         }
 
         //POST - для DELETE
@@ -168,12 +181,20 @@ namespace WebAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.Category.Find(id);
-            if (obj == null)
+            var product = _db.Product.Find(id);
+            if (product == null)
             {
                 return NotFound();
             }
-            _db.Category.Remove(obj);
+
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string uploadPath = webRootPath + WebConstants.ImagePath;
+            var oldFile = Path.Combine(uploadPath, product.Image);
+
+            if (System.IO.File.Exists(oldFile))
+                System.IO.File.Delete(oldFile);
+
+            _db.Product.Remove(product);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
