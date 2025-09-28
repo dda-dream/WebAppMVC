@@ -4,10 +4,9 @@
     var title = "Delete Product";
 }
 
-<form method="post" asp-controller="Product" asp-action="DeletePost">
+<form method="post" asp-controller="Product">
     @if (Model.Product.Id != 0)
     {
-        title = "Delete Product";
         <input name="Id" asp-for="Product.Id" hidden />
     }
 
@@ -75,10 +74,11 @@
                 </div>
 
             </div>
+
             <div class="col-3 offset-1 pt-4">
-                @* Keep this empty *@
                 <img src="@WebConstants.ImagePath@Model.Product.Image" class="card-img img-fluid rounded shadow mx-auto d-block" />
             </div>
+
         </div>
 
     </div>

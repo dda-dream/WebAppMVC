@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using WebAppMVC.Data;
 
@@ -20,13 +23,44 @@ namespace WebAppMVC
             });
             */
 
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole(); // вывод логов в консоль
+            /*
+            builder.WebHost.ConfigureKestrel(options =>
+{
+                options.ListenAnyIP(5055, listenOptions =>
+                {
+                    listenOptions.UseConnectionHandler<LoggingConnectionHandler>();
+                });
+                
+                options.ListenAnyIP(5050, listenOptions =>
+                {
+                    listenOptions.UseConnectionHandler<LoggingConnectionHandler>();
+                });
+                
+                
+            });
+            */
             // Add services to the container.
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))  
             );
+            builder.Services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSession(Options =>
+            {
+                Options.IdleTimeout = TimeSpan.FromMinutes(10);
+                Options.Cookie.HttpOnly = true;
+                Options.Cookie.IsEssential = true;
+            });
+
             var app = builder.Build();
+
+            //app.MapConnections("/tcp", c => c.UseConnectionHandler<LoggingConnectionHandler>());
 
             if (!app.Environment.IsDevelopment())
             {
@@ -39,7 +73,9 @@ namespace WebAppMVC
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",
@@ -48,4 +84,5 @@ namespace WebAppMVC
             app.Run();
         }
     }
+
 }

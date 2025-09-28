@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WebAppMVC.Models;
 
 namespace WebAppMVC.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -15,6 +16,10 @@ namespace WebAppMVC.Data
 
 
         public DbSet<MyDailyJournalModel> MyDailyJournal { get; set; }
+        public DbSet<LogTable> LogTable { get; set; }
+
         public DbSet<TestForMigrationModel> TestForMigration_1 { get; set; }
+
+
     }
 }

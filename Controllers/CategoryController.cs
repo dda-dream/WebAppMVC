@@ -18,6 +18,8 @@ namespace WebAppMVC.Controllers
             IEnumerable<CategoryModel> objList = _db.Category;
             return View(objList);
         }
+
+//---------------------------------------------------------------------------------------------------
         
         //GET - для CREATE
         public IActionResult Create()
@@ -38,6 +40,8 @@ namespace WebAppMVC.Controllers
             }
             return View(obj);   
         }
+
+//---------------------------------------------------------------------------------------------------
 
         //GET - для EDIT
         public IActionResult Edit(int? id)
@@ -70,6 +74,7 @@ namespace WebAppMVC.Controllers
             return View(obj);   
         }
 
+//---------------------------------------------------------------------------------------------------
 
         //GET - для DELETE
         public IActionResult Delete(int? id)
@@ -103,6 +108,7 @@ namespace WebAppMVC.Controllers
             return RedirectToAction("Index");
         }
 
+//---------------------------------------------------------------------------------------------------
 
 
     }

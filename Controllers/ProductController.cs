@@ -26,7 +26,7 @@ namespace WebAppMVC.Controllers
 //---------------------------------------------------------------------------------------------------
         public IActionResult Index()
         {            
-            IEnumerable<ProductModel> products = _db.Product;
+            IEnumerable<ProductModel> products = _db.Product.Include(u=>u.Category);
 
             foreach (ProductModel obj in products)
             {
@@ -117,6 +117,7 @@ namespace WebAppMVC.Controllers
                     productModel.Price = productViewModel.Product.Price;
                     productModel.Description = productViewModel.Product.Description;
                     productModel.CategoryId = productViewModel.Product.CategoryId;
+                    productModel.ShortDesc = productViewModel.Product.ShortDesc;
 
                     if (files.Count > 0)
                     {
@@ -177,7 +178,7 @@ namespace WebAppMVC.Controllers
         }
 
         //POST - для DELETE
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {

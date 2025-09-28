@@ -1,28 +1,99 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Linq;
+using WebAppMVC.Data;
 using WebAppMVC.Models;
+using WebAppMVC.Models.ViewModels;
+using WebAppMVC.Utility;
 
 namespace WebAppMVC.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ApplicationDbContext _db;
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
         {
             _logger = logger;
+            _db = db;
         }
+         
+//---------------------------------------------------------------------------------------------------
 
         public IActionResult Index()
         {
-            var t = View();
-            return View();
-        }
+            var homeViewModel = new HomeViewModel();
+            homeViewModel.Products = _db.Product;//.Include(u => u.Category); //Eager loading - жадная загрузка.
+            homeViewModel.Categories = _db.Category;
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+
+            return View(homeViewModel);
+        } 
+
+//---------------------------------------------------------------------------------------------------
+
+
+        public IActionResult Details(int id)
+        {   
+            DetailsViewModel detailsViewModel = new DetailsViewModel(); 
+            detailsViewModel.Product = _db.Product.Where(_ => _.Id == id).First();
+            detailsViewModel.Product.Category = _db.Category.Where(_ => _.Id == detailsViewModel.Product.CategoryId).First();
+            detailsViewModel.ExistsInCart = false;
+
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null 
+             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Count() > 0
+                )
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
+                if (shoppingCartList.Find(n => n.ProductId == id) != null)
+                    detailsViewModel.ExistsInCart = true;
+            }
+
+            return View(detailsViewModel);
+        } 
+
+
+        [HttpPost, ActionName("Details")]
+        public IActionResult DetailsPost(int id)
+        {   
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+
+
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null 
+             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Count() > 0
+                )
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
+            }
+            shoppingCartList.Add(new ShoppingCart{ ProductId = id });
+            HttpContext.Session.Set( WebConstants.SessionCart, shoppingCartList );
+
+            return RedirectToAction(nameof(Index));
+        } 
+
+//---------------------------------------------------------------------------------------------------
+
+        public IActionResult RemoveFromCart(int id)
+        {   
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null 
+             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Count() > 0
+                )
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
+            }
+            var itemToRemove = shoppingCartList.Find(n => n.ProductId == id);
+            
+            shoppingCartList.Remove(itemToRemove);
+            HttpContext.Session.Set( WebConstants.SessionCart, shoppingCartList );
+
+            return RedirectToAction(nameof(Index));
+        } 
+
+//---------------------------------------------------------------------------------------------------
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
