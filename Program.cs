@@ -12,20 +12,9 @@ namespace WebAppMVC
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            /*
-            builder.WebHost.ConfigureKestrel(options =>
-            {
-                options.ListenAnyIP(5050);
-                options.Listen(System.Net.IPAddress.Any, 5055, listenOptions =>
-                        {
-                            listenOptions.UseHttps(); // HTTPS
-                        });
-            });
-            */
-
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole(); // вывод логов в консоль
-            /*
+            
             builder.WebHost.ConfigureKestrel(options =>
 {
                 options.ListenAnyIP(5055, listenOptions =>
@@ -37,11 +26,12 @@ namespace WebAppMVC
                 {
                     listenOptions.UseConnectionHandler<LoggingConnectionHandler>();
                 });
-                
-                
             });
-            */
+            
             // Add services to the container.
+
+            
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))  
             );
@@ -68,8 +58,13 @@ namespace WebAppMVC
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+
             app.UseStaticFiles();
+
+            //app.UseDirectoryBrowser();
+            //app.UseFileServer();
+            //app.UseHttpLogging();
 
             app.UseRouting();
 
@@ -80,6 +75,8 @@ namespace WebAppMVC
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            //app.Use(
 
             app.Run();
         }
