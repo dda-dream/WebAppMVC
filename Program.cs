@@ -13,7 +13,7 @@ namespace WebAppMVC
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Logging.ClearProviders();
-            builder.Logging.AddConsole(); // вывод логов в консоль
+            builder.Logging.AddConsole(); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             
             builder.WebHost.ConfigureKestrel(options =>
 {
@@ -72,6 +72,8 @@ namespace WebAppMVC
             app.UseAuthorization();
             app.UseSession();
 
+            app.MapRazorPages();
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -83,3 +85,4 @@ namespace WebAppMVC
     }
 
 }
+ 

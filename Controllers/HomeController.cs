@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 using System.Diagnostics;
-using System.Linq;
+
 using WebAppMVC.Data;
 using WebAppMVC.Models;
 using WebAppMVC.Models.ViewModels;
@@ -26,7 +26,6 @@ namespace WebAppMVC.Controllers
             var homeViewModel = new HomeViewModel();
             homeViewModel.Products = _db.Product;//.Include(u => u.Category); //Eager loading - жадная загрузка.
             homeViewModel.Categories = _db.Category;
-
 
             return View(homeViewModel);
         } 
