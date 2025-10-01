@@ -12,11 +12,17 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebAppMVC.styles.css" asp-append-version="true" />
+
+
+    <!-- include libraries(jQuery, bootstrap) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.js"></script>
+
+    
     @*
     <link rel="stylesheet" href="~/fontawesome/css/all.css" />
     *@
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
-
 </head>
 <body>
     <header>
@@ -98,15 +104,19 @@
     <footer class="border-top footer text-muted">
         
     </footer>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    
+    <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
-    @{
-        //<script src="~/js/site.js" asp-append-version="true"></script>
-     }
+
+
+    <!-- include summernote css/js -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.js"></script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

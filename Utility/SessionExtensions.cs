@@ -24,7 +24,6 @@ namespace WebAppMVC.Utility
                 return d;
             }
                 //return value == null ? default : d;
-
         }
     }
 }

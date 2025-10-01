@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebAppMVC.Models
 {
-    public class LogTable
+    public class LogTableModel
     {
         [Key]
         public int Id {get; set;}
@@ -12,14 +12,17 @@ namespace WebAppMVC.Models
         [Required]
         public DateTime CreatedDateTime { get; set; }
 
-
+        [Required]
         [DisplayName("Log type: (insert/update/delete)")]
         public string TypeStr { get; set; }
 
 
-
-        [DisplayName("Source:")]
-        public string Source { get; set; }
+        [Required]
+        [DisplayName("LogTableName:")]
+        public string LogTableName { get; set; }
+        [Required]
+        [DisplayName("LogRecordId:")]
+        public int LogRecordId { get; set; }
 
 
 

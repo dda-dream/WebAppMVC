@@ -37,10 +37,23 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                var transactionId = _db.Database.BeginTransaction();
+
                 obj.CreatedDateTime = DateTime.Now;
                 obj.ModifiedDateTime = DateTime.Now;
-                _db.MyDailyJournal.Add(obj);
+                var newRecord = _db.MyDailyJournal.Add(obj);                
                 _db.SaveChanges();
+
+                LogTableModel logTable = new LogTableModel();
+                logTable.CreatedDateTime = DateTime.Now;
+                logTable.TypeStr = "insert";
+                logTable.LogTableName = "MyDailyJournalModel";
+                logTable.LogRecordId = newRecord.Entity.Id;
+                logTable.Message = $"MyDailyJournalController.cs Record with ID:{newRecord.Entity.Id}  Text:{newRecord.Entity.Text}";
+                _db.Add(logTable);
+                _db.SaveChanges();
+
+                transactionId.Commit();
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -77,6 +90,16 @@ namespace WebAppMVC.Controllers
                 obj.ModifiedDateTime = DateTime.Now;
                 _db.MyDailyJournal.Update(obj);
                 _db.SaveChanges();
+
+                LogTableModel logTable = new LogTableModel();
+                logTable.CreatedDateTime = DateTime.Now;
+                logTable.TypeStr = "modify";
+                logTable.LogTableName = "MyDailyJournalModel";
+                logTable.LogRecordId = obj.Id;
+                logTable.Message = $"Record with ID:{obj.Id}  Text:{obj.Text}";
+                _db.Add(logTable);
+                _db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             return View(obj);   
@@ -113,6 +136,18 @@ namespace WebAppMVC.Controllers
             }
             _db.MyDailyJournal.Remove(obj);
             _db.SaveChanges();
+
+            LogTableModel logTable = new LogTableModel();
+            logTable.CreatedDateTime = DateTime.Now;
+            logTable.TypeStr = "delete";
+            logTable.LogTableName = "MyDailyJournalModel";
+            logTable.Message = $"Record with ID:{obj.Id}  Text:{obj.Text}";
+            logTable.LogRecordId = obj.Id;
+            _db.Add(logTable);
+            _db.SaveChanges();
+
+
+
             return RedirectToAction("Index");
         }
 

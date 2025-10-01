@@ -18,7 +18,7 @@ namespace WebAppMVC.Data
 
 
         public DbSet<MyDailyJournalModel> MyDailyJournal { get; set; }
-        public DbSet<LogTable> LogTable { get; set; }
+        public DbSet<LogTableModel> LogTable { get; set; }
 
         public DbSet<TestForMigrationModel> TestForMigration_1 { get; set; }
 
