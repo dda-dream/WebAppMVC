@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using NuGet.Protocol;
 using WebAppMVC.Models;
+using WebAppMVC_Utility;
+
 
 namespace WebAppMVC.Areas.Identity.Pages.Account
 {
@@ -117,12 +119,12 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            var a = _roleManager.Roles.Where(r => r.Id == WebConstants.AdminRole);
+            var a = _roleManager.Roles.Where(r => r.Id == WC.AdminRole);
 
             var roles = _roleManager.Roles;
-            Input.isAdminRoleCreated = _roleManager.Roles.Where(r => r.Id == WebConstants.AdminRole).Any();
+            Input.isAdminRoleCreated = _roleManager.Roles.Where(r => r.Id == WC.AdminRole).Any();
 
-            var adminUsers = await _userManager.GetUsersInRoleAsync(WebConstants.AdminRole);
+            var adminUsers = await _userManager.GetUsersInRoleAsync(WC.AdminRole);
             if (adminUsers.Any()) 
             {
                 Input.isAdminUserCreated = true;
@@ -131,11 +133,11 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
             if (!Input.isAdminRoleCreated)
             {
                 IdentityRole adminRole = new IdentityRole();
-                adminRole.Id = WebConstants.AdminRole;
-                adminRole.Name = WebConstants.AdminRole;
+                adminRole.Id = WC.AdminRole;
+                adminRole.Name = WC.AdminRole;
 
                 await _roleManager.CreateAsync(adminRole);
-                await _roleManager.CreateAsync(new IdentityRole() { Id = WebConstants.CustomerRole, Name = WebConstants.CustomerRole } );
+                await _roleManager.CreateAsync(new IdentityRole() { Id = WC.CustomerRole, Name = WC.CustomerRole } );
             }
 
             ReturnUrl = returnUrl;
@@ -166,19 +168,19 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
                     bool foundAdmin=false;
                     foreach (var sel_user in _userManager.Users )
                     {
-                        if (await _userManager.IsInRoleAsync(sel_user, WebConstants.AdminRole) )
+                        if (await _userManager.IsInRoleAsync(sel_user, WC.AdminRole) )
                             foundAdmin = true;
                         if (foundAdmin == true)
                             break;
                     }
 
-                    if (User.IsInRole(WebConstants.AdminRole) || !foundAdmin)
+                    if (User.IsInRole(WC.AdminRole) || !foundAdmin)
                     {
-                        await _userManager.AddToRoleAsync(user, WebConstants.AdminRole);
+                        await _userManager.AddToRoleAsync(user, WC.AdminRole);
                     }
                     else 
                     { 
-                        await _userManager.AddToRoleAsync(user, WebConstants.CustomerRole);
+                        await _userManager.AddToRoleAsync(user, WC.CustomerRole);
                     }
 
 

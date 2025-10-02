@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAppMVC.Data;
 using WebAppMVC.Models;
+using WebAppMVC_Utility;
 
 namespace WebAppMVC.Controllers
 {
-     [Authorize(Roles=WebConstants.AdminRole)]
+     [Authorize(Roles=WC.AdminRole)]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _db;

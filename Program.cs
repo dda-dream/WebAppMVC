@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using WebAppMVC.Data;
-using WebAppMVC.Utility;
+using WebAppMVC_Utility;
 
 namespace WebAppMVC
 {

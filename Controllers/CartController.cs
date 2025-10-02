@@ -7,7 +7,7 @@ using System.Text;
 using WebAppMVC.Data;
 using WebAppMVC.Models;
 using WebAppMVC.Models.ViewModels;
-using WebAppMVC.Utility;
+using WebAppMVC_Utility;
 
 namespace WebAppMVC.Controllers
 {
@@ -32,7 +32,7 @@ namespace WebAppMVC.Controllers
         public IActionResult Index()
         {
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-            IEnumerable<ShoppingCart> enumeratorShoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart);
+            IEnumerable<ShoppingCart> enumeratorShoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
 
             if (enumeratorShoppingCart != null && enumeratorShoppingCart.Any())
             {
@@ -49,7 +49,7 @@ namespace WebAppMVC.Controllers
         public IActionResult Remove(int id)
         {
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-            IEnumerable<ShoppingCart> enumeratorShoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart);
+            IEnumerable<ShoppingCart> enumeratorShoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
 
             if (enumeratorShoppingCart != null && enumeratorShoppingCart.Any())
             {
@@ -61,7 +61,7 @@ namespace WebAppMVC.Controllers
             List<int> prodInCart = shoppingCartList.Select(p => p.ProductId).ToList();
             IEnumerable<ProductModel> prodList = _db.Product.Where(p => prodInCart.Contains(p.Id));
             
-            HttpContext.Session.Set( WebConstants.SessionCart, shoppingCartList );
+            HttpContext.Session.Set( WC.SessionCart, shoppingCartList );
 
             return RedirectToAction(nameof(Index));
         }
@@ -83,7 +83,7 @@ namespace WebAppMVC.Controllers
 
 
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-            IEnumerable<ShoppingCart> enumeratorShoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart);
+            IEnumerable<ShoppingCart> enumeratorShoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
 
             if (enumeratorShoppingCart != null && enumeratorShoppingCart.Any())
             {
@@ -132,7 +132,7 @@ namespace WebAppMVC.Controllers
                 productSB.ToString());
 
 
-            await _emailSender.SendEmailAsync(WebConstants.AdminEmail, subject, messageBody);
+            await _emailSender.SendEmailAsync(WC.AdminEmail, subject, messageBody);
 
             return RedirectToAction(nameof(OrderConfirmation));
         }   

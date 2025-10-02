@@ -1,4 +1,6 @@
 ﻿@model WebAppMVC.Models.ViewModels.ProductViewModel
+@using WebAppMVC_Utility;
+
 
 @{
     var title = "Delete Product";
@@ -76,7 +78,7 @@
             </div>
 
             <div class="col-3 offset-1 pt-4">
-                <img src="@WebConstants.ImagePath@Model.Product.Image" class="card-img img-fluid rounded shadow mx-auto d-block" />
+                <img src="@WC.ImagePath@Model.Product.Image" class="card-img img-fluid rounded shadow mx-auto d-block" />
             </div>
 
         </div>

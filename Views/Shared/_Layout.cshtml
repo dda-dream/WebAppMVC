@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
-@using WebAppMVC.Utility 
+@using WebAppMVC_Utility 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +47,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
   
-                        @if (User.IsInRole(WebConstants.AdminRole))
+                        @if (User.IsInRole(WC.AdminRole))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -63,11 +63,11 @@
                         }
 
                         <li>
-                            @if( HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart) != null )
+                            @if( HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null )
                             {
                                 <a asp-action="Index" asp-controller="Cart" class="nav-link">
                                     @{
-                                        var count = HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart).Count;
+                                        var count = HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart).Count;
                                     }
                                     <i> В корзине: @count</i>
                                 </a>

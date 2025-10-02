@@ -25,4 +25,8 @@
     <Folder Include="wwwroot\images\product\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WEBAPP_Utility\WebApp_Utility.csproj" />
+  </ItemGroup>
+
 </Project>

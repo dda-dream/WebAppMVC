@@ -5,7 +5,7 @@ using System.Diagnostics;
 using WebAppMVC.Data;
 using WebAppMVC.Models;
 using WebAppMVC.Models.ViewModels;
-using WebAppMVC.Utility;
+using WebAppMVC_Utility;
 
 namespace WebAppMVC.Controllers
 {
@@ -41,11 +41,11 @@ namespace WebAppMVC.Controllers
             detailsViewModel.ExistsInCart = false;
 
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null 
-             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Count() > 0
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null 
+             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0
                 )
             {
-                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
                 if (shoppingCartList.Find(n => n.ProductId == id) != null)
                     detailsViewModel.ExistsInCart = true;
             }
@@ -60,14 +60,14 @@ namespace WebAppMVC.Controllers
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
 
 
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null 
-             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Count() > 0
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null 
+             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0
                 )
             {
-                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
             }
             shoppingCartList.Add(new ShoppingCart{ ProductId = id });
-            HttpContext.Session.Set( WebConstants.SessionCart, shoppingCartList );
+            HttpContext.Session.Set( WC.SessionCart, shoppingCartList );
 
             return RedirectToAction(nameof(Index));
         } 
@@ -78,16 +78,16 @@ namespace WebAppMVC.Controllers
         {   
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
 
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null 
-             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Count() > 0
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null 
+             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0
                 )
             {
-                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
             }
             var itemToRemove = shoppingCartList.Find(n => n.ProductId == id);
             
             shoppingCartList.Remove(itemToRemove);
-            HttpContext.Session.Set( WebConstants.SessionCart, shoppingCartList );
+            HttpContext.Session.Set( WC.SessionCart, shoppingCartList );
 
             return RedirectToAction(nameof(Index));
         } 

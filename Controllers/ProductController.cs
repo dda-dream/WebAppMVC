@@ -6,11 +6,12 @@ using WebAppMVC.Data;
 using WebAppMVC.Models;
 using WebAppMVC.Models.ViewModels;
 using static System.Net.WebRequestMethods;
+using WebAppMVC_Utility;
 
 
 namespace WebAppMVC.Controllers
 { 
-    [Authorize(Roles=WebConstants.AdminRole)]
+    [Authorize(Roles=WC.AdminRole)]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -96,7 +97,7 @@ namespace WebAppMVC.Controllers
 
                 if (productViewModel.Product.Id == 0)
                 { //Create
-                    string uploadPath = webRootPath + WebConstants.ImagePath;
+                    string uploadPath = webRootPath + WC.ImagePath;
                     string fileName = Guid.NewGuid().ToString();
                     string fileExt = Path.GetExtension(files[0].FileName);
                     using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName + fileExt), FileMode.Create))
@@ -120,7 +121,7 @@ namespace WebAppMVC.Controllers
 
                     if (files.Count > 0)
                     {
-                        string uploadPath = webRootPath + WebConstants.ImagePath;
+                        string uploadPath = webRootPath + WC.ImagePath;
                         string fileName = Guid.NewGuid().ToString();
                         string fileExt = Path.GetExtension(files[0].FileName);
 
@@ -188,7 +189,7 @@ namespace WebAppMVC.Controllers
             }
 
             string webRootPath = _webHostEnvironment.WebRootPath;
-            string uploadPath = webRootPath + WebConstants.ImagePath;
+            string uploadPath = webRootPath + WC.ImagePath;
             var oldFile = Path.Combine(uploadPath, product.Image);
 
             if (System.IO.File.Exists(oldFile))

@@ -1,4 +1,7 @@
 ﻿@model WebAppMVC.Models.ProductModel
+@using WebAppMVC_Utility;
+
+
 
 <div class="col-lg-4 col-md-6 pb-4 filter @Model.Category.Name.Replace(' ', '_')">
     <!-- Card-->
@@ -8,7 +11,7 @@
             <div class="col-5"><label class="float-right"><span class="text-info h5">@String.Format("{0:c0}", Model.Price) / шт.</span></label> </div>
         </div>
 
-        <img src="@WebConstants.ImagePath@Model.Image" class="card-img img-fluid rounded shadow mx-auto d-block" />
+        <img src="@WC.ImagePath@Model.Image" class="card-img img-fluid rounded shadow mx-auto d-block" />
 
 
 
