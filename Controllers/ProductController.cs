@@ -1,10 +1,7 @@
-﻿
-
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
 using Microsoft.EntityFrameworkCore;
-
 using WebAppMVC.Data;
 using WebAppMVC.Models;
 using WebAppMVC.Models.ViewModels;
@@ -12,7 +9,8 @@ using static System.Net.WebRequestMethods;
 
 
 namespace WebAppMVC.Controllers
-{
+{ 
+    [Authorize(Roles=WebConstants.AdminRole)]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;

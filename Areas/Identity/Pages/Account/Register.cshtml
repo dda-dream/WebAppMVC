@@ -2,7 +2,7 @@
 @using WebAppMVC
 @model RegisterModel
 @{
-    if( User.IsInRole(WebConstants.AdminRole) )
+    if (User.IsInRole(WebConstants.AdminRole) && !Model.Input.isAdminUserCreated || !Model.Input.isAdminUserCreated)
     {
         <h1>Зарегистрировать ученую запись ADMIN</h1>
     }
@@ -50,7 +50,7 @@
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            @if (User.IsInRole(WebConstants.AdminRole))
+            @if (User.IsInRole(WebConstants.AdminRole) && !Model.Input.isAdminUserCreated || !Model.Input.isAdminUserCreated)
             {
                 <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-alert-warning">Зарегистрировать Админа</button>
             } else

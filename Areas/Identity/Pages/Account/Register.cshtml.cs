@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
@@ -32,6 +33,7 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+       
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -48,6 +50,8 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+
+            Input = new InputModel();
         }
 
         /// <summary>
@@ -105,6 +109,9 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
 
             public string FullName { get; set; }
             public string PhoneNumber { get; set; }
+
+            public bool isAdminRoleCreated { get; set; }
+            public bool isAdminUserCreated { get; set; }
         }
 
 
@@ -112,8 +119,16 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
         {
             var a = _roleManager.Roles.Where(r => r.Id == WebConstants.AdminRole);
 
-            var isAdminRoleCreated = _roleManager.Roles.Where(r => r.Id == WebConstants.AdminRole).Any();
-            if (!isAdminRoleCreated)
+            var roles = _roleManager.Roles;
+            Input.isAdminRoleCreated = _roleManager.Roles.Where(r => r.Id == WebConstants.AdminRole).Any();
+
+            var adminUsers = await _userManager.GetUsersInRoleAsync(WebConstants.AdminRole);
+            if (adminUsers.Any()) 
+            {
+                Input.isAdminUserCreated = true;
+            }
+
+            if (!Input.isAdminRoleCreated)
             {
                 IdentityRole adminRole = new IdentityRole();
                 adminRole.Id = WebConstants.AdminRole;
@@ -167,7 +182,7 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
                     }
 
 
-                        _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -187,6 +202,7 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
                     }
                     else
                     {
+
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }

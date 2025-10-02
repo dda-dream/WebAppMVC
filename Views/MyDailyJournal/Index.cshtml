@@ -32,20 +32,21 @@
 					<tr>
 						<td width="3%" class="text-center fs-6"><input type="checkbox" name="selectedIds" value="@obj.Id" class="select-item" /></td>
 						<td width="10%" class="text-center fs-6">@obj.LogDate.ToString("dd.MM.yyyy HH:mm")</td>
-						<td width="70%">@Html.Raw(obj.Text)</td>
-						<td>
-							<div class="w-100 btn-group" role="group">
-								<a asp-controller="MyDailyJournal" asp-route-Id="@obj.Id" asp-action="Edit" class="btn-sm btn-dark mx-2">
+						<td>@Html.Raw(obj.Text)</td>
+						<td width="150px">
+
+							<div class="d-flex justify-content-center w-100 btn-group" role="group">
+								<a asp-controller="MyDailyJournal" asp-route-Id="@obj.Id" asp-action="Edit" class="btn-sm btn-dark">
 									Edit
 								</a>
-								<a asp-controller="MyDailyJournal" asp-route-Id="@obj.Id" asp-action="Delete" class="btn-sm btn-danger mx-2">
+								<a asp-controller="MyDailyJournal" asp-route-Id="@obj.Id" asp-action="Delete" class="btn-sm btn-danger">
 									Delete
 								</a>
-								<a asp-controller="MyDailyJournal" asp-route-Id="@obj.Id" asp-action="ShowMoreInfo" class="btn-sm btn-info mx-2">
+								<a asp-controller="MyDailyJournal" asp-route-Id="@obj.Id" asp-action="ShowMoreInfo" class="btn-sm btn-info">
 									Info
 								</a>
-
 							</div>
+
 						</td>
 					</tr>
 				}

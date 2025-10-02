@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using WebAppMVC.Data;
+using WebAppMVC.Utility;
 
 namespace WebAppMVC
 {
@@ -13,7 +15,7 @@ namespace WebAppMVC
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Logging.ClearProviders();
-            builder.Logging.AddConsole(); // ����� ����� � �������
+            builder.Logging.AddConsole(); 
             
             builder.WebHost.ConfigureKestrel(options =>
 {
@@ -27,16 +29,10 @@ namespace WebAppMVC
                     listenOptions.UseConnectionHandler<LoggingConnectionHandler>();
                 });
             });
-            
-            // Add services to the container.
-
-            
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))  
             );
-            //builder.Services.AddDefaultIdentity<IdentityUser>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddDefaultTokenProviders().AddDefaultUI()
@@ -52,9 +48,9 @@ namespace WebAppMVC
                 Options.Cookie.IsEssential = true;
             });
 
-            var app = builder.Build();
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-            //app.MapConnections("/tcp", c => c.UseConnectionHandler<LoggingConnectionHandler>());
+            var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
             {
@@ -62,14 +58,8 @@ namespace WebAppMVC
                 app.UseHsts();
             }
 
-            //app.UseHttpsRedirection();
-
             app.UseStaticFiles();
-
-            //app.UseDirectoryBrowser();
-            //app.UseFileServer();
-            //app.UseHttpLogging();
-
+            
             app.UseRouting();
 
             app.UseAuthentication();
@@ -81,8 +71,6 @@ namespace WebAppMVC
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            //app.Use(
 
             app.Run();
         }
