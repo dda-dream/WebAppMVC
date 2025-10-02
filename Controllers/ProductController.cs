@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using WebAppMVC.Data;
-using WebAppMVC.Models;
-using WebAppMVC.Models.ViewModels;
+using WebApp_DataAccess.Data;
+using WebAppMVC_Models;
+using WebAppMVC_Models.ViewModels;
 using static System.Net.WebRequestMethods;
 using WebAppMVC_Utility;
 

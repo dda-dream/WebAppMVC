@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Security.Claims;
 using System.Text;
-using WebAppMVC.Data;
-using WebAppMVC.Models;
-using WebAppMVC.Models.ViewModels;
+using WebApp_DataAccess.Data;
+using WebAppMVC_Models;
+using WebAppMVC_Models.ViewModels;
 using WebAppMVC_Utility;
 
 namespace WebAppMVC.Controllers

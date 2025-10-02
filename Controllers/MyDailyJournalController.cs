@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebAppMVC.Data;
-using WebAppMVC.Models;
+using WebApp_DataAccess.Data;
+using WebAppMVC_Models;
 
 namespace WebAppMVC.Controllers
 {

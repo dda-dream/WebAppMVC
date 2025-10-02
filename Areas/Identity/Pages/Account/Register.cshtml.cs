@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using NuGet.Protocol;
-using WebAppMVC.Models;
+using WebAppMVC_Models;
 using WebAppMVC_Utility;
 
 

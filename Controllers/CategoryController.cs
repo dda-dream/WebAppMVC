@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebAppMVC.Data;
-using WebAppMVC.Models;
+using WebApp_DataAccess.Data;
+using WebAppMVC_Models;
 using WebAppMVC_Utility;
 
 namespace WebAppMVC.Controllers

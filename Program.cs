@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
-using WebAppMVC.Data;
+using WebApp_DataAccess.Data;
 using WebAppMVC_Utility;
 
 namespace WebAppMVC
