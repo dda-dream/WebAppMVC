@@ -10,16 +10,20 @@ namespace WebApp_DataAccess.Data
         {
 
         }
+
+
         public DbSet<CategoryModel> Category { get; set; }
         public DbSet<ProductModel> Product { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
 
 
-
         public DbSet<MyDailyJournalModel> MyDailyJournal { get; set; }
         public DbSet<LogTableModel> LogTable { get; set; }
 
+        
+        
+        //My test Table//
         public DbSet<TestForMigrationModel> TestForMigration_1 { get; set; }
 
 

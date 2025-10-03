@@ -1,24 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp_DataAccess.Data;
+using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Models;
 using WebAppMVC_Utility;
 
 namespace WebAppMVC.Controllers
 {
-     [Authorize(Roles=WC.AdminRole)]
+    [Authorize(Roles=WC.AdminRole)]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly ICategoryRepository categoryRepository;
+        public CategoryController(ICategoryRepository categoryRepository)
         {
-            _db = db;
+            this.categoryRepository = categoryRepository;
         }
         public IActionResult Index()
         {
-            //_db.Category.
-
-            IEnumerable<CategoryModel> objList = _db.Category;
+            IEnumerable<CategoryModel> objList = categoryRepository.GetAll();
             return View(objList);
         }
 
@@ -37,8 +36,8 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Category.Add(obj);
-                _db.SaveChanges();
+                categoryRepository.Add(obj);
+                categoryRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(obj);   
@@ -54,9 +53,9 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = _db.Category.Find(id);
-            if (obj == null) 
-            { 
+            var obj = categoryRepository.Find(id.GetValueOrDefault());
+            if (obj == null)
+            {
                 return NotFound();
             }
 
@@ -70,8 +69,8 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Category.Update(obj);
-                _db.SaveChanges();
+                categoryRepository.Update(obj);
+                categoryRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(obj);   
@@ -87,7 +86,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = _db.Category.Find(id);
+            var obj = categoryRepository.Find(id.GetValueOrDefault());
             if (obj == null) 
             { 
                 return NotFound();
@@ -101,13 +100,13 @@ namespace WebAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.Category.Find(id);
+            var obj = categoryRepository.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.Category.Remove(obj);
-            _db.SaveChanges();
+            categoryRepository.Remove(obj);
+            categoryRepository.Save();
             return RedirectToAction("Index");
         }
 

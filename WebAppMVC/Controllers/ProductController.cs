@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApp_DataAccess.Data;
+using WebApp_DataAccess.Repository;
+using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Models;
 using WebAppMVC_Models.ViewModels;
-using static System.Net.WebRequestMethods;
 using WebAppMVC_Utility;
+using static System.Net.WebRequestMethods;
 
 
 namespace WebAppMVC.Controllers
@@ -14,24 +16,27 @@ namespace WebAppMVC.Controllers
     [Authorize(Roles=WC.AdminRole)]
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IProductRepository productRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public ProductController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        public ProductController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment)
         {
-            _db = db;
+            this.productRepository = productRepository;
             _webHostEnvironment = webHostEnvironment;
         }
 //---------------------------------------------------------------------------------------------------
         public IActionResult Index()
         {            
-            IEnumerable<ProductModel> products = _db.Product.Include(u=>u.Category);
+            
+            IEnumerable<ProductModel> products = productRepository.GetAll(includeProperties:"Category");
 
+            /*
             foreach (ProductModel obj in products)
             {
-                obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.CategoryId);
+                obj.Category = productRepository.FirstOrDefault(u => u.Id == obj.CategoryId);
             }
+            */
             
             return View(products);
         }
@@ -59,11 +64,8 @@ namespace WebAppMVC.Controllers
             //ProductModel productModel = new ProductModel();
             ProductViewModel productViewModel = new ProductViewModel();
             productViewModel.Product = new ProductModel();
-            productViewModel.CategorySelectList = _db.Category.Select(i => new SelectListItem
-            {
-                Text = i.Name,
-                Value = i.Id.ToString(),
-            });
+            productViewModel.CategorySelectList = productRepository.GetCategoryDropDownList();
+            
 
             if (id == null)
             { //do CREATE
@@ -71,7 +73,7 @@ namespace WebAppMVC.Controllers
             }
             else
             { //do UPDATE
-                productViewModel.Product = _db.Product.Find(id);
+                productViewModel.Product = productRepository.Find(id.GetValueOrDefault());
                 if (productViewModel.Product == null)
                 {
                     return NotFound();
@@ -96,7 +98,7 @@ namespace WebAppMVC.Controllers
                 string webRootPath = _webHostEnvironment.WebRootPath;
 
                 if (productViewModel.Product.Id == 0)
-                { //Create
+                { //Creating
                     string uploadPath = webRootPath + WC.ImagePath;
                     string fileName = Guid.NewGuid().ToString();
                     string fileExt = Path.GetExtension(files[0].FileName);
@@ -107,13 +109,13 @@ namespace WebAppMVC.Controllers
 
                     productViewModel.Product.Image = fileName + fileExt;
 
-                    _db.Product.Add(productViewModel.Product);
+                    productRepository.Add(productViewModel.Product);
                 }
                 else
-                { // Update                    
-                    var productModel = _db.Product.Find(productViewModel.Product.Id);
+                { // Updating                    
+                    var productModel = productRepository.Find(productViewModel.Product.Id);
 
-                    productModel. Name = productViewModel.Product.Name;
+                    productModel.Name = productViewModel.Product.Name;
                     productModel.Price = productViewModel.Product.Price;
                     productModel.Description = productViewModel.Product.Description;
                     productModel.CategoryId = productViewModel.Product.CategoryId;
@@ -138,16 +140,12 @@ namespace WebAppMVC.Controllers
                         productModel.Image = fileName + fileExt;
                     }
 
-                    _db.Product.Update(productModel);
+                    productRepository.Update(productModel);
                 }
-                _db.SaveChanges();
+                productRepository.Save();
                 return RedirectToAction("Index");
             }
-            productViewModel.CategorySelectList = _db.Category.Select(i => new SelectListItem
-            {
-                Text = i.Name,
-                Value = i.Id.ToString(),
-            });
+            productViewModel.CategorySelectList = productRepository.GetCategoryDropDownList();
 
             return View(productViewModel);   
         }
@@ -163,13 +161,12 @@ namespace WebAppMVC.Controllers
             }
 
 
-            var product = _db.Product.Find(id);
+            var product = productRepository.FirstOrDefault(u => u.Id == id, includeProperties: "Category");
+
             if (product == null) 
             { 
                 return NotFound();
             }
-
-            product.Category = _db.Category.FirstOrDefault(u => u.Id == product.CategoryId);
 
             var productViewModel= new ProductViewModel();
             productViewModel.Product = product;
@@ -182,7 +179,7 @@ namespace WebAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var product = _db.Product.Find(id);
+            var product = productRepository.Find(id.GetValueOrDefault());
             if (product == null)
             {
                 return NotFound();
@@ -195,8 +192,9 @@ namespace WebAppMVC.Controllers
             if (System.IO.File.Exists(oldFile))
                 System.IO.File.Delete(oldFile);
 
-            _db.Product.Remove(product);
-            _db.SaveChanges();
+            productRepository.Remove(product);
+            productRepository.Save();
+
             return RedirectToAction("Index");
         }
 

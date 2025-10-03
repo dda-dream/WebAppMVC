@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using WebApp_DataAccess.Data;
+using WebApp_DataAccess.Repository;
+using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Utility;
 
 namespace WebAppMVC
@@ -50,6 +52,14 @@ namespace WebAppMVC
             });
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
+            
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IMyDailyJournalRepository, MyDailyJournalRepository>();
+
+
+
+
 
             var app = builder.Build();
 

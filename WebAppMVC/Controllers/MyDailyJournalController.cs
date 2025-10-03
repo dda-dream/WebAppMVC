@@ -1,20 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApp_DataAccess.Data;
+using WebApp_DataAccess.Repository;
+using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Models;
 
 namespace WebAppMVC.Controllers
 {
     public class MyDailyJournalController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public MyDailyJournalController(ApplicationDbContext db)
+        private readonly IMyDailyJournalRepository repository;
+        public MyDailyJournalController( IMyDailyJournalRepository repository)
         {
-            _db = db;
+            this.repository = repository;
         }
         public IActionResult Index()
         {
-            IEnumerable<MyDailyJournalModel> objList = _db.MyDailyJournal;
+            IEnumerable<MyDailyJournalModel> objList = repository.GetAll();
             return View(objList);
         }
         
@@ -37,6 +39,10 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                repository.Add(obj);
+                repository.Save();
+                /*
+
                 var transactionId = _db.Database.BeginTransaction();
 
                 obj.CreatedDateTime = DateTime.Now;
@@ -54,6 +60,8 @@ namespace WebAppMVC.Controllers
                 _db.SaveChanges();
 
                 transactionId.Commit();
+                */
+                
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -69,7 +77,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = _db.MyDailyJournal.Find(id);
+            var obj = repository.Find(id.GetValueOrDefault());
             if (obj == null) 
             { 
                 return NotFound();
@@ -85,6 +93,10 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                repository.Update(obj);
+                repository.Save();
+
+                /*
                 var objPrev = _db.MyDailyJournal.AsNoTracking().FirstOrDefault(_ => _.Id == obj.Id);
                 obj.CreatedDateTime = objPrev.CreatedDateTime;
                 obj.ModifiedDateTime = DateTime.Now;
@@ -99,7 +111,7 @@ namespace WebAppMVC.Controllers
                 logTable.Message = $"Record with ID:{obj.Id}  Text:{obj.Text}";
                 _db.Add(logTable);
                 _db.SaveChanges();
-
+                */
                 return RedirectToAction("Index");
             }
             return View(obj);   
@@ -115,7 +127,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = _db.MyDailyJournal.Find(id);
+            var obj = repository.Find(id.GetValueOrDefault());
             if (obj == null) 
             { 
                 return NotFound();
@@ -129,11 +141,14 @@ namespace WebAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.MyDailyJournal.Find(id);
+            var obj = repository.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
             }
+            repository.Remove(obj);
+            repository.Save();
+            /*
             _db.MyDailyJournal.Remove(obj);
             _db.SaveChanges();
 
@@ -145,7 +160,7 @@ namespace WebAppMVC.Controllers
             logTable.LogRecordId = obj.Id;
             _db.Add(logTable);
             _db.SaveChanges();
-
+            */
 
 
             return RedirectToAction("Index");
@@ -161,7 +176,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = _db.MyDailyJournal.Find(id);
+            var obj = repository.Find(id.GetValueOrDefault());
             if (obj == null) 
             { 
                 return NotFound();
