@@ -9,28 +9,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebAppMVC</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebAppMVC.styles.css" asp-append-version="true" />
 
+    <!--sweetalert2.github.io-->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--sweetalert2.github.io-->
 
-    <!-- include libraries(jQuery, bootstrap) -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.js"></script>
 
     
-    @*
-    <link rel="stylesheet" href="~/fontawesome/css/all.css" />
-    *@
+
+    <!--SUMMERNOTE WORKED 100%-->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
+    <!--SUMMERNOTE WORKED 100%-->
+
+
+    <!--Загружается долго пока отключил https://datatables.net/  -->
+    <link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
+    <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+    <!--Загружается долго пока отключил https://datatables.net/  -->
+
+
+    <!--TOASTR-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <!--TOASTR-->
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-gradient border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebAppMVC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">-=My Site (home)=-</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" 
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -40,24 +66,20 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class="nav-item">
-                            <a class="nav-link text-info bg-primary" asp-area="" asp-controller="MyDailyJournal" asp-action="Index">Ежедневник</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-danger bg-light" asp-area="" asp-controller="MyDailyJournal" asp-action="Index">Ежедневник</a>
                         </li>
   
                         @if (User.IsInRole(WC.AdminRole))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Редактор магазина(Admin)
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
+                                    <a class="dropdown-item text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
+                                    <a class="dropdown-item text-dark" asp-area="" asp-controller="Product"  asp-action="Index">Product</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register"> Create Admin User</a>
+                                    <a class="dropdown-item text-dark" asp-area="Identity" asp-page="/Account/Register"> Create Admin User</a>
                                 </ul>
                             </li>
                         }
@@ -69,15 +91,13 @@
                                     @{
                                         var count = HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart).Count;
                                     }
-                                    <i> В корзине: @count</i>
+                                    <i>(В корзине: @count)</i>
                                 </a>
                             } 
                             else
                             {
                                 <a href="#" class="nav-link">
-                                    <i>
-                                        В корзине: (0)
-                                    </i>
+                                    <i>(В корзине пусто!)</i>
                                 </a>
                             }
                         </li>
@@ -102,17 +122,18 @@
     </footer>
 
 
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-
-    <!-- include summernote css/js -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.js"></script>
 
 
     @await RenderSectionAsync("Scripts", required: false)
+
+
+ 
+
+
+
+
+
 </body>
 </html>
+
+

@@ -8,12 +8,14 @@
 
 <div class="text-center">
 	<a asp-action="Create" asp-controller="MyDailyJournal" class="btn btn-primary">
-		Создать новую запись в (Мой ежедневник)
+		Создать новую запись
 	</a>
 </div>
 <br />
 
 <div class="w-10">
+
+
 
 	@if (Model.Count() > 0)
 	{
@@ -59,3 +61,5 @@
 	}
 
 </div>
+
+

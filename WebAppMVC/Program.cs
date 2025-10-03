@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using System;
 using WebApp_DataAccess.Data;
 using WebAppMVC_Utility;
 
@@ -73,6 +74,9 @@ namespace WebAppMVC
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+
+
+
         }
     }
 
