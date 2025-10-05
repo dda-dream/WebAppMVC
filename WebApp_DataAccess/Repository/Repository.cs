@@ -29,7 +29,7 @@ namespace WebApp_DataAccess.Repository
 
         public T Find(int id)
         {
-            return this.dbSet.Find(id);
+            return dbSet.Find(id);
         }
 
         public T FirstOrDefault(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool isTracking = true)
@@ -51,7 +51,6 @@ namespace WebApp_DataAccess.Repository
                 query = query.AsNoTracking();
 
             return query.FirstOrDefault();
-
         }
 
         public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, string includeProperties = null, bool isTracking = true)
@@ -85,7 +84,6 @@ namespace WebApp_DataAccess.Repository
         public void Save()
         {
             db.SaveChanges(); 
-
         }
     }
 }
