@@ -9,13 +9,21 @@ namespace WebAppMVC.Controllers
 {
     public class MyDailyJournalController : Controller
     {
+        int forTestTransientOrScooped = 0;
         private readonly IMyDailyJournalRepository repository;
-        public MyDailyJournalController( IMyDailyJournalRepository repository)
+        private readonly IMyDailyJournalRepository repository_forTest_LifeTime;
+
+
+        public MyDailyJournalController( IMyDailyJournalRepository repository, IMyDailyJournalRepository repository_forTest_LifeTime)
         {
             this.repository = repository;
-        }
+            this.repository_forTest_LifeTime = repository_forTest_LifeTime;
+        }   
         public IActionResult Index()
         {
+            forTestTransientOrScooped++;
+            repository.DoIncrement_forTestTransientOrScooped();
+
             IEnumerable<MyDailyJournalModel> objList = repository.GetAll();
             return View(objList);
         }

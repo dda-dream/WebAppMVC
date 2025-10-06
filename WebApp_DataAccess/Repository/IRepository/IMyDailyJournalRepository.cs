@@ -11,5 +11,6 @@ namespace WebApp_DataAccess.Repository.IRepository
     public interface IMyDailyJournalRepository : IRepository<MyDailyJournalModel>
     {
         void Update(MyDailyJournalModel model);
+        void DoIncrement_forTestTransientOrScooped();
     }
 }

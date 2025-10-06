@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Models;
@@ -28,7 +23,7 @@ namespace WebApp_DataAccess.Repository
         }
         public void Update(ProductModel product)
         {
-            db.Update(product);
+            db.Product.Update(product);
             /*
             var obj = db.Product.FirstOrDefault(c => c.Id == product.Id);
 

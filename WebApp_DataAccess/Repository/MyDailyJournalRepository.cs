@@ -12,9 +12,14 @@ namespace WebApp_DataAccess.Repository
 {
     public class MyDailyJournalRepository : Repository<MyDailyJournalModel>, IMyDailyJournalRepository
     {
-        
+        public int forTestTransientOrScooped = 0;
         public MyDailyJournalRepository(ApplicationDbContext _db) : base(_db)
         {
+        }
+
+        public void DoIncrement_forTestTransientOrScooped()
+        {
+            forTestTransientOrScooped++;
         }
 
         public void Add(MyDailyJournalModel model)

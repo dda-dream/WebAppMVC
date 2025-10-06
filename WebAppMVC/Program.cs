@@ -18,10 +18,10 @@ namespace WebAppMVC
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Logging.ClearProviders();
-            builder.Logging.AddConsole(); 
-            
+            builder.Logging.AddConsole();
+
             builder.WebHost.ConfigureKestrel(options =>
-{
+            {
                 options.ListenAnyIP(5055, listenOptions =>
                 {
                     listenOptions.UseConnectionHandler<LoggingConnectionHandler>();
@@ -38,11 +38,10 @@ namespace WebAppMVC
             );
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddDefaultTokenProviders().AddDefaultUI()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                            .AddDefaultTokenProviders().AddDefaultUI()
+                            .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddControllersWithViews();
-
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddSession(Options =>
             {
@@ -52,14 +51,9 @@ namespace WebAppMVC
             });
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
-            
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IMyDailyJournalRepository, MyDailyJournalRepository>();
-
-
-
-
 
             var app = builder.Build();
 
@@ -70,23 +64,33 @@ namespace WebAppMVC
             }
 
             app.UseStaticFiles();
-            
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
-
             app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+            app.Use(MyMiddleware);
+
+
             app.Run();
+        }
 
-
-
+        static async Task MyMiddleware(HttpContext context, Func<Task> next)
+        {
+            // До
+            //Console.WriteLine("Before");
+            
+            //await context.Response.WriteAsync("MyMiddleware");
+             
+            await next();
+            // После
+            //Console.WriteLine("After");
         }
     }
 

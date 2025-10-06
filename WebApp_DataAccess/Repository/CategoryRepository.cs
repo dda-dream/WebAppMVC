@@ -11,10 +11,8 @@ namespace WebApp_DataAccess.Repository
 {
     public class CategoryRepository : Repository<CategoryModel>, ICategoryRepository
     {
-        //private readonly ApplicationDbContext db;
         public CategoryRepository(ApplicationDbContext _db) : base(_db)
         {
-            //db = _db;
         }
 
         public void Update(CategoryModel category)
