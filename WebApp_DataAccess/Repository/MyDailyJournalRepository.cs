@@ -38,7 +38,7 @@ namespace WebApp_DataAccess.Repository
             logTable.TypeStr = "insert";
             logTable.LogTableName = model.GetType().Name;
             logTable.LogRecordId = newRecord.Entity.Id;
-            logTable.Message = $"{this.GetType().Name} Record with ID:{model.Id}  Text:{newRecord.Entity.Text}";
+            logTable.Message = model.Text;
             db.LogTable.Add(logTable);
              
             //db.SaveChanges();
@@ -58,7 +58,7 @@ namespace WebApp_DataAccess.Repository
             logTable.TypeStr = "modify";
             logTable.LogTableName = model.GetType().Name;
             logTable.LogRecordId = model.Id;
-            logTable.Message = $"{this.GetType().Name} Record with ID:{model.Id}  Text:{model.Text}";
+            logTable.Message = model.Text;
             db.LogTable.Add(logTable);
 
             //db.SaveChanges();
@@ -74,7 +74,7 @@ namespace WebApp_DataAccess.Repository
             logTable.CreatedDateTime = DateTime.Now;
             logTable.TypeStr = "delete";
             logTable.LogTableName = model.GetType().Name;;
-            logTable.Message = $"{this.GetType().Name} Record with ID:{model.Id}  Text:{model.Text}";
+            logTable.Message = model.Text;
             logTable.LogRecordId = model.Id;
             db.LogTable.Add(logTable);
             db.SaveChanges();

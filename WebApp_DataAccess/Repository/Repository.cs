@@ -76,6 +76,18 @@ namespace WebApp_DataAccess.Repository
             return query.ToList();
         }
 
+        public IEnumerable<LogTableModel> GetLogForId(int? id)
+        {
+            //string tableName = db.Model.FindEntityType(typeof(T)).GetTableName();
+            string tableName = typeof(T).Name;
+
+            var retVal = db.LogTable.Where(l => l.LogRecordId == id)
+                                    .Where(q => q.LogTableName == tableName)
+                                    .OrderBy(l => l.CreatedDateTime)
+                                    .ToList();
+            return retVal;
+        }
+
         public void Remove(T entity)
         {
             dbSet.Remove(entity);

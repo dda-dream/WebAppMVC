@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using WebAppMVC_Models;
 
 namespace WebApp_DataAccess.Repository.IRepository
 {
@@ -31,6 +32,7 @@ namespace WebApp_DataAccess.Repository.IRepository
 
         void Save();
 
+        IEnumerable<LogTableModel> GetLogForId(int? id);
 
     }
 }

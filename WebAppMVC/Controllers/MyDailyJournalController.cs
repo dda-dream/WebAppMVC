@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.IRepository;
@@ -176,9 +177,16 @@ namespace WebAppMVC.Controllers
 
 //---------------------------------------------------------------------------------------------------
 
+        public class DataToView
+        {
+            public MyDailyJournalModel _MyDailyJournalModel;
+            public IEnumerable<LogTableModel> _LogTableModelEnumerator;
+        }
         //GET - для ShowMoreInfo
         public IActionResult ShowMoreInfo(int? id)
         {
+            var d = new DataToView();
+
             if (id == null || id == 0)
             {
                 return NotFound();
@@ -188,9 +196,18 @@ namespace WebAppMVC.Controllers
             if (obj == null) 
             { 
                 return NotFound();
-            }            
+            }
 
-            return View(obj);
+            var LogTableList = repository.GetLogForId(id);
+
+            d._MyDailyJournalModel = obj;
+            d._LogTableModelEnumerator = LogTableList;
+
+            TempData["test"] = "test";
+            ViewBag.test = "test";
+            ViewData["test"] = "test";
+
+            return View(d);
         }
 
 

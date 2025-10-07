@@ -1,25 +1,13 @@
-﻿@model WebAppMVC_Models.MyDailyJournalModel
+﻿@model WebAppMVC.Controllers.MyDailyJournalController.DataToView
 
 <div class="container p-3">
 	<h1 class="text-primary ">Мой ежедневник</h1>
 </div>
-
 <br>
 
-
-<div class="table shadow ">
-	<div class="text-center caption-top col-4">
-		<b>Просмотр дополнительной информации о записи<b>
-	</div>
-	<div id="id0001" class="col-4">
-		<b>Дата создания  :</b> @this.Model.CreatedDateTime
-	</div>
-	<div id="id0002" class="col-4">
-		<b>Дата изменения :</b>	@this.Model.ModifiedDateTime
-	</div>
-	<div class="col-4">
-		<a asp-action="Index" class="btn btn-success w-100"><i class="fas fa-step-backward"></i> Назад</a>
-	</div>
+<div class="col-4">
+	<a asp-action="Index" class="btn btn-success w-100"><i class="fas fa-step-backward"></i> Назад</a>
+</div>
 
 <br>
 
@@ -28,33 +16,40 @@
 	<!-- Список будет заполнен JavaScript -->
 </ul>
 
+
+@{
+    <table class="table table-bordered table-hover table-sm align-middle shadow-sm mt-3">
+        <thead class="table-success text-center">
+            <tr>
+                <th>Дата изменения</th>
+                <th>Тип изменения</th>
+                <th>Новое значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (LogTableModel i in Model._LogTableModelEnumerator)
+	        {
+                <tr>
+                    <td class="text-nowrap">@i.CreatedDateTime.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                    <td>@i.TypeStr</td>
+                    <td>@Html.Raw(i.Message)</td>
+                </tr>
+	        }
+        </tbody>
+    </table>
+
+}
+
+
 @section Scripts {
-    <script>
-        function updateElementText(elementId, newText) 
-		{
-			document.getElementById( elementId ).innerText = newText + " " + document.getElementById( elementId ).innerText;
-        }
+	<script>
 
-		updateElementText("id0001", " - ");
-		updateElementText("id0002", " - ");
+		$(document).ready(function() {
+			$('.summernote').summernote({
+				height: 100
+			});
 
-
-		function initializeList() 
-		{
-			const list = document.getElementById('myList');
-			list.innerHTML = ''; // Очищаем список (если нужно)
-
-			for(i = 1; i<100; i++)
-			{
-				document.write(i+";");
-				const li = document.createElement('li');
-				li.classList.add('list-group-item');
-				li.textContent = i;
-				list.appendChild(li);
-			}
-		}
-
-		//initializeList();
+		});
 
 	</script>
 }

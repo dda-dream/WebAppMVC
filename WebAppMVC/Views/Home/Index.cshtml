@@ -1,5 +1,12 @@
 ﻿@model WebAppMVC_Models.ViewModels.HomeViewModel
 
+<br />
+@{
+	var a = Html.AntiForgeryToken();
+	a= a;
+}
+<br />
+
 <div class="container">
 	<div class="text-center">
 		<button class="btn btn-dark filter-button" data-filter="all">All</button>

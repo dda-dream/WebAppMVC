@@ -27,8 +27,11 @@ namespace WebAppMVC.Controllers
             homeViewModel.Products = _db.Product;//.Include(u => u.Category); //Eager loading - жадная загрузка.
             homeViewModel.Categories = _db.Category;
 
+
             return View(homeViewModel);
         } 
+
+
 
 //---------------------------------------------------------------------------------------------------
 

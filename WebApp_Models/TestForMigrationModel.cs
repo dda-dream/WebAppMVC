@@ -11,5 +11,11 @@ namespace WebAppMVC_Models
 
         [DisplayName("Message:")]
         public string? Text_1 { get; set; }
+
+
+        public string ModyfyText_1()
+        {
+            return "_" + this.ModyfyText_1; 
+        }
     }
 }

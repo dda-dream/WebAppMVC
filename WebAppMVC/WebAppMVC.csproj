@@ -12,6 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WebApp_DataAccess\WebApp_DataAccess.csproj" />
     <ProjectReference Include="..\WebApp_Models\WebApp_Models.csproj" />
     <ProjectReference Include="..\WEBAPP_Utility\WebApp_Utility.csproj" />

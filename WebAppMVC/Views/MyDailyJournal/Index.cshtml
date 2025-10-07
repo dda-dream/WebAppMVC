@@ -19,13 +19,13 @@
 
 	@if (Model.Count() > 0)
 	{
-		<table class="table-bordered table-striped table-bordered table-info" style="width:100%">
-			<thead>
+		<table class="table table-bordered table-hover table-sm align-middle shadow-sm mt-3">
+			<thead class="table-success text-center">
 				<tr>
-					<th class="text-center">Выбор</th>
-					<th class="text-center">Дата и время</th>
-					<th class="text-center">Сообщение</th>
-					<th class="text-center">Операции</th>
+					<th>Выбор</th>
+					<th>Дата и время</th>
+					<th>Сообщение</th>
+					<th>Операции</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -33,7 +33,7 @@
 				{
 					<tr>
 						<td width="3%" class="text-center fs-6"><input type="checkbox" name="selectedIds" value="@obj.Id" class="select-item" /></td>
-						<td width="10%" class="text-center fs-6">@obj.LogDate.ToString("dd.MM.yyyy HH:mm")</td>
+						<td width="10%" class="text-nowrap">@obj.LogDate.ToString("dd.MM.yyyy HH:mm:ss")</td>
 						<td>@Html.Raw(obj.Text)</td>
 						<td width="150px">
 
@@ -63,3 +63,11 @@
 </div>
 
 
+@functions
+{
+	string testFunc()
+	{
+		return "retVal";
+	}
+
+}
