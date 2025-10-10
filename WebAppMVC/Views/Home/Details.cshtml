@@ -27,9 +27,23 @@
                                     <div class="col-12">
                                         <span class="badge p-3 border" style="background-color:palevioletred">@Model.Product.Category.Name</span>
                                         <h3 class="text-success"></h3>
-
                                         <p class="text-secondary">@Html.Raw(Model.Product.Description)</p>
                                     </div>
+                                    
+                                    @if( User.IsInRole(WC.AdminRole) )
+                                    {
+                                        <div class="col-12">Количество 
+                                            @if (Model.ExistsInCart)
+                                            {
+                                                <input asp-for="@Model.Product.TempQty" disabled class="form-control" />
+                                            }
+                                            else
+                                            {
+                                                <input asp-for="@Model.Product.TempQty" class="form-control" />
+                                            }
+                                        </div>
+                                        <span asp-validation-for="@Model.Product.TempQty" class="text-danger"></span>
+                                    }
 
                                 </div>
                             </div>
@@ -57,3 +71,5 @@
         </div>
     </form>
 </div>
+
+<partial action="_ValidationScriptsPartial"></partial>

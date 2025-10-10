@@ -27,7 +27,6 @@ namespace WebAppMVC.Controllers
         [BindProperty]
         public ProductUserViewModel ProductUserViewModel { get; set; }
 
-
         
         public CartController(IApplicationUserRepository applicationUserRepository, IProductRepository productRepository, 
                               IWebHostEnvironment webHostEnvironment, IEmailSender emailSender,
@@ -53,6 +52,11 @@ namespace WebAppMVC.Controllers
 
             List<int> prodInCart = shoppingCartList.Select(p => p.ProductId).ToList();
             IEnumerable<ProductModel> prodList = productRepository.GetAll(p => prodInCart.Contains(p.Id));
+
+            foreach (ProductModel prod in prodList)
+            {
+                prod.TempQty = shoppingCartList.Where(p => p.ProductId == prod.Id).ToList().FirstOrDefault().Qty;
+            }
 
             return View(prodList);
         }
@@ -143,9 +147,7 @@ namespace WebAppMVC.Controllers
                 productUserViewModel.ApplicationUser.PhoneNumber,
                 productSB.ToString());
 
-
             await _emailSender.SendEmailAsync(WC.AdminEmail, subject, messageBody);
-
 
             var claims = (ClaimsIdentity)User.Identity;
             var claim = claims.FindFirst(ClaimTypes.NameIdentifier);
@@ -179,14 +181,29 @@ namespace WebAppMVC.Controllers
 
         public IActionResult OrderConfirmation()
         {
-           
-
-            
-
             TempData[WC.Success] = "Операция выполнена успешно!";
             HttpContext.Session.Clear();
             return View();
         }   
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateCart(IEnumerable<ProductModel> products)
+        {
+            var shoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
+
+            foreach (var i in products)
+            {
+                var s = shoppingCart.Where(c => c.ProductId == i.Id).FirstOrDefault();
+                s.Qty = i.TempQty;
+            }
+
+            HttpContext.Session.Set(WC.SessionCart, shoppingCart); 
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
 
     

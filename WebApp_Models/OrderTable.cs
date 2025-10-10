@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -20,13 +21,23 @@ namespace WebApp_Models
         public ApplicationUser ApplicationUser { get; set; }
 
 
+
+        [DisplayName("Дата заказа")]
         public DateTime OrderDate { get; set; }
 
+
         [Required]
+        [DisplayName("Номер телефона")]
         public string PhoneNumber {get; set; }
+
+
         [Required]
+        [DisplayName("Полное имя")]
         public string FullName {get; set; }
+
+
         [Required]
+        [DisplayName("Емейл")]
         public string Email {get; set; }
 
 

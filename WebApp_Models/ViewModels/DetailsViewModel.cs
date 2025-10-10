@@ -13,6 +13,6 @@ namespace WebAppMVC_Models.ViewModels
         public ProductModel Product { get; set; }
         public bool ExistsInCart { get; set; }
 
-        
+
     }
 }

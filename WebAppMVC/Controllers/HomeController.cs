@@ -30,7 +30,7 @@ namespace WebAppMVC.Controllers
         public IActionResult Index()
         {
             var homeViewModel = new HomeViewModel();
-            homeViewModel.Products = productRepository.GetAll(includeProperties:"Category");//.Include(u => u.Category); //Eager loading - жадная загрузка.
+            homeViewModel.Products = productRepository.GetAll(includeProperties:"Category");//Eager loading - жадная загрузка.
             homeViewModel.Categories = categoryRepository.GetAll();
 
             string headers="";
@@ -63,20 +63,12 @@ namespace WebAppMVC.Controllers
 
         public IActionResult Details(int id)
         {
-            /*
-            DetailsViewModel detailsViewModel = new DetailsViewModel();
-            detailsViewModel.Product = productRepository.Find(id);
-            detailsViewModel.Product.Category = categoryRepository.Find(detailsViewModel.Product.CategoryId);
-            detailsViewModel.ExistsInCart = false;
-            */
+
             DetailsViewModel detailsViewModel = new DetailsViewModel()
             {
                 Product = productRepository.GetAll(includeProperties:"Category", filter: i => i.Id == id).FirstOrDefault(),
-                //Product.Category = categoryRepository.Find(detailsViewModel.Product.CategoryId),
                 ExistsInCart = false
             };
-
-
 
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
             var shoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
@@ -92,19 +84,27 @@ namespace WebAppMVC.Controllers
 
 
         [HttpPost, ActionName("Details")]
-        public IActionResult DetailsPost(int id)
-        {   
-            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-
-            var shoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
-            if (shoppingCart != null && shoppingCart.Count() > 0 )
+        public IActionResult DetailsPost(int id, DetailsViewModel dVM)
+        {
+            //if (ModelState.IsValid)
             {
-                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
-            }
-            shoppingCartList.Add(new ShoppingCart{ ProductId = id });
-            HttpContext.Session.Set( WC.SessionCart, shoppingCartList );
+                List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
 
-            return RedirectToAction(nameof(Index));
+                var shoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
+                if (shoppingCart != null && shoppingCart.Count() > 0)
+                {
+                    shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
+                }
+                shoppingCartList.Add(new ShoppingCart { 
+                                        ProductId = id, 
+                                        Qty = dVM.Product.TempQty });
+                HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData.Add(WC.Error, "Ошибка при добавлении в корзину.");
+            return View();
         } 
 
 //---------------------------------------------------------------------------------------------------

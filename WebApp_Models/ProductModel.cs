@@ -5,6 +5,11 @@ namespace WebAppMVC_Models
 {
     public class ProductModel
     {
+        public ProductModel()
+        {
+            TempQty = 1;
+        }
+
         [Key]
         public int Id {get; set;}
 
@@ -23,5 +28,10 @@ namespace WebAppMVC_Models
 
         [ForeignKey("CategoryId")]
         public virtual CategoryModel Category {get; set;}
+
+
+        [NotMapped]
+        [Range(1,10000)]
+        public int TempQty {get; set;}
     }
 }
