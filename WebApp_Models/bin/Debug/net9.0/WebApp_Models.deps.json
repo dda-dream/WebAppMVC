@@ -8,7 +8,8 @@
     ".NETCoreApp,Version=v9.0": {
       "WebApp_Models/1.0.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.Identity.UI": "9.0.9"
+          "Microsoft.AspNetCore.Identity.UI": "9.0.9",
+          "WebApp_Utility": "1.0.0"
         },
         "runtime": {
           "WebApp_Models.dll": {}
@@ -166,6 +167,17 @@
             "fileVersion": "9.0.925.41916"
           }
         }
+      },
+      "WebApp_Utility/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.UI": "9.0.9"
+        },
+        "runtime": {
+          "WebApp_Utility.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -272,6 +284,11 @@
       "sha512": "sha512-z4pyMePOrl733ltTowbN565PxBw1oAr8IHmIXNDiDqd22nFpYltX9KhrNC/qBWAG1/Zx5MHX+cOYhWJQYCO/iw==",
       "path": "microsoft.extensions.primitives/9.0.9",
       "hashPath": "microsoft.extensions.primitives.9.0.9.nupkg.sha512"
+    },
+    "WebApp_Utility/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

@@ -29,3 +29,5 @@ C:\Users\User\source\repos\WebAppMVC\WebApp_DataAccess\obj\Debug\net9.0\WebApp_D
 C:\Users\User\source\repos\WebAppMVC\WebApp_DataAccess\obj\Debug\net9.0\refint\WebApp_DataAccess.dll
 C:\Users\User\source\repos\WebAppMVC\WebApp_DataAccess\obj\Debug\net9.0\WebApp_DataAccess.pdb
 C:\Users\User\source\repos\WebAppMVC\WebApp_DataAccess\obj\Debug\net9.0\ref\WebApp_DataAccess.dll
+C:\Users\User\source\repos\WebAppMVC\WebApp_DataAccess\bin\Debug\net9.0\WebApp_Utility.dll
+C:\Users\User\source\repos\WebAppMVC\WebApp_DataAccess\bin\Debug\net9.0\WebApp_Utility.pdb

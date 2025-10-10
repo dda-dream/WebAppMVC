@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text;
 using WebApp_DataAccess.Data;
+using WebApp_DataAccess.Repository.IRepository;
+using WebApp_Models;
 using WebAppMVC_Models;
 using WebAppMVC_Models.ViewModels;
 using WebAppMVC_Utility;
@@ -13,19 +15,30 @@ namespace WebAppMVC.Controllers
     [Authorize]
     public class CartController : Controller
     {
-        private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        
         private readonly IEmailSender _emailSender;
+
+        private readonly IProductRepository productRepository;
+        private readonly IApplicationUserRepository applicationUserRepository;
+        private readonly IOrderTableRepository orderTableRepository;
+        private readonly IOrderLineRepository orderLineRepository;
+
 
         [BindProperty]
         public ProductUserViewModel ProductUserViewModel { get; set; }
+
+
         
-        public CartController(ApplicationDbContext _db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
+        public CartController(IApplicationUserRepository applicationUserRepository, IProductRepository productRepository, 
+                              IWebHostEnvironment webHostEnvironment, IEmailSender emailSender,
+                              IOrderTableRepository orderTableRepository, IOrderLineRepository orderLineRepository)
         {
-            this._db = _db;
             this._webHostEnvironment = webHostEnvironment;
             this._emailSender = emailSender;
+            this.productRepository = productRepository;
+            this.applicationUserRepository = applicationUserRepository;
+            this.orderTableRepository = orderTableRepository;
+            this.orderLineRepository = orderLineRepository;
         }
 //------------------------------//------------------------------//------------------------------//------------------------------//------------------------------
         public IActionResult Index()
@@ -39,7 +52,7 @@ namespace WebAppMVC.Controllers
             }
 
             List<int> prodInCart = shoppingCartList.Select(p => p.ProductId).ToList();
-            IEnumerable<ProductModel> prodList = _db.Product.Where(p => prodInCart.Contains(p.Id));
+            IEnumerable<ProductModel> prodList = productRepository.GetAll(p => prodInCart.Contains(p.Id));
 
             return View(prodList);
         }
@@ -58,7 +71,7 @@ namespace WebAppMVC.Controllers
             shoppingCartList.Remove(shoppingCartList.FirstOrDefault(a => a.ProductId == id));
 
             List<int> prodInCart = shoppingCartList.Select(p => p.ProductId).ToList();
-            IEnumerable<ProductModel> prodList = _db.Product.Where(p => prodInCart.Contains(p.Id));
+            IEnumerable<ProductModel> prodList = productRepository.GetAll(p => prodInCart.Contains(p.Id));
             
             HttpContext.Session.Set( WC.SessionCart, shoppingCartList );
 
@@ -90,10 +103,10 @@ namespace WebAppMVC.Controllers
             }
 
             List<int> prodInCart = shoppingCartList.Select(p => p.ProductId).ToList();
-            IEnumerable<ProductModel> prodList = _db.Product.Where(p => prodInCart.Contains(p.Id));
+            IEnumerable<ProductModel> prodList = productRepository.GetAll(p => prodInCart.Contains(p.Id));
 
             ProductUserViewModel = new ProductUserViewModel();
-            ProductUserViewModel.ApplicationUser = _db.ApplicationUser.FirstOrDefault(q => q.Id == claim.Value);
+            ProductUserViewModel.ApplicationUser = applicationUserRepository.FirstOrDefault(q => q.Id == claim.Value);
             ProductUserViewModel.ProductList = prodList.ToList();    
 
             return View(ProductUserViewModel);
@@ -133,6 +146,34 @@ namespace WebAppMVC.Controllers
 
             await _emailSender.SendEmailAsync(WC.AdminEmail, subject, messageBody);
 
+
+            var claims = (ClaimsIdentity)User.Identity;
+            var claim = claims.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.Name);
+
+            OrderTable orderTable = new OrderTable()
+            {
+                ApplicationUserId = claim.Value,
+                OrderDate = DateTime.Now,
+                PhoneNumber = productUserViewModel.ApplicationUser.PhoneNumber,
+                FullName = productUserViewModel.ApplicationUser.FullName,
+                Email = productUserViewModel.ApplicationUser.Email,
+            };
+
+            orderTableRepository.Add(orderTable);
+            orderTableRepository.Save();
+
+            foreach (var item in productUserViewModel.ProductList)
+            {
+                OrderLine orderLine = new OrderLine()
+                {
+                    OrderId = orderTable.Id,
+                    ProductId = item.Id
+                };
+                orderLineRepository.Add(orderLine);
+            }
+            orderLineRepository.Save();
+
             return RedirectToAction(nameof(OrderConfirmation));
         }   
 
@@ -142,6 +183,7 @@ namespace WebAppMVC.Controllers
 
             
 
+            TempData[WC.Success] = "Операция выполнена успешно!";
             HttpContext.Session.Clear();
             return View();
         }   

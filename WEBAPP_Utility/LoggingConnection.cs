@@ -1,24 +1,21 @@
 ﻿using Microsoft.AspNetCore.Connections;
+using Microsoft.Extensions.Logging;
 
-namespace WebAppMVC
+namespace WebApp_Utility
 {
-    public class LoggingConnectionHandler : ConnectionHandler
+    public class MyConnectionHandler : ConnectionHandler
     {
-        private readonly ILogger<LoggingConnectionHandler> _logger;
+        private readonly ILogger<MyConnectionHandler> _logger;
 
-        public LoggingConnectionHandler(ILogger<LoggingConnectionHandler> logger)
+        public MyConnectionHandler(ILogger<MyConnectionHandler> logger)
         {
-            //(LoggingConnectionHandler)logger.
-            
             _logger = logger;
-            
         }
 
         public override async Task OnConnectedAsync(ConnectionContext connection)
         {
             _logger.LogInformation("=========> TCP connected: {Id} from {Remote} to {Local}", 
                 connection.ConnectionId, connection.RemoteEndPoint, connection.LocalEndPoint);
-
 
             try
             {

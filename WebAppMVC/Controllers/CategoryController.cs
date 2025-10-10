@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Models;
@@ -38,8 +39,11 @@ namespace WebAppMVC.Controllers
             {
                 categoryRepository.Add(obj);
                 categoryRepository.Save();
+                TempData[WC.Success] = "Операция выполнена успешно!";
                 return RedirectToAction("Index");
             }
+
+            TempData[WC.Error] = "Ошибка создания категории!";
             return View(obj);   
         }
 
@@ -71,6 +75,7 @@ namespace WebAppMVC.Controllers
             {
                 categoryRepository.Update(obj);
                 categoryRepository.Save();
+                TempData[WC.Success] = "Операция выполнена успешно!";
                 return RedirectToAction("Index");
             }
             return View(obj);   
@@ -107,6 +112,7 @@ namespace WebAppMVC.Controllers
             }
             categoryRepository.Remove(obj);
             categoryRepository.Save();
+            TempData[WC.Success] = "Операция выполнена успешно!";
             return RedirectToAction("Index");
         }
 

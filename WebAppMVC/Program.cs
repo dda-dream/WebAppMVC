@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.IRepository;
+using WebApp_Utility;
 using WebAppMVC_Utility;
 
 namespace WebAppMVC
@@ -15,6 +17,8 @@ namespace WebAppMVC
     {
         public static void Main(string[] args)
         {
+
+
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Logging.ClearProviders();
@@ -24,12 +28,12 @@ namespace WebAppMVC
             {
                 options.ListenAnyIP(5055, listenOptions =>
                 {
-                    listenOptions.UseConnectionHandler<LoggingConnectionHandler>();
+                    listenOptions.UseConnectionHandler<MyConnectionHandler>();
                 });
                 
                 options.ListenAnyIP(5050, listenOptions =>
                 {
-                    listenOptions.UseConnectionHandler<LoggingConnectionHandler>();
+                    listenOptions.UseConnectionHandler<MyConnectionHandler>();
                 });
             });
 
@@ -38,7 +42,8 @@ namespace WebAppMVC
             );
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                            .AddDefaultTokenProviders().AddDefaultUI()
+                            .AddDefaultTokenProviders()
+                            .AddDefaultUI()
                             .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddControllersWithViews();
@@ -53,14 +58,20 @@ namespace WebAppMVC
             builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IOrderTableRepository, OrderTableRepository>();
+            builder.Services.AddScoped<IOrderLineRepository, OrderLineRepository>();
+            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            
+                       
             builder.Services.AddScoped<IMyDailyJournalRepository, MyDailyJournalRepository>();
+
 
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseStaticFiles();
@@ -74,6 +85,7 @@ namespace WebAppMVC
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+    
 
             app.Use(MyMiddleware);
 

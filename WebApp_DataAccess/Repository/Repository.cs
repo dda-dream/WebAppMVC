@@ -22,11 +22,6 @@ namespace WebApp_DataAccess.Repository
             dbSet = db.Set<T>();
         }
 
-        public void Add(T entity)
-        {
-            dbSet.Add(entity);
-        }
-
         public T Find(int id)
         {
             return dbSet.Find(id);
@@ -88,6 +83,12 @@ namespace WebApp_DataAccess.Repository
             return retVal;
         }
 
+        public void Add(T entity)
+        {
+            dbSet.Add(entity);
+        }
+
+
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
@@ -96,6 +97,11 @@ namespace WebApp_DataAccess.Repository
         public void Save()
         {
             db.SaveChanges(); 
+        }
+
+        public void RemoveRange(IEnumerable<T> entitys)
+        {
+            dbSet.RemoveRange(entitys);
         }
     }
 }

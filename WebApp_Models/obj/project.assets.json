@@ -264,6 +264,19 @@
         "build": {
           "buildTransitive/net8.0/_._": {}
         }
+      },
+      "WebApp_Utility/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.UI": "9.0.9"
+        },
+        "compile": {
+          "bin/placeholder/WebApp_Utility.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/WebApp_Utility.dll": {}
+        }
       }
     }
   },
@@ -779,11 +792,17 @@
         "microsoft.extensions.primitives.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "WebApp_Utility/1.0.0": {
+      "type": "project",
+      "path": "../WEBAPP_Utility/WebApp_Utility.csproj",
+      "msbuildProject": "../WEBAPP_Utility/WebApp_Utility.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Microsoft.AspNetCore.Identity.UI >= 9.0.9"
+      "Microsoft.AspNetCore.Identity.UI >= 9.0.9",
+      "WebApp_Utility >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -819,7 +838,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\User\\source\\repos\\WebAppMVC\\WEBAPP_Utility\\WebApp_Utility.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\WebAppMVC\\WEBAPP_Utility\\WebApp_Utility.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -30,22 +30,27 @@
     <!--SUMMERNOTE WORKED 100%-->
 
 
-    <!--Загружается долго пока отключил https://datatables.net/  -->
+    <!--Загружается долго  https://datatables.net/  -->
     <link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
     <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-    <!--Загружается долго пока отключил https://datatables.net/  -->
+    <!--Загружается долго  https://datatables.net/  -->
 
 
     <!--TOASTR-->
+    <!--
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    -->
     <!--TOASTR-->
 
-
+    <!--BOOTSTRAP-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <!--BOOTSTRAP-->
 
-
+    <!--BOOTSTRAP ICONS-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <!--BOOTSTRAP ICONS-->
 
 </head>
 <body>
@@ -73,13 +78,22 @@
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Редактор магазина(Admin)
+                                    Редактор магазина
                                 </a>
                                 <ul class="dropdown-menu">
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Product"  asp-action="Index">Product</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item text-dark" asp-area="Identity" asp-page="/Account/Register"> Create Admin User</a>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Управление ордерами
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <a class="dropdown-item text-dark" asp-area="" asp-controller="Order" asp-action="Index">Ордера</a>
                                 </ul>
                             </li>
                         }
@@ -113,6 +127,7 @@
 
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_Notifications" />
             @RenderBody()
         </main>
     </div>

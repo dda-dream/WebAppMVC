@@ -5,6 +5,7 @@ using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Models;
+using WebAppMVC_Utility;
 
 namespace WebAppMVC.Controllers
 {
@@ -15,15 +16,19 @@ namespace WebAppMVC.Controllers
         private readonly IMyDailyJournalRepository repository_forTest_LifeTime;
 
 
-        public MyDailyJournalController( IMyDailyJournalRepository repository, IMyDailyJournalRepository repository_forTest_LifeTime)
+        public MyDailyJournalController( IMyDailyJournalRepository repository)
         {
             this.repository = repository;
-            this.repository_forTest_LifeTime = repository_forTest_LifeTime;
         }   
+
+
+//---------------------------------------------------------------------------------------------------
         public IActionResult Index()
         {
             forTestTransientOrScooped++;
             repository.DoIncrement_forTestTransientOrScooped();
+
+            
 
             IEnumerable<MyDailyJournalModel> objList = repository.GetAll();
             return View(objList);
@@ -50,27 +55,8 @@ namespace WebAppMVC.Controllers
             {
                 repository.Add(obj);
                 repository.Save();
-                /*
-
-                var transactionId = _db.Database.BeginTransaction();
-
-                obj.CreatedDateTime = DateTime.Now;
-                obj.ModifiedDateTime = DateTime.Now;
-                var newRecord = _db.MyDailyJournal.Add(obj);                
-                _db.SaveChanges();
-
-                LogTableModel logTable = new LogTableModel();
-                logTable.CreatedDateTime = DateTime.Now;
-                logTable.TypeStr = "insert";
-                logTable.LogTableName = "MyDailyJournalModel";
-                logTable.LogRecordId = newRecord.Entity.Id;
-                logTable.Message = $"MyDailyJournalController.cs Record with ID:{newRecord.Entity.Id}  Text:{newRecord.Entity.Text}";
-                _db.Add(logTable);
-                _db.SaveChanges();
-
-                transactionId.Commit();
-                */
                 
+                TempData[WC.Success] = "Запись создана!";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -105,22 +91,7 @@ namespace WebAppMVC.Controllers
                 repository.Update(obj);
                 repository.Save();
 
-                /*
-                var objPrev = _db.MyDailyJournal.AsNoTracking().FirstOrDefault(_ => _.Id == obj.Id);
-                obj.CreatedDateTime = objPrev.CreatedDateTime;
-                obj.ModifiedDateTime = DateTime.Now;
-                _db.MyDailyJournal.Update(obj);
-                _db.SaveChanges();
-
-                LogTableModel logTable = new LogTableModel();
-                logTable.CreatedDateTime = DateTime.Now;
-                logTable.TypeStr = "modify";
-                logTable.LogTableName = "MyDailyJournalModel";
-                logTable.LogRecordId = obj.Id;
-                logTable.Message = $"Record with ID:{obj.Id}  Text:{obj.Text}";
-                _db.Add(logTable);
-                _db.SaveChanges();
-                */
+                TempData[WC.Success] = "Запись изменена!";
                 return RedirectToAction("Index");
             }
             return View(obj);   
@@ -157,21 +128,8 @@ namespace WebAppMVC.Controllers
             }
             repository.Remove(obj);
             repository.Save();
-            /*
-            _db.MyDailyJournal.Remove(obj);
-            _db.SaveChanges();
 
-            LogTableModel logTable = new LogTableModel();
-            logTable.CreatedDateTime = DateTime.Now;
-            logTable.TypeStr = "delete";
-            logTable.LogTableName = "MyDailyJournalModel";
-            logTable.Message = $"Record with ID:{obj.Id}  Text:{obj.Text}";
-            logTable.LogRecordId = obj.Id;
-            _db.Add(logTable);
-            _db.SaveChanges();
-            */
-
-
+            TempData[WC.Success] = "Запись удалена!";
             return RedirectToAction("Index");
         }
 
@@ -202,10 +160,6 @@ namespace WebAppMVC.Controllers
 
             d._MyDailyJournalModel = obj;
             d._LogTableModelEnumerator = LogTableList;
-
-            TempData["test"] = "test";
-            ViewBag.test = "test";
-            ViewData["test"] = "test";
 
             return View(d);
         }

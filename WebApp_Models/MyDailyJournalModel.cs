@@ -1,10 +1,16 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using WebApp_Utility;
+
 
 namespace WebAppMVC_Models
 {
     public class MyDailyJournalModel
     {
+        public MyDailyJournalModel() {
+            ExecutionStatus = MyDailyJournal_ExecutionStatus.Created;
+        }
+
         [Key]
         public int Id { get; set; }
  
@@ -27,6 +33,10 @@ namespace WebAppMVC_Models
         [Required]
         public DateTime ModifiedDateTime { get; set; } 
 
-        public int Test { get; set; }
+        [DisplayName("Статус выполнения")]
+        public MyDailyJournal_ExecutionStatus ExecutionStatus { get; set; }
+
+         
+
     }
 }

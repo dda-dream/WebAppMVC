@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using WebApp_Models;
 using WebAppMVC_Models;
 
 namespace WebApp_DataAccess.Data
@@ -15,6 +17,12 @@ namespace WebApp_DataAccess.Data
         public DbSet<CategoryModel> Category { get; set; }
         public DbSet<ProductModel> Product { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+
+
+        public DbSet<OrderTable> OrderTable { get; set; }
+        public DbSet<OrderLine> OrderLine { get; set; }
+
+
 
 
 

@@ -669,10 +669,22 @@
       },
       "WebApp_Models/1.0.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.Identity.UI": "9.0.9"
+          "Microsoft.AspNetCore.Identity.UI": "9.0.9",
+          "WebApp_Utility": "1.0.0"
         },
         "runtime": {
           "WebApp_Models.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "WebApp_Utility/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.UI": "9.0.9"
+        },
+        "runtime": {
+          "WebApp_Utility.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -1128,6 +1140,11 @@
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
     },
     "WebApp_Models/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WebApp_Utility/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

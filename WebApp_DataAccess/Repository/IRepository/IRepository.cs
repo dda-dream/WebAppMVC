@@ -30,6 +30,8 @@ namespace WebApp_DataAccess.Repository.IRepository
 
         void Remove(T entity);
 
+        void RemoveRange(IEnumerable<T> entitys);
+
         void Save();
 
         IEnumerable<LogTableModel> GetLogForId(int? id);

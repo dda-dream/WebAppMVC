@@ -23,3 +23,6 @@ C:\Users\User\source\repos\WebAppMVC\WebApp_Models\obj\Debug\net9.0\WebApp_Model
 C:\Users\User\source\repos\WebAppMVC\WebApp_Models\obj\Debug\net9.0\refint\WebApp_Models.dll
 C:\Users\User\source\repos\WebAppMVC\WebApp_Models\obj\Debug\net9.0\WebApp_Models.pdb
 C:\Users\User\source\repos\WebAppMVC\WebApp_Models\obj\Debug\net9.0\ref\WebApp_Models.dll
+C:\Users\User\source\repos\WebAppMVC\WebApp_Models\bin\Debug\net9.0\WebApp_Utility.dll
+C:\Users\User\source\repos\WebAppMVC\WebApp_Models\bin\Debug\net9.0\WebApp_Utility.pdb
+C:\Users\User\source\repos\WebAppMVC\WebApp_Models\obj\Debug\net9.0\WebApp_M.244BD08C.Up2Date

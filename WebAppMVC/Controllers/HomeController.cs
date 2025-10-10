@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 using WebApp_DataAccess.Data;
+using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Models;
 using WebAppMVC_Models.ViewModels;
 using WebAppMVC_Utility;
@@ -12,11 +13,16 @@ namespace WebAppMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _db;
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
+
+        private readonly IProductRepository productRepository;
+        private readonly ICategoryRepository categoryRepository;
+
+
+        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, ICategoryRepository categoryRepository)
         {
             _logger = logger;
-            _db = db;
+            this.productRepository = productRepository;
+            this.categoryRepository = categoryRepository;
         }
          
 //---------------------------------------------------------------------------------------------------
@@ -24,9 +30,28 @@ namespace WebAppMVC.Controllers
         public IActionResult Index()
         {
             var homeViewModel = new HomeViewModel();
-            homeViewModel.Products = _db.Product;//.Include(u => u.Category); //Eager loading - жадная загрузка.
-            homeViewModel.Categories = _db.Category;
+            homeViewModel.Products = productRepository.GetAll(includeProperties:"Category");//.Include(u => u.Category); //Eager loading - жадная загрузка.
+            homeViewModel.Categories = categoryRepository.GetAll();
 
+            string headers="";
+            foreach (var i in HttpContext.Request.Headers)
+            {
+                headers = headers + $"\n{i.Key} = {i.Value}";
+            }
+
+            _logger.LogInformation($"\n---------------------------{HttpContext.Connection.RemoteIpAddress} {HttpContext.Connection.RemotePort}" +
+                $"\nCookies count:{HttpContext.Request.Cookies.Count}" +
+                $"\nHeaders count:{HttpContext.Request.Headers.Count}" +
+                $"\n-----------------------------------------------------------" +
+                $"{headers}" +
+                $"\n-----------------------------------------------------------" +
+                $"\n");
+
+
+            var builder = LoggerFactory.Create(b => b.AddConsole());
+
+            ILogger<string> logger1 = builder.CreateLogger<string>();
+            logger1.LogInformation("testLogMessage");
 
             return View(homeViewModel);
         } 
@@ -37,16 +62,25 @@ namespace WebAppMVC.Controllers
 
 
         public IActionResult Details(int id)
-        {   
-            DetailsViewModel detailsViewModel = new DetailsViewModel(); 
-            detailsViewModel.Product = _db.Product.Where(_ => _.Id == id).First();
-            detailsViewModel.Product.Category = _db.Category.Where(_ => _.Id == detailsViewModel.Product.CategoryId).First();
+        {
+            /*
+            DetailsViewModel detailsViewModel = new DetailsViewModel();
+            detailsViewModel.Product = productRepository.Find(id);
+            detailsViewModel.Product.Category = categoryRepository.Find(detailsViewModel.Product.CategoryId);
             detailsViewModel.ExistsInCart = false;
+            */
+            DetailsViewModel detailsViewModel = new DetailsViewModel()
+            {
+                Product = productRepository.GetAll(includeProperties:"Category", filter: i => i.Id == id).FirstOrDefault(),
+                //Product.Category = categoryRepository.Find(detailsViewModel.Product.CategoryId),
+                ExistsInCart = false
+            };
+
+
 
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null 
-             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0
-                )
+            var shoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
+            if (shoppingCart != null && shoppingCart.Count() > 0 )
             {
                 shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
                 if (shoppingCartList.Find(n => n.ProductId == id) != null)
@@ -62,10 +96,8 @@ namespace WebAppMVC.Controllers
         {   
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
 
-
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null 
-             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0
-                )
+            var shoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
+            if (shoppingCart != null && shoppingCart.Count() > 0 )
             {
                 shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
             }
@@ -81,9 +113,8 @@ namespace WebAppMVC.Controllers
         {   
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
 
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart) != null 
-             && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0
-                )
+            var shoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
+            if (shoppingCart != null && shoppingCart.Count() > 0 )
             {
                 shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
             }

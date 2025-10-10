@@ -31,7 +31,7 @@ namespace WebApp_DataAccess.Repository
             var newRecord = db.Add(model);                
             db.MyDailyJournal.Add(model);
             
-            db.SaveChanges();
+            db.SaveChanges(); // Тут нужно что бы получить ID записи. надо подумать как решить этот вопрос.
 
             LogTableModel logTable = new LogTableModel();
             logTable.CreatedDateTime = DateTime.Now;
@@ -39,11 +39,7 @@ namespace WebApp_DataAccess.Repository
             logTable.LogTableName = model.GetType().Name;
             logTable.LogRecordId = newRecord.Entity.Id;
             logTable.Message = model.Text;
-            db.LogTable.Add(logTable);
-             
-            //db.SaveChanges();
-
-            //transactionId.Commit();
+            db.LogTable.Add(logTable);             
         }
         public void Update(MyDailyJournalModel model)
         {
@@ -51,7 +47,6 @@ namespace WebApp_DataAccess.Repository
             model.CreatedDateTime = objPrev.CreatedDateTime;
             model.ModifiedDateTime = DateTime.Now;
             db.MyDailyJournal.Update(model);
-            //db.SaveChanges();
 
             LogTableModel logTable = new LogTableModel();
             logTable.CreatedDateTime = DateTime.Now;
@@ -61,14 +56,12 @@ namespace WebApp_DataAccess.Repository
             logTable.Message = model.Text;
             db.LogTable.Add(logTable);
 
-            //db.SaveChanges();
             db.MyDailyJournal.Update(model);
         }
 
         public void Remove(MyDailyJournalModel model)
         { 
             db.MyDailyJournal.Remove(model);
-            db.SaveChanges();
 
             LogTableModel logTable = new LogTableModel();
             logTable.CreatedDateTime = DateTime.Now;
@@ -77,7 +70,6 @@ namespace WebApp_DataAccess.Repository
             logTable.Message = model.Text;
             logTable.LogRecordId = model.Id;
             db.LogTable.Add(logTable);
-            db.SaveChanges();
         }
     }
 }

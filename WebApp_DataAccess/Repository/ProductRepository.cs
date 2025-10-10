@@ -24,20 +24,6 @@ namespace WebApp_DataAccess.Repository
         public void Update(ProductModel product)
         {
             db.Product.Update(product);
-            /*
-            var obj = db.Product.FirstOrDefault(c => c.Id == product.Id);
-
-            if (obj != null)
-            {
-                obj.ShortDesc = product.ShortDesc;
-                obj.Category = product.Category;
-                obj.CategoryId = product.CategoryId;
-                obj.Price   = product.Price;
-                obj.Description = product.Description;
-                obj.Image = product.Image;
-                obj.Name = product.Name;
-            }
-            */
         }
     }
 }

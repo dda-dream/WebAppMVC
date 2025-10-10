@@ -1,4 +1,5 @@
-﻿@model IEnumerable<WebAppMVC_Models.MyDailyJournalModel>
+﻿@using WebApp_Utility
+@model IEnumerable<WebAppMVC_Models.MyDailyJournalModel>
 
 <div class="container p-3">
 	<div class="row pt-4">
@@ -22,7 +23,7 @@
 		<table class="table table-bordered table-hover table-sm align-middle shadow-sm mt-3">
 			<thead class="table-success text-center">
 				<tr>
-					<th>Выбор</th>
+					<th>Статус</th>
 					<th>Дата и время</th>
 					<th>Сообщение</th>
 					<th>Операции</th>
@@ -32,7 +33,9 @@
 				@foreach(var obj in Model)
 				{
 					<tr>
-						<td width="3%" class="text-center fs-6"><input type="checkbox" name="selectedIds" value="@obj.Id" class="select-item" /></td>
+						<td width="3%" class="text-center fs-6">
+							@obj.ExecutionStatus.GetDescription()
+						</td>
 						<td width="10%" class="text-nowrap">@obj.LogDate.ToString("dd.MM.yyyy HH:mm:ss")</td>
 						<td>@Html.Raw(obj.Text)</td>
 						<td width="150px">
