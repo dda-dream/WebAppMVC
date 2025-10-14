@@ -794,11 +794,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\source\\repos\\WebAppMVC\\WEBAPP_Utility\\WebApp_Utility.csproj",
+      "projectUniqueName": "E:\\Users\\User\\source\\repos\\WebAppMVC\\WEBAPP_Utility\\WebApp_Utility.csproj",
       "projectName": "WebApp_Utility",
-      "projectPath": "C:\\Users\\User\\source\\repos\\WebAppMVC\\WEBAPP_Utility\\WebApp_Utility.csproj",
+      "projectPath": "E:\\Users\\User\\source\\repos\\WebAppMVC\\WEBAPP_Utility\\WebApp_Utility.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\source\\repos\\WebAppMVC\\WEBAPP_Utility\\obj\\",
+      "outputPath": "E:\\Users\\User\\source\\repos\\WebAppMVC\\WEBAPP_Utility\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

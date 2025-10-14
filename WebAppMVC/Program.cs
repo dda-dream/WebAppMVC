@@ -61,9 +61,14 @@ namespace WebAppMVC
             builder.Services.AddScoped<IOrderTableRepository, OrderTableRepository>();
             builder.Services.AddScoped<IOrderLineRepository, OrderLineRepository>();
             builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            builder.Services.AddScoped<ISalesTableRepository, SalesTableRepository>();
+            builder.Services.AddScoped<ISalesLineRepository, SalesLineRepository>();
             
                        
             builder.Services.AddScoped<IMyDailyJournalRepository, MyDailyJournalRepository>();
+
+
+
 
 
             var app = builder.Build();

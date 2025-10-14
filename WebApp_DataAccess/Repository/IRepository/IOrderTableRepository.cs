@@ -11,6 +11,6 @@ namespace WebApp_DataAccess.Repository.IRepository
 {
     public interface IOrderTableRepository : IRepository<OrderTable>
     {
-        void Update(OrderTable product);
+        void Update(OrderTable orderTable);
     }
 }

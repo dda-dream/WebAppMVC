@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 using WebApp_DataAccess.Repository.IRepository;
 using WebApp_Models;
 using WebApp_Models.ViewModels;
@@ -18,6 +20,7 @@ namespace WebAppMVC.Controllers
             this.orderLineRepository = orderLineRepository;
         }
 
+        [Authorize(Roles = WC.AdminRole)]
         public IActionResult Index()
         {
             IEnumerable<OrderTable> ot = orderTableRepository.GetAll();
@@ -52,6 +55,7 @@ namespace WebAppMVC.Controllers
             }
             HttpContext.Session.Clear();
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
+            HttpContext.Session.Set<int>(WC.SessionOrderId, order.orderTable.Id);
 
             return RedirectToAction("Index", "Cart");
         }

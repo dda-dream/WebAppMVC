@@ -23,6 +23,8 @@ namespace WebApp_DataAccess.Data
         public DbSet<OrderLine> OrderLine { get; set; }
 
 
+        public DbSet<SalesTable> SalesTable { get; set; }
+        public DbSet<SalesLine> SalesLine { get; set; }
 
 
 

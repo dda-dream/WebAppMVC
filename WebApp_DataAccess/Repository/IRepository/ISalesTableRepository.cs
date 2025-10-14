@@ -9,8 +9,8 @@ using WebAppMVC_Models;
 
 namespace WebApp_DataAccess.Repository.IRepository
 {
-    public interface IOrderLineRepository : IRepository<OrderLine>
+    public interface ISalesTableRepository : IRepository<SalesTable>
     {
-        void Update(OrderLine orderLine);
+        void Update(SalesTable salesTable);
     }
 }

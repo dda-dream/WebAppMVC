@@ -73,7 +73,6 @@ namespace WebApp_DataAccess.Repository
 
         public IEnumerable<LogTableModel> GetLogForId(int? id)
         {
-            //string tableName = db.Model.FindEntityType(typeof(T)).GetTableName();
             string tableName = typeof(T).Name;
 
             var retVal = db.LogTable.Where(l => l.LogRecordId == id)

@@ -1,4 +1,5 @@
 ﻿@using WebAppMVC_Models.ViewModels
+@using WebAppMVC_Utility
 @model ProductUserViewModel
 
 <form method="post">
@@ -12,7 +13,7 @@
                         Order Summary
                     </div>
                     <div class="col-6 text-right">
-                        <a class="btn btn-outline-info btn-sm">Back to Cart</a>
+                        <a action="Index" class="btn btn-outline-info btn-sm">Back to Cart</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -38,7 +39,7 @@
                                         <label>Phone</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="@Model.ApplicationUser.PhoneNumber" type="text" class="form-control" />
+                                        <input asp-for="@Model.ApplicationUser.PhoneNumber" required type="text" class="form-control" />
                                         <span asp-validation-for="ApplicationUser.PhoneNumber" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -47,32 +48,85 @@
                                         <label>Email</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="@Model.ApplicationUser.Email" type="text" class="form-control" />
+                                        <input asp-for="@Model.ApplicationUser.Email" required type="text" class="form-control" />
                                         <span asp-validation-for="ApplicationUser.Email" class="text-danger"></span>
                                     </div>
                                 </div>
+
+                                @if( User.IsInRole(WC.AdminRole))
+                                {
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Street Address</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="@Model.ApplicationUser.StreetAddress" type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.StreetAddress" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>City</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="@Model.ApplicationUser.City" type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.City" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>State</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="@Model.ApplicationUser.State" type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.State" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>PostalCode</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="@Model.ApplicationUser.PostalCode" type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.PostalCode" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                }
+
                             </div>
                             <div class="col-12 col-lg-5 row">
                                 <div class="col-12">
                                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="text-info">ИТОГО:</span>
                                     </h4>
-
+                                    @{double totalOrderSum = 0;}
                                     @for(int i = 0; i < Model.ProductList.Count(); i++)
                                     {
                                         <input type="hidden" asp-for="@Model.ProductList[i].Name" />
                                         <input type="hidden" asp-for="@Model.ProductList[i].Id" />
+                                        <input type="hidden" asp-for="@Model.ProductList[i].Price" />
+                                        <input type="hidden" asp-for="@Model.ProductList[i].TempQty" />
 
                                         <ul class="list-group mb-3">
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
-                                                    <h6 class="my-0">Product Name: @Model.ProductList.ElementAt(i).Name</h6>
+                                                    <h6 class="my-0">Наименование: @Model.ProductList.ElementAt(i).Name</h6>
                                                     <small class="text-muted">Цена: @Model.ProductList.ElementAt(i).Price.ToString("c")</small>
+                                                    <small class="text-muted">Ко-во: @Model.ProductList.ElementAt(i).TempQty</small>
+                                                </div>
+                                                <div>
+                                                    @{
+                                                        var totalByLine = Model.ProductList.ElementAt(i).Price * Model.ProductList.ElementAt(i).TempQty;
+                                                        totalOrderSum += totalByLine;
+                                                    }
+                                                    <div class="text-muted">ИТОГО: @totalByLine.ToString("c")</div>
                                                 </div>
                                             </li>
                                         </ul>
                                     }
-
+                                </div>
+                                <div class="text-info">
+                                    ИТОГО по заказу: @totalOrderSum.ToString("c");
                                 </div>
                             </div>
                         </div>
@@ -81,7 +135,14 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-12 col-md-5 offset-md-7">
-                            <button type="submit" class="btn btn-primary form-control">Отправить запрос</button>
+                            @if( User.IsInRole(WC.AdminRole))
+                            {
+                                <button type="submit" class="btn btn-success form-control">Зарегистрировать Заказ (для оплаты и доставки)</button>
+                            }
+                            else
+                            {                                
+                                <button type="submit"  class="btn btn-primary form-control">Отправить запрос на Заказ</button>
+                            }
                         </div>
                     </div>
                 </div>
