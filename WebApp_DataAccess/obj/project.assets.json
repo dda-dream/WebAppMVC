@@ -3204,11 +3204,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_DataAccess\\WebApp_DataAccess.csproj",
+      "projectUniqueName": "C:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_DataAccess\\WebApp_DataAccess.csproj",
       "projectName": "WebApp_DataAccess",
-      "projectPath": "E:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_DataAccess\\WebApp_DataAccess.csproj",
+      "projectPath": "C:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_DataAccess\\WebApp_DataAccess.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "E:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_DataAccess\\obj\\",
+      "outputPath": "C:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_DataAccess\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -3230,8 +3230,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "E:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_Models\\WebApp_Models.csproj": {
-              "projectPath": "E:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_Models\\WebApp_Models.csproj"
+            "C:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_Models\\WebApp_Models.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\WebAppMVC\\WebApp_Models\\WebApp_Models.csproj"
             }
           }
         }
