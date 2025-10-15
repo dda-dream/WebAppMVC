@@ -20,7 +20,10 @@ else
                                 <i class="fa fa-shopping-cart"></i> &nbsp;
                                 Корзина покупок
                             </div>
-                            <div class="col-6 text-right">
+                            <div class="col-3 text-right">
+                                <a asp-action="Clear" asp-controller="Cart" class="btn btn-outline-warning btn-sm">Очистить корзину</a>
+                            </div>
+                            <div class="col-3 text-right">
                                 <a asp-action="Index" asp-controller="Home" class="btn btn-outline-info btn-sm">Продолжить покупки</a>
                             </div>
                         </div>

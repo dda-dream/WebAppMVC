@@ -75,8 +75,8 @@ namespace WebApp_DataAccess.Repository
         {
             string tableName = typeof(T).Name;
 
-            var retVal = db.LogTable.Where(l => l.LogRecordId == id)
-                                    .Where(q => q.LogTableName == tableName)
+            var retVal = db.LogTable.Where(l => l.LogRecordId == id && l.LogTableName == tableName)
+                                    //.Where(q => q.LogTableName == tableName)
                                     .OrderBy(l => l.CreatedDateTime)
                                     .ToList();
             return retVal;

@@ -24,20 +24,17 @@ namespace WebApp_DataAccess.Repository
 
         public void Add(MyDailyJournalModel model)
         {
-            //var transactionId = db.Database.BeginTransaction();
-
             model.CreatedDateTime = DateTime.Now;
             model.ModifiedDateTime = DateTime.Now;
-            var newRecord = db.Add(model);                
-            db.MyDailyJournal.Add(model);
+            db.MyDailyJournal.Add(model);                
             
-            db.SaveChanges(); // Тут нужно что бы получить ID записи. надо подумать как решить этот вопрос.
+            db.SaveChanges();
 
             LogTableModel logTable = new LogTableModel();
             logTable.CreatedDateTime = DateTime.Now;
             logTable.TypeStr = "insert";
             logTable.LogTableName = model.GetType().Name;
-            logTable.LogRecordId = newRecord.Entity.Id;
+            logTable.LogRecordId = model.Id;
             logTable.Message = model.Text;
             db.LogTable.Add(logTable);             
         }

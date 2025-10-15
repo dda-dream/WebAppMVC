@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,14 +25,17 @@ namespace WebApp_Models
 
         [Required]
         public DateTime OrderDate { get; set; }
-        [Required]
+        
         public DateTime ShippingDate { get; set; }
+
         [Required]
         public double FinalOrderTotal { get; set; }
         public string OrderStatus { get; set; }
         public DateTime PaymentDate { get; set; }
         public DateTime PaymentDueDate { get; set; }
-        public string TransactionId { get; set; } // Номер транзакции по оплате
+
+        
+        public string? TransactionId { get; set; } // Номер транзакции по оплате
 
 
         [Required]

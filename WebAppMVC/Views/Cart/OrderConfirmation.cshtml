@@ -1,8 +1,17 @@
-﻿<div class="text-center">
+﻿@using WebApp_Models
+@model SalesTable
 
-	<h1 class="text-info">Подтверждение списка покупок</h1>
-	<p>Мы получили ваш запрос и скоро свяжемся с вами!</p>
+<div class="text-center">
 
-
+	@if (Model != null)
+	{
+		<h1 class="text-info">Заказ создан.</h1>
+		<p>Номер заказа: @Model.Id</p>
+	}
+	else
+	{
+		<h1 class="text-info">Подтверждение списка покупок</h1>
+		<p>Мы получили ваш запрос и скоро свяжемся с вами!</p>
+	}
 
 </div>

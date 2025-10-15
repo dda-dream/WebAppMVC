@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Braintree;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.IRepository;
 using WebApp_Models;
+using WebApp_Utility.BrainTree;
 using WebAppMVC_Models;
 using WebAppMVC_Models.ViewModels;
 using WebAppMVC_Utility;
@@ -26,16 +29,18 @@ namespace WebAppMVC.Controllers
 
         private readonly ISalesTableRepository salesTableRepository;
         private readonly ISalesLineRepository salesLineRepository;
-
+        private readonly IBrainTreeGate brainTreeGate;
 
         [BindProperty]
         public ProductUserViewModel ProductUserViewModel { get; set; }
 
-        
-        public CartController(IApplicationUserRepository applicationUserRepository, IProductRepository productRepository, 
+
+        public CartController(IApplicationUserRepository applicationUserRepository, IProductRepository productRepository,
                               IWebHostEnvironment webHostEnvironment, IEmailSender emailSender,
                               IOrderTableRepository orderTableRepository, IOrderLineRepository orderLineRepository,
-                              ISalesTableRepository salesTableRepository, ISalesLineRepository salesLineRepository)
+                              ISalesTableRepository salesTableRepository, ISalesLineRepository salesLineRepository,
+                              IBrainTreeGate brainTreeGate
+                              )
         {
             this._webHostEnvironment = webHostEnvironment;
             this._emailSender = emailSender;
@@ -45,6 +50,7 @@ namespace WebAppMVC.Controllers
             this.orderLineRepository = orderLineRepository;
             this.salesTableRepository = salesTableRepository;
             this.salesLineRepository = salesLineRepository;
+            this.brainTreeGate = brainTreeGate;
         }
 //------------------------------//------------------------------//------------------------------//------------------------------//------------------------------
         public IActionResult Index() // GET
@@ -106,18 +112,8 @@ namespace WebAppMVC.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        //------------------------------//------------------------------//------------------------------//------------------------------//------------------------------
-        /*
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName("Index")]
-        public IActionResult IndexPost()
-        {
-            return RedirectToAction(nameof(Summary));
-        }
-        */
-        //------------------------------//------------------------------//------------------------------//------------------------------//------------------------------
-        public IActionResult Summary()
+
+        public IActionResult Summary() //GET
         {
             var claims = (ClaimsIdentity)User.Identity;
             var claim = claims.FindFirst(ClaimTypes.NameIdentifier);
@@ -159,8 +155,11 @@ namespace WebAppMVC.Controllers
                     ProductUserViewModel.ApplicationUser.FullName = "";
                     ProductUserViewModel.ApplicationUser.PhoneNumber = "";
                     ProductUserViewModel.ApplicationUser.Email = "";
-
                 }
+
+                var gateway = brainTreeGate.GetGateway();
+                var clientToken = gateway.ClientToken.Generate();
+                ViewBag.ClientToken = clientToken;
             }
             return View(ProductUserViewModel);
         }
@@ -168,7 +167,7 @@ namespace WebAppMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public async Task<IActionResult> SummaryPost(ProductUserViewModel productUserViewModel)
+        public async Task<IActionResult> SummaryPost(IFormCollection collection, ProductUserViewModel productUserViewModel)
         {
             var claims = (ClaimsIdentity)User.Identity;
             var claims_1 = User.Identity;
@@ -177,44 +176,70 @@ namespace WebAppMVC.Controllers
             
             if (User.IsInRole(WC.AdminRole))
             {
-                List<ShoppingCart> shoppingCartList = new List<ShoppingCart>(); 
-                IEnumerable<ShoppingCart> enumeratorShoppingCart = HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart);
-                
-                double finalOrderTotal = enumeratorShoppingCart.Sum(i => i.Qty * 
-                                        productUserViewModel.ProductList.Where(q=>q.Id == i.ProductId).FirstOrDefault().Price);
+                double finalOrderTotal = productUserViewModel.ProductList.Sum(i => i.Price * i.TempQty);
 
-                SalesTable salesTable = new SalesTable();
-                salesTable.CreatedBy = applicationUserRepository.FirstOrDefault(filter:q=>q.Id == user_nameIdentifier);
-                salesTable.CreatedByUserId = claim.Value;
-                salesTable.FinalOrderTotal = finalOrderTotal;
-                salesTable.PhoneNumber = productUserViewModel.ApplicationUser.PhoneNumber;
-                salesTable.StreetAddress = productUserViewModel.ApplicationUser.StreetAddress;
-                salesTable.City = productUserViewModel.ApplicationUser.City;
-                salesTable.State = productUserViewModel.ApplicationUser.State;
-                salesTable.PostalCode = productUserViewModel.ApplicationUser.PostalCode;
-                salesTable.FullName = productUserViewModel.ApplicationUser.FullName;
-                salesTable.Email = productUserViewModel.ApplicationUser.Email;
-                salesTable.OrderDate = DateTime.Now;
-                salesTable.OrderStatus = WC.StatusPending;
-
-                salesTable.TransactionId = "-";
+                SalesTable salesTable = new SalesTable()
+                {
+                    CreatedBy = applicationUserRepository.FirstOrDefault(filter: q => q.Id == user_nameIdentifier),
+                    CreatedByUserId = claim.Value,
+                    FinalOrderTotal = finalOrderTotal,
+                    PhoneNumber = productUserViewModel.ApplicationUser.PhoneNumber,
+                    StreetAddress = productUserViewModel.ApplicationUser.StreetAddress,
+                    City = productUserViewModel.ApplicationUser.City,
+                    State = productUserViewModel.ApplicationUser.State,
+                    PostalCode = productUserViewModel.ApplicationUser.PostalCode,
+                    FullName = productUserViewModel.ApplicationUser.FullName,
+                    Email = productUserViewModel.ApplicationUser.Email,
+                    OrderDate = DateTime.Now,
+                    OrderStatus = WC.StatusPending,
+                };
 
                 salesTableRepository.Add(salesTable);
                 salesTableRepository.Save();
 
                 foreach (var i in productUserViewModel.ProductList)
                 {
-                    SalesLine salesLine = new SalesLine();
-                    salesLine.SalesTable = salesTable;
-                    salesLine.ProductId = i.Id;
-                    salesLine.Qty = i.TempQty;
-                    salesLine.Price = i.Price;
-
+                    SalesLine salesLine = new SalesLine()
+                    {
+                        SalesTable = salesTable,
+                        ProductId = i.Id,
+                        Qty = i.TempQty,
+                        Price = i.Price,
+                    };
                     salesLineRepository.Add(salesLine);
                 }
                 salesLineRepository.Save();
 
-                return RedirectToAction( nameof(OrderConfirmation), new { id=salesTable.Id} );
+
+
+                string nonceFromTheClient = collection["payment_method_nonce"];
+
+                var request = new TransactionRequest
+                {
+                    Amount = Convert.ToDecimal(finalOrderTotal),
+                    PaymentMethodNonce = nonceFromTheClient,
+                    OrderId = salesTable.Id.ToString(),
+                    Options = new TransactionOptionsRequest
+                    {
+                        SubmitForSettlement = true
+                    }
+                };
+
+                var gateway = brainTreeGate.GetGateway();
+                Result<Transaction> result = gateway.Transaction.Sale(request);
+
+                if (result.Target.ProcessorResponseText == "Approved")
+                {
+                    salesTable.TransactionId = result.Target.Id;
+                    salesTable.OrderStatus = WC.StatusApproved;
+                }
+                else 
+                {
+                    salesTable.OrderStatus = WC.StatusCancelled;
+                }
+                salesTableRepository.Save();
+
+                return RedirectToAction(nameof(OrderConfirmation), new { id = salesTable.Id });
             }
             else
             {
@@ -275,11 +300,14 @@ namespace WebAppMVC.Controllers
             return RedirectToAction(nameof(OrderConfirmation));
         }   
 
-        public IActionResult OrderConfirmation()
+        public IActionResult OrderConfirmation(int id=0)
         {
+            SalesTable salesTable = salesTableRepository.Find(id);
+
             TempData[WC.Success] = "Операция выполнена успешно!";
             HttpContext.Session.Clear();
-            return View();
+
+            return View(salesTable);
         }   
 
 
@@ -301,6 +329,12 @@ namespace WebAppMVC.Controllers
         }
 
 
+        public IActionResult Clear()
+        {
+            HttpContext.Session.Clear();
+
+            return RedirectToAction(nameof(Index), "Home");
+        }
 
     
     }

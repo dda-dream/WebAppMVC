@@ -1,3 +1,4 @@
+using Braintree;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -9,6 +10,7 @@ using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.IRepository;
 using WebApp_Utility;
+using WebApp_Utility.BrainTree;
 using WebAppMVC_Utility;
 
 namespace WebAppMVC
@@ -63,7 +65,12 @@ namespace WebAppMVC
             builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
             builder.Services.AddScoped<ISalesTableRepository, SalesTableRepository>();
             builder.Services.AddScoped<ISalesLineRepository, SalesLineRepository>();
-            
+
+
+            builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("BrainTree"));
+            builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
+
+
                        
             builder.Services.AddScoped<IMyDailyJournalRepository, MyDailyJournalRepository>();
 
@@ -90,26 +97,8 @@ namespace WebAppMVC
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-    
-
-            app.Use(MyMiddleware);
-
-
             app.Run();
         }
-
-        static async Task MyMiddleware(HttpContext context, Func<Task> next)
-        {
-            // До
-            //Console.WriteLine("Before");
-            
-            //await context.Response.WriteAsync("MyMiddleware");
-             
-            await next();
-            // После
-            //Console.WriteLine("After");
-        }
     }
-
 }
  
