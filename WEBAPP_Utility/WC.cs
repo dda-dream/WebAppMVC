@@ -1,4 +1,6 @@
-﻿namespace WebAppMVC_Utility
+﻿using System.Collections.ObjectModel;
+
+namespace WebAppMVC_Utility
 {
     public static class WC
     {
@@ -24,6 +26,11 @@
         public const string StatusCancelled = "Cancelled";
         public const string StatusRefunded = "Refunded";
 
+        public static readonly IEnumerable<string> listStatus = new ReadOnlyCollection<string>(
+            new List<string>
+            {
+                StatusApproved, StatusCancelled, StatusPending, StatusInProcess, StatusShipped, StatusRefunded
+            });
 
     }
 }

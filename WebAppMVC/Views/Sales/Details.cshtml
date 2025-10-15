@@ -1,0 +1,44 @@
+﻿@using WebApp_Models
+@model IEnumerable<WebApp_Models.SalesLine>
+
+
+<h1>Details</h1>
+
+<div>
+	<div class="row">
+		@for (int i = 0; i < Model.Count(); i++)
+		{
+
+			<div class="col">
+				Id:
+				@Model.ElementAt(i).Id
+			</div>
+
+			<div class="col">
+				SalesId:
+				@Model.ElementAt(i).SalesId
+			</div>
+
+			<div class="col">
+				ProductId: 
+				@Model.ElementAt(i).ProductId
+			</div>
+			<div class="col">
+				Product Name:
+				@Model.ElementAt(i).Product.Name
+			</div>
+
+			<div class="col">
+				Qty: 
+				@Model.ElementAt(i).Qty
+			</div>
+
+
+		}
+	</div>
+
+</div>
+
+<div>
+	<a asp-action="Index">Back to List</a>
+</div>

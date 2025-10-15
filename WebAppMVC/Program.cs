@@ -70,6 +70,14 @@ namespace WebAppMVC
             builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("BrainTree"));
             builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
 
+            builder.Services.AddAuthentication().AddFacebook(o =>
+                { 
+                    o.AppId = "2263897900778199";
+                    o.AppSecret = "b43805b8a2d103e715110cf5def93018";
+                });
+
+
+
 
                        
             builder.Services.AddScoped<IMyDailyJournalRepository, MyDailyJournalRepository>();
