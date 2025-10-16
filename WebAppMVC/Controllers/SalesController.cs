@@ -15,6 +15,8 @@ namespace WebAppMVC.Controllers
         private readonly ISalesLineRepository salesLineRepository;
         private readonly IBrainTreeGate brainTreeGate;
 
+        [BindProperty]
+        public SalesLineListVM SalesLineListVM { get; set; }
 
         public SalesController(ISalesTableRepository _salesTableRepository, ISalesLineRepository _salesLineRepository,
             IBrainTreeGate _brainTreeGate)
@@ -24,35 +26,105 @@ namespace WebAppMVC.Controllers
             brainTreeGate = _brainTreeGate;
         }
 
-        public IActionResult Index(string searchName=null, string searchEmail=null, string searchPhone=null, string Status=null)
+        public IActionResult Index(string searchName = null, string searchEmail = null, string searchPhone = null, string Status = null)
         {
-            SalesListVM salesListVM = new SalesListVM();
+            SalesTableListVM salesTableListVM = new SalesTableListVM();
 
-            salesListVM.SalesTable = salesTableRepository.GetAll
+            salesTableListVM.SalesTable = salesTableRepository.GetAll
                 (
-                    filter: f =>   ( searchName  == null || f.FullName.Contains(searchName) )
-                                && ( searchEmail == null || f.Email.Contains(searchEmail) )
-                                && ( searchPhone == null || f.PhoneNumber.Contains(searchPhone) )
-                                && ( Status      == null || f.OrderStatus.Contains(Status) )
-                );
-            salesListVM.StatusList = WC.listStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                    filter: f => (
+                        (searchName == null || f.FullName.Contains(searchName))
+                     && (searchEmail == null || f.Email.Contains(searchEmail))
+                     && (searchPhone == null || f.PhoneNumber.Contains(searchPhone))
+                     && (Status == null || f.OrderStatus.Contains(Status))
+                                ));
+            salesTableListVM.StatusList = WC.listStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
             {
                 Text = i,
                 Value = i
             });
 
-            return View(salesListVM);
+            return View(salesTableListVM);
         }
 
 
         public IActionResult Details(int id)
         {
-            IEnumerable<SalesLine> salesLines;
+            SalesLineListVM = new SalesLineListVM()
+            {
+                SalesTable = salesTableRepository.Find(id),
+                SalesLine = salesLineRepository.GetAll(filter: x => x.SalesId == id, includeProperties: "Product"),
+            };
 
-            salesLines = salesLineRepository.GetAll(filter: x => x.Id == id, includeProperties:"Product");
-
-            return View(salesLines);
+            return View(SalesLineListVM);
         }
+
+
+
+        [HttpPost]
+        public IActionResult StartProcessing()
+        {
+            SalesTable salesTable = salesTableRepository.Find(this.SalesLineListVM.SalesTable.Id);
+            salesTable.OrderStatus = WC.StatusInProcess;
+            salesTableRepository.Save();
+            return RedirectToAction("Index");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult ShipOrder()
+        {
+            SalesTable salesTable = salesTableRepository.Find(this.SalesLineListVM.SalesTable.Id);
+            salesTable.OrderStatus = WC.StatusShipped;
+            salesTable.ShippingDate = DateTime.Now;
+            salesTableRepository.Save();
+            return RedirectToAction("Index");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult CancelOrder()
+        {
+            SalesTable salesTable = salesTableRepository.Find(this.SalesLineListVM.SalesTable.Id);
+            salesTable.OrderStatus = WC.StatusCancelled;
+            salesTable.ShippingDate = DateTime.Now;
+            salesTableRepository.Save();
+
+
+            var request = new TransactionRequest.
+            {
+                Amount = Convert.ToDecimal(salesTable.FinalOrderTotal),
+                PaymentMethodNonce = nonceFromTheClient,
+                OrderId = salesTable.Id.ToString(),
+                Options = new TransactionOptionsRequest
+                {
+                    
+                    SubmitForSettlement = true
+                }
+            };
+
+            var gateway = brainTreeGate.GetGateway();
+            Result<Transaction> result = gateway.Transaction.Sale(request);
+
+            if (result.Target != null)
+            {
+            }
+            return RedirectToAction("Index");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult UpdateOrderDetails(int id)
+        {
+
+
+            return View();
+        }
+
+
 
         #region API CALLS
         [HttpGet]

@@ -228,15 +228,24 @@ namespace WebAppMVC.Controllers
                 var gateway = brainTreeGate.GetGateway();
                 Result<Transaction> result = gateway.Transaction.Sale(request);
 
-                if (result.Target.ProcessorResponseText == "Approved")
+                if (result.Target != null)
                 {
-                    salesTable.TransactionId = result.Target.Id;
-                    salesTable.OrderStatus = WC.StatusApproved;
+                    if (result.Target.ProcessorResponseText == "Approved")
+                    {
+                        salesTable.TransactionId = result.Target.Id;
+                        salesTable.OrderStatus = WC.StatusApproved;
+                    }
+                    else
+                    {
+                        salesTable.OrderStatus = WC.StatusCancelled;
+                    }
                 }
-                else 
+                else
                 {
+                    salesTable.TransactionId = result.Message;
                     salesTable.OrderStatus = WC.StatusCancelled;
                 }
+                
                 salesTableRepository.Save();
 
                 return RedirectToAction(nameof(OrderConfirmation), new { id = salesTable.Id });

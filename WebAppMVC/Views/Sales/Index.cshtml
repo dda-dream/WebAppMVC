@@ -1,5 +1,5 @@
 ﻿@using WebApp_Models.ViewModels
-@model SalesListVM
+@model SalesTableListVM
  
 <form method="get">
 	<div class="container p-4 my-3">
@@ -22,7 +22,7 @@
 						<div class="col4">
 							@Html.DropDownListFor(u => u.Status, Model.StatusList, "--Статус--", new { @class = "form-control"})
 						</div>
-						<div class="offset-4 col-4">
+						<div class="offset-4 col-4 pt-1">
 							<button type="submit" class="h-100 btn btn-info form-control">
 								Найти
 							</button>
@@ -35,7 +35,7 @@
 </form>
 <hr />
 
-<div class="bg-white p-3">
+<div class="bg-white p-3 w-100">
 	<ejs-grid id="Grid" dataSource="@Model.SalesTable" allowFiltering="true" allowSorting="true" allowPaging="true">
 		<e-grid-filtersettings type="Menu"></e-grid-filtersettings>
 		<e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
@@ -49,6 +49,8 @@
 			<e-grid-column field="OrderDate" headerText="Дата заказа" customFormat="@(new { type = "date", format = "dd/MM/yyyy" })"></e-grid-column>
 			<e-grid-column field="OrderStatus" headerText="Статус"></e-grid-column>
 			<e-grid-column field="PhoneNumber" headerText="Телефон"></e-grid-column>
+			
+			<e-grid-column field="TransactionId" headerText="Код оплаты"></e-grid-column>
 
 			<e-grid-column field="Id" headerText="" width="70"
 						   template="<a rel='nofollow' href='Sales/Details/${Id}' class='btn btn-primary'>

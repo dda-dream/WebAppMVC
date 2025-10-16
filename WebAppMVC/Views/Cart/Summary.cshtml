@@ -31,7 +31,6 @@
                                     </div>
                                     <div class="col-9">
                                         <input asp-for="@Model.ApplicationUser.FullName" type="text" class="form-control" />
-                                        <span asp-validation-for="ApplicationUser.FullName" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
@@ -39,8 +38,7 @@
                                         <label>Phone</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="@Model.ApplicationUser.PhoneNumber" required type="text" class="form-control" />
-                                        <span asp-validation-for="ApplicationUser.PhoneNumber" class="text-danger"></span>
+                                        <input asp-for="@Model.ApplicationUser.PhoneNumber" type="text" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="row my-1">
@@ -48,8 +46,7 @@
                                         <label>Email</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="@Model.ApplicationUser.Email" required type="text" class="form-control" />
-                                        <span asp-validation-for="ApplicationUser.Email" class="text-danger"></span>
+                                        <input asp-for="@Model.ApplicationUser.Email" type="text" class="form-control" />
                                     </div>
                                 </div>
 
@@ -61,7 +58,6 @@
                                         </div>
                                         <div class="col-9">
                                             <input asp-for="@Model.ApplicationUser.StreetAddress" type="text" class="form-control" />
-                                            <span asp-validation-for="ApplicationUser.StreetAddress" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="row my-1">
@@ -70,7 +66,6 @@
                                         </div>
                                         <div class="col-9">
                                             <input asp-for="@Model.ApplicationUser.City" type="text" class="form-control" />
-                                            <span asp-validation-for="ApplicationUser.City" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="row my-1">
@@ -79,7 +74,6 @@
                                         </div>
                                         <div class="col-9">
                                             <input asp-for="@Model.ApplicationUser.State" type="text" class="form-control" />
-                                            <span asp-validation-for="ApplicationUser.State" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="row my-1">
@@ -88,7 +82,6 @@
                                         </div>
                                         <div class="col-9">
                                             <input asp-for="@Model.ApplicationUser.PostalCode" type="text" class="form-control" />
-                                            <span asp-validation-for="ApplicationUser.PostalCode" class="text-danger"></span>
                                         </div>
                                     </div>
                                 }
@@ -145,11 +138,11 @@
                         <div class="col-12 col-md-5 offset-md-7">
                             @if( User.IsInRole(WC.AdminRole))
                             {
-                                <button type="submit" class="btn btn-success form-control">Зарегистрировать Заказ (для оплаты и доставки)</button>
+                                <button type="submit" onclick="return validateFields()" class="btn btn-success form-control">Зарегистрировать Заказ(Sales)</button>
                             }
                             else
                             {                                
-                                <button type="submit"  class="btn btn-primary form-control">Отправить запрос на Заказ</button>
+                                <button type="submit"  class="btn btn-primary form-control">Отправить запрос на Заказ(Order)</button>
                             }
                         </div>
                     </div>
@@ -158,13 +151,35 @@
         </div>
     </div>
 </form>
-
+<br>
+@if (User.IsInRole(WC.AdminRole))
+{
+    <button type="button" onclick="validateFields()" class="btn btn-info form-control" style="width:fit-content">TEST TOAST</button>
+}
 
 @section Scripts{
-    <partial name="_ValidationScriptsPartial" />
 
+
+    <script>
+        function validateFields()
+        {
+            var name = document.getElementById("ApplicationUser_FullName").value;
+            var phonenumber = document.getElementById("ApplicationUser_PhoneNumber").value;
+            var email = document.getElementById("ApplicationUser_Email").value;
+
+            if(name == "" || phonenumber == "" || email == "")
+            {   
+                showToast('Не заполнены поля: Name, Phone, Email!', "danger", 5000);
+                return false;
+            }
+            
+            return true;
+        }
+    </script>
+
+
+    
     <script src="https://js.braintreegateway.com/web/dropin/1.45.2/js/dropin.min.js"></script>
-
     <script>
         var client_token = "@ViewBag.ClientToken";
         var form = document.querySelector('#payment-form');
@@ -190,4 +205,5 @@
             });
         });
     </script>
+    
 }

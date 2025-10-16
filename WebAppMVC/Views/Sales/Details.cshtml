@@ -1,44 +1,192 @@
 ﻿@using WebApp_Models
-@model IEnumerable<WebApp_Models.SalesLine>
+@model WebApp_Models.ViewModels.SalesLineListVM
 
 
-<h1>Details</h1>
 
-<div>
-	<div class="row">
-		@for (int i = 0; i < Model.Count(); i++)
-		{
+<form method="post">
+	<input asp-for="SalesTable.Id" hidden />
 
-			<div class="col">
-				Id:
-				@Model.ElementAt(i).Id
+	<br />
+	<div class="backgroundWhite container">
+		<div class="card">
+			<div class="card-header bg-dark text-light ml-0 row container">
+				<div class="col-12 d-none d-md-block col-md-6 pb-1">
+					<i class="fas fa-shopping-cart"></i> &nbsp; Order Summary
+				</div>
+				<div class="col-12 col-md-4 offset-md-2 text-right">
+					<a asp-action="Index" class="btn btn-outline-info form-control btn-sm">Back to Orders</a>
+				</div>
 			</div>
+			<div class="card-body pb-0">
+				<div class="container rounded p-2">
+					<div class="row">
+						<div class="col-12 col-lg-6 pb-4">
+							<div class="row">
+								<h4 class="d-flex justify-content-between align-items-center mb-3">
+									<span class="text-info">PickUp Details:</span>
+								</h4>
+							</div>
+							<div class="row my-1">
+								<div class="col-3">Name</div>
+								<div class="col-9">
 
-			<div class="col">
-				SalesId:
-				@Model.ElementAt(i).SalesId
+									<input asp-for="@Model.SalesTable.FullName" type="text" class="form-control" />
+									<span asp-validation-for="@Model.SalesTable.FullName" class="text-danger"></span>
+								</div>
+							</div>
+							<div class="row my-1">
+								<div class="col-3">Phone</div>
+								<div class="col-9">
+
+									<input asp-for="@Model.SalesTable.PhoneNumber" type="text" class="form-control" />
+									<span asp-validation-for="@Model.SalesTable.PhoneNumber" class="text-danger"></span>
+								</div>
+							</div>
+							<div class="row my-1">
+								<div class="col-3">Address</div>
+								<div class="col-9">
+
+									<input asp-for="@Model.SalesTable.StreetAddress" type="text" class="form-control" />
+									<span asp-validation-for="@Model.SalesTable.StreetAddress" class="text-danger"></span>
+								</div>
+							</div>
+							<div class="row my-1">
+								<div class="col-3">City</div>
+								<div class="col-9">
+
+									<input asp-for="@Model.SalesTable.City" type="text" class="form-control" />
+									<span asp-validation-for="@Model.SalesTable.City" class="text-danger"></span>
+								</div>
+							</div>
+							<div class="row my-1">
+								<div class="col-3">State</div>
+								<div class="col-9">
+
+									<input asp-for="@Model.SalesTable.State" type="text" class="form-control" />
+									<span asp-validation-for="@Model.SalesTable.State" class="text-danger"></span>
+								</div>
+							</div>
+							<div class="row my-1">
+								<div class="col-3">Zip Code</div>
+								<div class="col-9">
+
+									<input asp-for="@Model.SalesTable.PostalCode" type="text" class="form-control" />
+									<span asp-validation-for="@Model.SalesTable.PostalCode" class="text-danger"></span>
+								</div>
+							</div>
+							<div class="row my-1">
+								<div class="col-3">Email</div>
+								<div class="col-9">
+
+									<input asp-for="@Model.SalesTable.Email" type="text" class="form-control" />
+									<span asp-validation-for="@Model.SalesTable.Email" class="text-danger"></span>
+								</div>
+							</div>
+							<div class="row my-1">
+								<div class="col-3">Order Date</div>
+								<div class="col-9">
+
+									<input value="@Model.SalesTable.OrderDate.ToString("dd-MM-yyyy")" type="text" class="form-control" readonly />
+								</div>
+							</div>
+
+							<div class="row my-1">
+								<div class="col-3">Shipping Date</div>
+								<div class="col-9">
+									<input value="@Model.SalesTable.ShippingDate.ToString("dd-MM-yyyy")" id="shippingDate" type="text" readonly class="form-control" />
+								</div>
+							</div>
+
+							<div class="row my-1">
+								<div class="col-3">Transaction ID</div>
+								<div class="col-9">
+									<input value="@Model.SalesTable.TransactionId" type="text" readonly class="form-control" />
+								</div>
+							</div>
+							<div class="row my-1">
+								<div class="col-3">Order Status</div>
+								<div class="col-9">
+									<input value="@Model.SalesTable.OrderStatus" type="text" readonly class="form-control" />
+								</div>
+							</div>
+							<div class="row my-1">
+								<div class="col-9 offset-3">
+									<input type="submit" value="Update Order Details" class="btn btn-warning form-control"
+										   formaction="/Order/UpdateOrderDetails" formmethod="post" />
+								</div>
+							</div>
+
+
+						</div>
+						<div class="col-12 col-lg-5 offset-lg-1">
+							<h4 class="d-flex justify-content-between align-items-center mb-3">
+								<span class="text-info">Order Summary</span>
+							</h4>
+							<ul class="list-group mb-3">
+
+								@foreach (var i in @Model.SalesLine)
+								{
+									double lineAmount = i.Price * i.Qty;
+									<li class="list-group-item d-flex justify-content-between p-2">
+										<div class="row container">
+											<div class="col-8">
+												<h6 class="my-0 text-info">@i.Product.Name</h6>
+												<small class="text-muted">Price : @i.Price.ToString("c")</small><br />
+												<small class="text-muted">Quantity : @i.Qty</small>
+											</div>
+											<div class="col-4">
+												<p class="text-success">@lineAmount</p>
+											</div>
+										</div>
+									</li>
+								}
+
+								<li class="list-group-item bg-info">
+									<div class="row container">
+										<div class="col-6">
+											<h5 class="text-white">TOTAL </h5>
+										</div>
+										<div class="col-6 text-right">
+											<h5 class="text-white">@Model.SalesTable.FinalOrderTotal.ToString("c")</h5>
+										</div>
+									</div>
+								</li>
+							</ul>
+
+
+							<br />
+
+							<input type="submit" asp-action="StartProcessing" value="Start Processing" class="btn btn-info form-control" />
+
+							<input type="submit" asp-action="ShipOrder" value="Ship Order" class="btn btn-primary form-control" />
+
+							<div class="pt-2">
+								<button type="submit" asp-action="CancelOrder" class="btn btn-danger form-control" formmethod="post">
+									Cancel Order
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-
-			<div class="col">
-				ProductId: 
-				@Model.ElementAt(i).ProductId
-			</div>
-			<div class="col">
-				Product Name:
-				@Model.ElementAt(i).Product.Name
-			</div>
-
-			<div class="col">
-				Qty: 
-				@Model.ElementAt(i).Qty
-			</div>
-
-
-		}
+		</div>
 	</div>
+</form>
 
-</div>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
 
-<div>
-	<a asp-action="Index">Back to List</a>
-</div>
+	<script>
+		$(document).ready(
+			function()
+			{
+				var shipingDate = document.getElementById('shippingDate');
+
+				if(shipingDate.value == '01-01-0001')
+				{
+					shipingDate.value = '';
+				}
+			}
+		)
+	</script>
+}

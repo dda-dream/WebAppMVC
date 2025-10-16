@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace WebApp_Models.ViewModels
 {
-    public class SalesListVM
+    public class SalesLineListVM
     {
-        public IEnumerable<SalesTable> SalesTable { get; set;}
-        public IEnumerable<SelectListItem> StatusList { get; set;}
-        public string Status {get; set;}
-
+        public SalesTable SalesTable { get; set; }
+        public IEnumerable<SalesLine> SalesLine { get; set;}
 
     }
 }
