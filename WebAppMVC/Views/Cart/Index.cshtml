@@ -101,6 +101,7 @@ else
                                     {
                                         <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
                                             <input asp-for="@Model[i].TempQty" value="@Model[i].TempQty" class="w-50" style="font-size:17px;">  </input>
+                                            <span asp-validation-for="@Model[i].TempQty" class="text-danger"></span>
                                         </div>
                                         <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
                                             <span style="font-size:17px;">@lineTotal.ToString("c")</span>

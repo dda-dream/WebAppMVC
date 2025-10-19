@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using WebApp_DataAccess.Data;
+using WebApp_DataAccess.Initializer;
 using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.IRepository;
 using WebApp_Utility;
@@ -67,8 +68,14 @@ namespace WebAppMVC
             builder.Services.AddScoped<ISalesLineRepository, SalesLineRepository>();
 
 
+            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
+  
+            //https://sandbox.braintreegateway.com/
             builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("BrainTree"));
             builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
+
+
 
             builder.Services.AddAuthentication().AddFacebook(o =>
                 { 
@@ -87,6 +94,13 @@ namespace WebAppMVC
 
 
             var app = builder.Build();
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                dbInitializer.Initialize(); 
+            }
 
             if (!app.Environment.IsDevelopment())
             {

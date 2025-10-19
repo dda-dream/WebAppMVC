@@ -32,7 +32,7 @@ namespace WebAppMVC.Controllers
         private readonly IBrainTreeGate brainTreeGate;
 
         [BindProperty]
-        public ProductUserViewModel ProductUserViewModel { get; set; }
+        public ProductUserViewModel? ProductUserViewModel { get; set; }
 
 
         public CartController(IApplicationUserRepository applicationUserRepository, IProductRepository productRepository,
@@ -68,7 +68,8 @@ namespace WebAppMVC.Controllers
 
             foreach (ProductModel prod in prodList)
             {
-                prod.TempQty = shoppingCartList.Where(p => p.ProductId == prod.Id).ToList().FirstOrDefault().Qty;
+                var ___ = shoppingCartList.Where(p => p.ProductId == prod.Id).FirstOrDefault();
+                prod.TempQty = ___ != null ? ___.Qty : 0;
             }
 
             return View(prodList);

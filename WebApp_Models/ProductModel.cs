@@ -31,7 +31,7 @@ namespace WebAppMVC_Models
 
 
         [NotMapped]
-        [Range(1,10000)]
+        [Range(1,10000, ErrorMessage = "Количество дожно быть указано")]
         public int TempQty {get; set;}
     }
 }

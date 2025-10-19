@@ -9,7 +9,6 @@ namespace WebAppMVC_Models.ViewModels
             Product = new ProductModel();
         }
 
-
         public ProductModel Product { get; set; }
         public bool ExistsInCart { get; set; }
 

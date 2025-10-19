@@ -26,7 +26,7 @@ namespace WebAppMVC.Controllers
             brainTreeGate = _brainTreeGate;
         }
 
-        public IActionResult Index(string searchName = null, string searchEmail = null, string searchPhone = null, string Status = null)
+        public IActionResult Index(string? searchName = null, string? searchEmail = null, string? searchPhone = null, string? Status = null)
         {
             SalesTableListVM salesTableListVM = new SalesTableListVM();
 
@@ -67,6 +67,9 @@ namespace WebAppMVC.Controllers
             SalesTable salesTable = salesTableRepository.Find(this.SalesLineListVM.SalesTable.Id);
             salesTable.OrderStatus = WC.StatusInProcess;
             salesTableRepository.Save();
+
+            TempData[WC.Success] = "Заказ находится в процессе.";
+
             return RedirectToAction("Index");
         }
 
@@ -79,49 +82,61 @@ namespace WebAppMVC.Controllers
             salesTable.OrderStatus = WC.StatusShipped;
             salesTable.ShippingDate = DateTime.Now;
             salesTableRepository.Save();
+
+            TempData[WC.Success] = "Заказ успешно отправлен.";
+
             return RedirectToAction("Index");
         }
 
 
 
         [HttpPost]
-        public IActionResult CancelOrder()
+        public IActionResult CancelOrder(IFormCollection collection)
         {
             SalesTable salesTable = salesTableRepository.Find(this.SalesLineListVM.SalesTable.Id);
-            salesTable.OrderStatus = WC.StatusCancelled;
-            salesTable.ShippingDate = DateTime.Now;
+
+           
+            var gateway = brainTreeGate.GetGateway();
+            Transaction transaction = gateway.Transaction.Find(salesTable.TransactionId);
+
+            if (transaction.Status == TransactionStatus.AUTHORIZED || transaction.Status == TransactionStatus.SUBMITTED_FOR_SETTLEMENT)
+            {//не нужно возврашать деньги                
+                Result<Transaction> resultVoid = gateway.Transaction.Void(salesTable.TransactionId);
+            } 
+            else
+            {//нужно вернуть
+                Result<Transaction> resultRefund = gateway.Transaction.Refund(salesTable.TransactionId);                
+            }
+
+            salesTable.OrderStatus = WC.StatusRefunded;
             salesTableRepository.Save();
 
+            TempData[WC.Success] = "Оплата по заказу возвращена.";
 
-            var request = new TransactionRequest.
-            {
-                Amount = Convert.ToDecimal(salesTable.FinalOrderTotal),
-                PaymentMethodNonce = nonceFromTheClient,
-                OrderId = salesTable.Id.ToString(),
-                Options = new TransactionOptionsRequest
-                {
-                    
-                    SubmitForSettlement = true
-                }
-            };
-
-            var gateway = brainTreeGate.GetGateway();
-            Result<Transaction> result = gateway.Transaction.Sale(request);
-
-            if (result.Target != null)
-            {
-            }
             return RedirectToAction("Index");
         }
 
 
 
         [HttpPost]
-        public IActionResult UpdateOrderDetails(int id)
+        public IActionResult UpdateOrderDetails()
         {
+            SalesTable salesTable = salesTableRepository.Find(this.SalesLineListVM.SalesTable.Id);
 
+            salesTable.FullName = SalesLineListVM.SalesTable.FullName;
+            salesTable.PhoneNumber = SalesLineListVM.SalesTable.PhoneNumber;
+            salesTable.StreetAddress = SalesLineListVM.SalesTable.StreetAddress;
+            salesTable.City = SalesLineListVM.SalesTable.City;
+            salesTable.State = SalesLineListVM.SalesTable.State;
+            salesTable.PostalCode = SalesLineListVM.SalesTable.PostalCode;
+            salesTable.Email = SalesLineListVM.SalesTable.Email;
 
-            return View();
+            salesTableRepository.Update(salesTable);
+            salesTableRepository.Save();
+
+            TempData[WC.Success] = "Заказ успешно обновлен.";
+
+            return RedirectToAction("Details", "Sales", new { id = SalesLineListVM.SalesTable.Id } );
         }
 
 

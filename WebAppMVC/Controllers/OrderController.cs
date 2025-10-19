@@ -10,6 +10,7 @@ using WebAppMVC_Utility;
 
 namespace WebAppMVC.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         IOrderTableRepository orderTableRepository;

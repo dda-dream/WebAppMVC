@@ -40,9 +40,9 @@
                                             else
                                             {
                                                 <input asp-for="@Model.Product.TempQty" class="form-control" />
+                                                <span asp-validation-for="@Model.Product.TempQty" class="text-danger"></span>
                                             }
                                         </div>
-                                        <span asp-validation-for="@Model.Product.TempQty" class="text-danger"></span>
                                     }
 
                                 </div>

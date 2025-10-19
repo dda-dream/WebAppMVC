@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics.Contracts;
 
 namespace WebAppMVC_Utility
 {
@@ -12,7 +13,6 @@ namespace WebAppMVC_Utility
 
         public const string AdminRole = "Admin";
         public const string CustomerRole = "Customer";
-
 
         public const string AdminEmail = "admin@fbdda.duckdns.org";
 

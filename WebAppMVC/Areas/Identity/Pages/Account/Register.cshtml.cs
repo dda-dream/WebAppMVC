@@ -130,12 +130,14 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
 
             if (!Input.isAdminRoleCreated)
             {
+                /*
                 IdentityRole adminRole = new IdentityRole();
                 adminRole.Id = WC.AdminRole;
                 adminRole.Name = WC.AdminRole;
 
                 await _roleManager.CreateAsync(adminRole);
                 await _roleManager.CreateAsync(new IdentityRole() { Id = WC.CustomerRole, Name = WC.CustomerRole } );
+                */
             }
 
             ReturnUrl = returnUrl;
@@ -202,9 +204,16 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
                     }
                     else
                     {
-
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        if (User.IsInRole(WC.AdminRole))
+                        {
+                            TempData[WC.Success] = user.FullName + " - Зарегестрирован.";
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
                     }
                 }
                 foreach (var error in result.Errors)
