@@ -35,11 +35,13 @@
 
 <!-- Звук уведомления -->
 <audio id="notifySound" preload="auto">
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_b7b9ab1a4c.mp3" type="audio/mpeg">
+    <source src="~/sounds/whistle.mp3" type="audio/mp3">
 </audio>
 
 @section Scripts {
+    @* 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    *@
     <script>
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/chathub")
@@ -89,27 +91,32 @@
         }
 
         // Получение сообщений
-        connection.on("ReceiveMessage", (user, message) => {
+        connection.on("ReceiveMessage", (user, message) =>
+        {
             appendMessage(user, message);
 
             // Если сообщение не от нас — показать уведомление и звук
-            if (user !== currentUser() && user !== "") {
+            if (user !== currentUser() && user !== "")
+            {
                 notifySound.currentTime = 0;
                 notifySound.play().catch(() => { /* игнорируем блокировку звука */ });
                 showPopup(`${user}`, message);
             }
         });
 
-        connection.start().then(() => {
+        connection.start().then(() =>
+        {
             connection.invoke("LoadMessages");
             document.getElementById("sendButton").disabled = false;
         });
 
-        function sendMessage() {
+        function sendMessage()
+        {
             const user = currentUser();
             const message = document.getElementById("messageInput").value.trim();
 
-            if (!user) {
+            if (!user)
+            {
                 Swal.fire("Введите имя", "", "warning");
                 return;
             }
@@ -122,9 +129,12 @@
         document.getElementById("sendButton").addEventListener("click", sendMessage);
 
         // Клавиатура: Enter — отправить, Ctrl+Enter — новая строка
-        document.getElementById("messageInput").addEventListener("keydown", function (e) {
-            if (e.key === "Enter") {
-                if (e.ctrlKey) {
+        document.getElementById("messageInput").addEventListener("keydown", function (e) 
+        {
+            if (e.key === "Enter") 
+            {
+                if (e.ctrlKey) 
+                {
                     const start = this.selectionStart;
                     const end = this.selectionEnd;
                     this.value = this.value.substring(0, start) + "\n" + this.value.substring(end);
