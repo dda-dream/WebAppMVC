@@ -1,0 +1,140 @@
+﻿@page
+
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <!-- Заголовок -->
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                    <div class="fw-bold fs-5"><i class="bi bi-telegram"></i> Telegram Похожий Chat</div>
+                    <div class="small text-light opacity-75">SignalR</div>
+                </div>
+
+                <!-- Сообщения -->
+                <div id="chatBox" class="card-body bg-light" style="height:65vh; overflow-y:auto;">
+                    <ul id="messagesList" class="list-unstyled mb-0"></ul>
+                </div>
+
+                <!-- Ввод -->
+                <div class="card-footer bg-white border-top p-3">
+                    <div class="input-group">
+                        <input id="userInput" type="text" placeholder="Имя..." class="form-control form-control-sm w-25 me-2" />
+                        <textarea id="messageInput" class="form-control" rows="2" placeholder="Введите сообщение..."
+                                  style="resize:none;"></textarea>
+                        <button id="sendButton" class="btn btn-primary px-3">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </div>
+                    <small class="text-muted fst-italic">Enter — отправить, Ctrl+Enter — новая строка</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Звук уведомления -->
+<audio id="notifySound" preload="auto">
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_b7b9ab1a4c.mp3" type="audio/mpeg">
+</audio>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        const chatBox = document.getElementById("chatBox");
+        const messageList = document.getElementById("messagesList");
+        const notifySound = document.getElementById("notifySound");
+        const currentUser = () => document.getElementById("userInput").value.trim();
+
+        // Всплывающее уведомление Bootstrap Toast
+        function showPopup(title, message) {
+            Swal.fire({
+                title: title,
+                text: message,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: '#f0f9ff',
+                color: '#0d6efd',
+                icon: 'info'
+            });
+        }
+
+        // Отображение сообщения в чате
+        function appendMessage(user, message) {
+            const li = document.createElement("li");
+            li.classList.add("mb-3");
+
+            const isMine = user === currentUser();
+            const bubbleColor = isMine ? "bg-primary text-white" : "bg-white border";
+            const alignClass = isMine ? "text-end" : "text-start";
+            const bubbleStyle = "display:inline-block; max-width:75%; word-wrap:break-word; white-space:pre-line;";
+
+            li.innerHTML = `
+                <div class="${alignClass}">
+                    <div class="p-2 px-3 rounded-4 shadow-sm ${bubbleColor}" style="${bubbleStyle}">
+                        <div class="fw-bold small mb-1">${user}</div>
+                        <div>${message}</div>
+                    </div>
+                </div>
+            `;
+            messageList.appendChild(li);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Получение сообщений
+        connection.on("ReceiveMessage", (user, message) => {
+            appendMessage(user, message);
+
+            // Если сообщение не от нас — показать уведомление и звук
+            if (user !== currentUser() && user !== "") {
+                notifySound.currentTime = 0;
+                notifySound.play().catch(() => { /* игнорируем блокировку звука */ });
+                showPopup(`${user}`, message);
+            }
+        });
+
+        connection.start().then(() => {
+            connection.invoke("LoadMessages");
+            document.getElementById("sendButton").disabled = false;
+        });
+
+        function sendMessage() {
+            const user = currentUser();
+            const message = document.getElementById("messageInput").value.trim();
+
+            if (!user) {
+                Swal.fire("Введите имя", "", "warning");
+                return;
+            }
+            if (!message) return;
+
+            connection.invoke("SendMessage", user, message);
+            document.getElementById("messageInput").value = "";
+        }
+
+        document.getElementById("sendButton").addEventListener("click", sendMessage);
+
+        // Клавиатура: Enter — отправить, Ctrl+Enter — новая строка
+        document.getElementById("messageInput").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                if (e.ctrlKey) {
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    this.value = this.value.substring(0, start) + "\n" + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 1;
+                    e.preventDefault();
+                } else {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            }
+        });
+    </script>
+}

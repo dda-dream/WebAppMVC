@@ -12,14 +12,28 @@ using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.IRepository;
 using WebApp_Utility;
 using WebApp_Utility.BrainTree;
+using WebAppMVC.Hubs;
+using WebAppMVC.Views.Services;
 using WebAppMVC_Utility;
 
 namespace WebAppMVC
 {
     public class Program
     {
+        static Func<int, int, string> ppp;
+
         public static void Main(string[] args)
         {
+            Program.ppp = new Func<int, int, string>((i, i1) => 
+                {
+                    string s = "="+i.ToString()+"="; 
+                    return s;
+                }
+            );
+
+            string s = Program.ppp(111, 222);
+
+
 
 
             var builder = WebApplication.CreateBuilder(args);
@@ -75,8 +89,7 @@ namespace WebAppMVC
             builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("BrainTree"));
             builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
 
-
-
+            //FACEBOOK
             builder.Services.AddAuthentication().AddFacebook(o =>
                 { 
                     o.AppId = "2263897900778199";
@@ -84,12 +97,12 @@ namespace WebAppMVC
                 });
 
 
-
+            
 
                        
             builder.Services.AddScoped<IMyDailyJournalRepository, MyDailyJournalRepository>();
-
-
+            builder.Services.AddSignalR();
+            builder.Services.AddSingleton<ChatHistoryService>();
 
 
 
@@ -118,6 +131,9 @@ namespace WebAppMVC
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapHub<ChatHub>("/chathub");
+
 
             app.Run();
         }

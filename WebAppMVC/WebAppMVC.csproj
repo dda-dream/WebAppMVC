@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +26,12 @@
     <ProjectReference Include="..\WebApp_DataAccess\WebApp_DataAccess.csproj" />
     <ProjectReference Include="..\WebApp_Models\WebApp_Models.csproj" />
     <ProjectReference Include="..\WEBAPP_Utility\WebApp_Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="messages.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

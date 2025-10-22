@@ -1,0 +1,140 @@
+﻿@page
+
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <!-- Заголовок -->
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-3">
+                    <div class="fw-bold fs-5"><i class="bi bi-whatsapp"></i> Чат в стиле WhatsApp</div>
+                    <div class="small text-light opacity-75">SignalR</div>
+                </div>
+
+                <!-- Сообщения -->
+                <div id="chatBox" class="card-body bg-light" style="height:65vh; overflow-y:auto;">
+                    <ul id="messagesList" class="list-unstyled mb-0"></ul>
+                </div>
+
+                <!-- Ввод -->
+                <div class="card-footer bg-white border-top p-3">
+                    <div class="input-group">
+                        <input id="userInput" type="text" placeholder="Ваше имя..." class="form-control form-control-sm w-25 me-2" />
+                        <textarea id="messageInput" class="form-control" rows="2" placeholder="Введите сообщение..."
+                                  style="resize:none;"></textarea>
+                        <button id="sendButton" class="btn btn-success px-3">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </div>
+                    <small class="text-muted fst-italic">Enter — отправить, Ctrl+Enter — новая строка</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Звук уведомления -->
+<audio id="notifySound" preload="auto">
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_b7b9ab1a4c.mp3" type="audio/mpeg">
+</audio>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        const chatBox = document.getElementById("chatBox");
+        const messageList = document.getElementById("messagesList");
+        const notifySound = document.getElementById("notifySound");
+        const currentUser = () => document.getElementById("userInput").value.trim();
+
+        // Добавление сообщения в чат
+        function appendMessage(user, message) {
+            const li = document.createElement("li");
+            li.classList.add("mb-2");
+
+            const isMine = user === currentUser();
+            const bubbleClass = isMine ? "bg-success text-white" : "bg-white border";
+            const alignClass = isMine ? "text-end" : "text-start";
+            const bubbleStyle = "display:inline-block; max-width:75%; word-wrap:break-word; white-space:pre-line; padding:8px 12px; border-radius:15px;";
+
+            li.innerHTML = `
+                <div class="${alignClass}">
+                    <div class="${bubbleClass}" style="${bubbleStyle}">
+                        <div class="fw-bold small mb-1">${user}</div>
+                        <div>${message}</div>
+                    </div>
+                </div>
+            `;
+
+            // Добавляем в конец списка
+            messageList.appendChild(li);
+
+            // Автоскролл вниз
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Получение сообщений
+        connection.on("ReceiveMessage", (user, message) => {
+            appendMessage(user, message);
+
+            // Уведомление и звук, если сообщение не от текущего пользователя
+            if (user !== currentUser() && user !== "") {
+                notifySound.currentTime = 0;
+                notifySound.play().catch(() => {});
+
+                Swal.fire({
+                    title: user,
+                    text: message,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    background: '#d4f8d4',
+                    color: '#075e54',
+                    icon: 'info'
+                });
+            }
+        });
+
+        connection.start().then(() => {
+            connection.invoke("LoadMessages");
+            document.getElementById("sendButton").disabled = false;
+        });
+
+        function sendMessage() {
+            const user = currentUser();
+            const message = document.getElementById("messageInput").value.trim();
+
+            if (!user) {
+                Swal.fire("Введите имя", "", "warning");
+                return;
+            }
+            if (!message) return;
+
+            connection.invoke("SendMessage", user, message);
+            document.getElementById("messageInput").value = "";
+        }
+
+        document.getElementById("sendButton").addEventListener("click", sendMessage);
+
+        // Enter — отправка, Ctrl+Enter — новая строка
+        document.getElementById("messageInput").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                if (e.ctrlKey) {
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    this.value = this.value.substring(0, start) + "\n" + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 1;
+                    e.preventDefault();
+                } else {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            }
+        });
+    </script>
+}
