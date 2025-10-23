@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebAppMVC_Models
 {
@@ -28,5 +29,11 @@ namespace WebAppMVC_Models
 
         [DisplayName("Message:")]
         public string? Message { get; set; }
+
+
+
+        public string CreatedByUserId { get; set; } = "";
+
+
     }
 }
