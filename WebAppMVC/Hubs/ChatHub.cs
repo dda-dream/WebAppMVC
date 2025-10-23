@@ -35,7 +35,7 @@ namespace WebAppMVC.Hubs
             chatRepository.Add(chatModel);
             chatRepository.Save();
 
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            await Clients.All.SendAsync("ReceiveMessage", user, $"{chatModel.MessageDate.ToShortDateString()} {chatModel.MessageDate.ToShortTimeString()} : {message}");
         }
 
         public async Task LoadMessages()
@@ -61,7 +61,7 @@ namespace WebAppMVC.Hubs
                 parts[0] = msg.MessageUserNickName;
                 parts[1] = msg.MessageText;
                 if (parts.Length == 2)
-                    await Clients.Caller.SendAsync("ReceiveMessage", parts[0], parts[1].Trim());
+                    await Clients.Caller.SendAsync("ReceiveMessage", parts[0], $"{msg.MessageDate.ToShortDateString()} {msg.MessageDate.ToShortTimeString()} : {parts[1].Trim()}");
             }
 
 
