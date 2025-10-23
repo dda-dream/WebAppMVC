@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApp_DataAccess.Repository.IRepository;
 
 namespace WebAppMVC.Areas.Identity.Pages.Account.Manage
 {
@@ -17,12 +18,16 @@ namespace WebAppMVC.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
+        IApplicationUserRepository applicationUserRepository;
+
         public IndexModel(
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            IApplicationUserRepository applicationUserRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            this.applicationUserRepository = applicationUserRepository;
         }
 
         /// <summary>
@@ -58,6 +63,9 @@ namespace WebAppMVC.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Имя/никнейм")]
+            public string FullName { get; set; }
         }
 
         private async Task LoadAsync(IdentityUser user)
@@ -67,9 +75,13 @@ namespace WebAppMVC.Areas.Identity.Pages.Account.Manage
 
             Username = userName;
 
+            var userAppl = applicationUserRepository.FirstOrDefault(x => x.Id == user.Id);
+
+
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FullName = userAppl.FullName,
             };
         }
 
@@ -99,10 +111,19 @@ namespace WebAppMVC.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
+            var userAppl = applicationUserRepository.FirstOrDefault(x => x.Id == user.Id);
+            if(userAppl.FullName != Input.FullName)
+            {
+                userAppl.FullName = Input.FullName;
+                applicationUserRepository.Save();
+            }
+
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+
+
                 if (!setPhoneResult.Succeeded)
                 {
                     StatusMessage = "Unexpected error when trying to set phone number.";

@@ -148,7 +148,7 @@
         });
 
 
-        document.getElementById("userInput").value = "@this.Model.FullName";
+        document.getElementById("userInput").value = @Html.Raw( Json.Serialize( Model.FullName ) );
 
     </script>
 }
