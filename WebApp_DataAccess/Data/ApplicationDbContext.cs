@@ -31,6 +31,7 @@ namespace WebApp_DataAccess.Data
         public DbSet<MyDailyJournalModel> MyDailyJournal { get; set; }
         public DbSet<LogTableModel> LogTable { get; set; }
 
+        public DbSet<ChatModel> Chat {get; set;}
         
         
         //My test Table//

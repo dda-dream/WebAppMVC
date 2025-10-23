@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 using WebApp_DataAccess.Data;
@@ -9,6 +10,8 @@ using WebAppMVC_Utility;
 
 namespace WebAppMVC.Controllers
 {
+
+    [Authorize]
     public class MyDailyJournalController : Controller
     {
         int forTestTransientOrScooped = 0;

@@ -82,6 +82,7 @@ namespace WebAppMVC
             builder.Services.AddScoped<ISalesLineRepository, SalesLineRepository>();
 
 
+
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
   
@@ -103,6 +104,7 @@ namespace WebAppMVC
             builder.Services.AddScoped<IMyDailyJournalRepository, MyDailyJournalRepository>();
             builder.Services.AddSignalR();
             builder.Services.AddSingleton<ChatHistoryService>();
+            builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
 
 
