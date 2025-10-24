@@ -362,3 +362,22 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /WEBAPPMVC/messages.txt
+/WebApp_Models/bin/Debug/net9.0/WebApp_Models.dll
+/WebApp_Models/bin/Debug/net9.0/WebApp_Models.pdb
+/WebApp_Models/obj/Debug/net9.0/ref/WebApp_Models.dll
+/WebApp_Models/obj/Debug/net9.0/refint/WebApp_Models.dll
+/WebApp_Models/obj/Debug/net9.0/WebApp_Models.AssemblyInfo.cs
+/WebApp_Models/obj/Debug/net9.0/WebApp_Models.AssemblyInfoInputs.cache
+/WebApp_Models/obj/Debug/net9.0/WebApp_Models.csproj.AssemblyReference.cache
+/WebApp_Models/obj/Debug/net9.0/WebApp_Models.dll
+/WebApp_Models/obj/Debug/net9.0/WebApp_Models.pdb
+/WebApp_Models/obj/Debug/net9.0/WebApp_Models.sourcelink.json
+/WEBAPP_Utility/bin/Debug/net9.0/WebApp_Utility.dll
+/WEBAPP_Utility/bin/Debug/net9.0/WebApp_Utility.pdb
+/WEBAPP_Utility/obj/Debug/net9.0/ref/WebApp_Utility.dll
+/WEBAPP_Utility/obj/Debug/net9.0/refint/WebApp_Utility.dll
+/WEBAPP_Utility/obj/Debug/net9.0/WebApp_Utility.AssemblyInfo.cs
+/WEBAPP_Utility/obj/Debug/net9.0/WebApp_Utility.AssemblyInfoInputs.cache
+/WEBAPP_Utility/obj/Debug/net9.0/WebApp_Utility.dll
+/WEBAPP_Utility/obj/Debug/net9.0/WebApp_Utility.pdb
+/WEBAPP_Utility/obj/Debug/net9.0/WebApp_Utility.sourcelink.json
