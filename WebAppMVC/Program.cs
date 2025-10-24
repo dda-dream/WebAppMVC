@@ -1,10 +1,14 @@
-using Braintree;
+﻿using Braintree;
 using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog;
 using System;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Initializer;
@@ -13,6 +17,7 @@ using WebApp_DataAccess.Repository.IRepository;
 using WebApp_Utility;
 using WebApp_Utility.BrainTree;
 using WebAppMVC.Hubs;
+using WebAppMVC.Middleware;
 using WebAppMVC.Views.Services;
 using WebAppMVC_Utility;
 
@@ -40,6 +45,8 @@ namespace WebAppMVC
 
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
+            builder.Logging.AddDebug(); // для отладки
+
 
             builder.WebHost.ConfigureKestrel(options =>
             {
@@ -107,8 +114,36 @@ namespace WebAppMVC
             builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
 
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("Logs/app-.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            builder.Host.UseSerilog(); // подключаем Serilog как источник логов
+
 
             var app = builder.Build();
+            
+            app.UseMiddleware<AnomalyLoggingMiddleware>();
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+
+                    if (exceptionHandlerPathFeature?.Error != null)
+                    {
+                        logger.LogError(exceptionHandlerPathFeature.Error,
+                            "❌ Необработанное исключение на {Path}", exceptionHandlerPathFeature.Path);
+                    }
+
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsync("Произошла ошибка.");
+                });
+            });
+
 
 
             using (var scope = app.Services.CreateScope())
