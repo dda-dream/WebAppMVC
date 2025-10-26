@@ -18,25 +18,61 @@
 
 
 @{
-    <table class="table table-bordered table-hover table-sm align-middle shadow-sm mt-3">
-        <thead class="table-success text-center">
-            <tr>
-                <th>Дата изменения</th>
-                <th>Тип изменения</th>
-                <th>Новое значение</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (LogTableModel i in Model._LogTableModelEnumerator)
-	        {
-                <tr>
-                    <td class="text-nowrap">@i.CreatedDateTime.ToString("dd.MM.yyyy HH:mm:ss")</td>
-                    <td>@i.TypeStr</td>
-                    <td>@Html.Raw(i.Message)</td>
-                </tr>
-	        }
-        </tbody>
-    </table>
+    <div class="container-fluid mt-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-sm align-middle shadow-sm rounded">
+                <thead class="table-success text-center">
+                    <tr>
+                        <th scope="col" class="py-3">
+                            <i class="bi bi-calendar3 me-1"></i>Дата изменения
+                        </th>
+                        <th scope="col" class="py-3">
+                            <i class="bi bi-gear me-1"></i>Тип изменения
+                        </th>
+                        <th scope="col" class="py-3">
+                            <i class="bi bi-file-earmark-text me-1"></i>Новое значение
+                        </th>
+                        <th scope="col" class="py-3">
+                            <i class="bi bi-person me-1"></i>User Id
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(LogTableModel i in Model._LogTableModelEnumerator)
+                    {
+                        <tr class="align-middle">
+                            <td class="text-nowrap fw-medium">
+                                @i.CreatedDateTime.ToString( "dd.MM.yyyy HH:mm:ss" )
+                            </td>
+                            <td>
+                                @{
+                                    var badgeClass = i.TypeStr switch
+                                    {
+                                        "Update" => "bg-primary",
+                                        "Delete" => "bg-danger",
+                                        "Create" => "bg-success",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @badgeClass rounded-pill px-2 py-1">@i.TypeStr</span>
+                            </td>
+                            <td class="text-break">@Html.Raw( i.Message )</td>
+                            <td class="fw-semibold text-muted">
+                                @i.CreatedByUserId
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if(!Model._LogTableModelEnumerator.Any())
+        {
+            <div class="text-center text-muted py-4">
+                <i class="bi bi-inbox fs-1 mb-2"></i>
+                <p class="mb-0">Нет записей для отображения.</p>
+            </div>
+        }
+    </div>
 
 }
 

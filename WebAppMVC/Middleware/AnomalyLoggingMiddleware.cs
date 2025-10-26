@@ -15,14 +15,14 @@
         {
             var request = context.Request;
 
-            // Пример: слишком длинный заголовок Host или подозрительный метод
+            //подозрительный метод
             if (request.Method != "GET" && request.Method != "POST" &&
                 request.Method != "PUT" && request.Method != "DELETE")
             {
                 _logger.LogWarning("🚨 Подозрительный HTTP-метод: {Method} от {IP}", 
                     request.Method, context.Connection.RemoteIpAddress);
             }
-
+            //слишком длинный заголовок Host
             if (request.Headers.Host.Count > 0 && request.Headers.Host[0].Length > 100)
             {
                 _logger.LogWarning("🚨 Аномальный Host-заголовок ({Length} символов) от {IP}", 

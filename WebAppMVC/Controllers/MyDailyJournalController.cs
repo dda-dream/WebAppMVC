@@ -14,7 +14,6 @@ namespace WebAppMVC.Controllers
     [Authorize]
     public class MyDailyJournalController : Controller
     {
-        int forTestTransientOrScooped = 0;
         private readonly IMyDailyJournalRepository repository;
         private readonly IMyDailyJournalRepository repository_forTest_LifeTime;
 
@@ -27,11 +26,7 @@ namespace WebAppMVC.Controllers
 
 //---------------------------------------------------------------------------------------------------
         public IActionResult Index()
-        {
-            forTestTransientOrScooped++;
-            repository.DoIncrement_forTestTransientOrScooped();
-
-            
+        {            
 
             IEnumerable<MyDailyJournalModel> objList = repository.GetAll();
             return View(objList);
@@ -56,7 +51,8 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Add(obj);
+
+                repository.Add(obj, User);
                 repository.Save();
                 
                 TempData[WC.Success] = "Запись создана!";
@@ -91,7 +87,7 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Update(obj);
+                repository.Update(obj, User);
                 repository.Save();
 
                 TempData[WC.Success] = "Запись изменена!";
@@ -129,7 +125,7 @@ namespace WebAppMVC.Controllers
             {
                 return NotFound();
             }
-            repository.Remove(obj);
+            repository.Remove(obj, User);
             repository.Save();
 
             TempData[WC.Success] = "Запись удалена!";

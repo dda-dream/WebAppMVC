@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebApp_DataAccess.Data;
@@ -17,12 +18,8 @@ namespace WebApp_DataAccess.Repository
         {
         }
 
-        public void DoIncrement_forTestTransientOrScooped()
-        {
-            forTestTransientOrScooped++;
-        }
 
-        public void Add(MyDailyJournalModel model)
+        public void Add(MyDailyJournalModel model, ClaimsPrincipal user)
         {
             model.CreatedDateTime = DateTime.Now;
             model.ModifiedDateTime = DateTime.Now;
@@ -36,9 +33,10 @@ namespace WebApp_DataAccess.Repository
             logTable.LogTableName = model.GetType().Name;
             logTable.LogRecordId = model.Id;
             logTable.Message = model.Text;
+            logTable.CreatedByUserId = user.Claims.FirstOrDefault().Value;
             db.LogTable.Add(logTable);             
         }
-        public void Update(MyDailyJournalModel model)
+        public void Update(MyDailyJournalModel model, ClaimsPrincipal user)
         {
             var objPrev = this.FirstOrDefault( _ => _.Id == model.Id, isTracking: false);
             model.CreatedDateTime = objPrev.CreatedDateTime;
@@ -51,12 +49,13 @@ namespace WebApp_DataAccess.Repository
             logTable.LogTableName = model.GetType().Name;
             logTable.LogRecordId = model.Id;
             logTable.Message = model.Text;
+            logTable.CreatedByUserId = user.Claims.FirstOrDefault().Value;
             db.LogTable.Add(logTable);
 
             db.MyDailyJournal.Update(model);
         }
 
-        public void Remove(MyDailyJournalModel model)
+        public void Remove(MyDailyJournalModel model, ClaimsPrincipal user)
         { 
             db.MyDailyJournal.Remove(model);
 
@@ -66,6 +65,7 @@ namespace WebApp_DataAccess.Repository
             logTable.LogTableName = model.GetType().Name;;
             logTable.Message = model.Text;
             logTable.LogRecordId = model.Id;
+            logTable.CreatedByUserId = user.Claims.FirstOrDefault().Value;
             db.LogTable.Add(logTable);
         }
     }

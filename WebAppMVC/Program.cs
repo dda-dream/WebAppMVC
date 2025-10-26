@@ -29,14 +29,10 @@ namespace WebAppMVC
 
         public static void Main(string[] args)
         {
-            Program.ppp = new Func<int, int, string>((i, i1) => 
-                {
-                    string s = "="+i.ToString()+"="; 
-                    return s;
-                }
-            );
 
-            string s = Program.ppp(111, 222);
+            char[] buffer = new char[100]; // Исходный буфер            
+            buffer.AsSpan().Fill(' '); // Заполнение пробелами без копирования
+            ReadOnlySpan<char> slice = buffer.AsSpan(10, 20); // Срез без аллокации
 
 
 
