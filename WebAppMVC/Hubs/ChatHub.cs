@@ -63,8 +63,10 @@ namespace WebAppMVC.Hubs
                 if (parts.Length == 2)
                     await Clients.Caller.SendAsync("ReceiveMessage", parts[0], $"{msg.MessageDate.ToShortDateString()} {msg.MessageDate.ToShortTimeString()} : {parts[1].Trim()}");
             }
-
-
         }
+
+
+
+
     }
 }

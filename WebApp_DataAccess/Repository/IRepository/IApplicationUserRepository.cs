@@ -12,5 +12,12 @@ namespace WebApp_DataAccess.Repository.IRepository
     public interface IApplicationUserRepository : IRepository<ApplicationUser>
     {
         void Update(ApplicationUser applicationUser);
+
+
+        public IEnumerable<ApplicationUser> GetUsersForLog(int logRecordId, string logTableName);
+
+        public int GetUserChatMessagesCount(string userid);
+        public Dictionary<DateTime, int> GetUserChatMessagesCountByDay(string userid);
+
     }
 }

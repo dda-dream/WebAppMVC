@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
 using System;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Initializer;
@@ -46,15 +49,18 @@ namespace WebAppMVC
 
             builder.WebHost.ConfigureKestrel(options =>
             {
-                options.ListenAnyIP(5055, listenOptions =>
+                options.Listen( System.Net.IPAddress.Any, 5055, listenOptions =>
                 {
+                    listenOptions.UseHttps();
+                });
+                
+                
+                options.Listen( System.Net.IPAddress.Any, 5050, listenOptions =>
+                {
+                    listenOptions.UseHttps();
                     listenOptions.UseConnectionHandler<MyConnectionHandler>();
                 });
                 
-                options.ListenAnyIP(5050, listenOptions =>
-                {
-                    listenOptions.UseConnectionHandler<MyConnectionHandler>();
-                });
             });
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -114,10 +120,21 @@ namespace WebAppMVC
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .WriteTo.File("Logs/app-.log", rollingInterval: RollingInterval.Day)
+                .WriteTo.MSSqlServer(
+                    connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+                    sinkOptions: new MSSqlServerSinkOptions
+                    {
+                        TableName = "Logs",
+                        AutoCreateSqlTable = true
+                    },
+                    restrictedToMinimumLevel: LogEventLevel.Information
+                )
                 .CreateLogger();
 
             builder.Host.UseSerilog(); // подключаем Serilog как источник логов
 
+
+            System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
             var app = builder.Build();
             
@@ -148,13 +165,21 @@ namespace WebAppMVC
                 dbInitializer.Initialize(); 
             }
 
-            if (!app.Environment.IsDevelopment())
+           if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
                 //app.UseHsts();
             }
 
-            app.UseStaticFiles();
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".7z"] = "application/x-7z-compressed";
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = provider
+            });
+
+
+
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -167,8 +192,24 @@ namespace WebAppMVC
 
             app.MapHub<ChatHub>("/chathub");
 
+            app.MapGet("/test", 
+                async c => 
+                { 
+                    await c.Response.WriteAsync("XXX"); 
+                } );
+
+            /*
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/test", async context =>
+                {
+                    await context.Response.WriteAsync("Hello, HTTPS!");
+                });
+            });
+            */
 
             app.Run();
+
         }
     }
 }

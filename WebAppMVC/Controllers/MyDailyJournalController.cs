@@ -14,13 +14,13 @@ namespace WebAppMVC.Controllers
     [Authorize]
     public class MyDailyJournalController : Controller
     {
-        private readonly IMyDailyJournalRepository repository;
-        private readonly IMyDailyJournalRepository repository_forTest_LifeTime;
+        private readonly IMyDailyJournalRepository myDailyJournalRepository;
+        private readonly IApplicationUserRepository appUserRepository;
 
-
-        public MyDailyJournalController( IMyDailyJournalRepository repository)
+        public MyDailyJournalController( IMyDailyJournalRepository repository, IApplicationUserRepository appUserRepository)
         {
-            this.repository = repository;
+            this.myDailyJournalRepository = repository;
+            this.appUserRepository = appUserRepository;
         }   
 
 
@@ -28,7 +28,7 @@ namespace WebAppMVC.Controllers
         public IActionResult Index()
         {            
 
-            IEnumerable<MyDailyJournalModel> objList = repository.GetAll();
+            IEnumerable<MyDailyJournalModel> objList = myDailyJournalRepository.GetAll();
             return View(objList);
         }
         
@@ -52,8 +52,8 @@ namespace WebAppMVC.Controllers
             if (ModelState.IsValid)
             {
 
-                repository.Add(obj, User);
-                repository.Save();
+                myDailyJournalRepository.Add(obj, User);
+                myDailyJournalRepository.Save();
                 
                 TempData[WC.Success] = "Запись создана!";
                 return RedirectToAction("Index");
@@ -71,7 +71,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = repository.Find(id.GetValueOrDefault());
+            var obj = myDailyJournalRepository.Find(id.GetValueOrDefault());
             if (obj == null) 
             { 
                 return NotFound();
@@ -87,8 +87,8 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Update(obj, User);
-                repository.Save();
+                myDailyJournalRepository.Update(obj, User);
+                myDailyJournalRepository.Save();
 
                 TempData[WC.Success] = "Запись изменена!";
                 return RedirectToAction("Index");
@@ -106,7 +106,7 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = repository.Find(id.GetValueOrDefault());
+            var obj = myDailyJournalRepository.Find(id.GetValueOrDefault());
             if (obj == null) 
             { 
                 return NotFound();
@@ -120,26 +120,36 @@ namespace WebAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = repository.Find(id.GetValueOrDefault());
+            var obj = myDailyJournalRepository.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
             }
-            repository.Remove(obj, User);
-            repository.Save();
+            myDailyJournalRepository.Remove(obj, User);
+            myDailyJournalRepository.Save();
 
             TempData[WC.Success] = "Запись удалена!";
             return RedirectToAction("Index");
         }
 
+
+
+
+
+
+
+
+
+
 //---------------------------------------------------------------------------------------------------
 
-        public class DataToView
-        {
-            public MyDailyJournalModel _MyDailyJournalModel;
-            public IEnumerable<LogTableModel> _LogTableModelEnumerator;
-        }
-        //GET - для ShowMoreInfo
+                    public class DataToView
+                    {
+                        public MyDailyJournalModel? _MyDailyJournalModel;
+                        public IEnumerable<LogTableModel>? _LogTableModelEnumerator;
+                        public IEnumerable<ApplicationUser>? _ApplicationUser;
+                    }
+
         public IActionResult ShowMoreInfo(int? id)
         {
             var d = new DataToView();
@@ -149,19 +159,31 @@ namespace WebAppMVC.Controllers
                 return NotFound();
             }
 
-            var obj = repository.Find(id.GetValueOrDefault());
+            var obj = myDailyJournalRepository.Find(id.GetValueOrDefault());
             if (obj == null) 
             { 
                 return NotFound();
             }
 
-            var LogTableList = repository.GetLogForId(id);
+            var logTableList = myDailyJournalRepository.GetLogForId(id);
+            var userIdList = logTableList.Select(l => l.CreatedByUserId).ToList(); 
+            //var applicationUser = appUserRepository.GetAll(filter: x => userIdList.Contains( x.Id ) );
+            var applicationUser1 = appUserRepository.GetUsersForLog( id ?? 0, typeof(MyDailyJournalModel).Name );
 
             d._MyDailyJournalModel = obj;
-            d._LogTableModelEnumerator = LogTableList;
+            d._LogTableModelEnumerator = logTableList;
+            d._ApplicationUser = applicationUser1;
+
 
             return View(d);
         }
+
+
+
+
+
+
+
 
 
     }

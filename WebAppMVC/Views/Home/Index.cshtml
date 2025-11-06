@@ -1,57 +1,15 @@
-﻿@model WebAppMVC_Models.ViewModels.HomeViewModel
+﻿@model List<string>
 
-<br />
+<h1>HOME</h1>
 @{
-	var a = Html.AntiForgeryToken();
-	a= a;
-}
-<br />
 
-<div class="container">
-	<div class="text-center">
-		<button class="btn btn-dark filter-button" data-filter="all">All</button>
-		@{
-			foreach (var category in this.Model.Categories)
-			{
-				<button class="btn btn-outline-secondary filter-button" data-filter="@category.Name.Replace(' ','_')">@category.Name</button>
-			}
-		}
-	</div>
-	
-	<br />
-
-	<div class="row">
-		@{
-			foreach (var product in this.Model.Products)
-			{
-				<partial name="_IndividualProductCard" model="product" />
-			}
-		} 
-	</div>
-
-
-</div>
-
-
-@section Scripts {
-
-    <script>
-
-        $(document).ready(function()
-        {
-            $(".filter-button").click(function()
-            {
-                var value = $(this).attr('data-filter');
-                if(value == "all")
-                {
-                    $('.filter').show('1000');
-                }
-                else
-                {
-                    $(".filter").not('.'+value).hide('3000');
-                    $('.filter').filter('.'+value).show('3000');
-                }
-            });
-        });
-    </script>
+    <br />
+    @Html.Raw( $"<a href='{Url.Content( "~/boomsosed.7z" )}'>Ссылка на boomsosed.7z</a>" )
+    <br />
+    Write( "test Write() " );
+    Write( Html.Raw( "<br>" ) );
+    foreach(var i in Model)
+    {
+         @Html.Raw(i) <br />
+    }
 }

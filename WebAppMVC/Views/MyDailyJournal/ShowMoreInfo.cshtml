@@ -58,7 +58,11 @@
                             </td>
                             <td class="text-break">@Html.Raw( i.Message )</td>
                             <td class="fw-semibold text-muted">
-                                @i.CreatedByUserId
+                                @{
+                                    ApplicationUser a = this.Model._ApplicationUser.Where(x=>x.Id == i.CreatedByUserId).FirstOrDefault();
+                                    string s = a == null ? "Неизвестный пользователь" : a.FullName;
+                                    this.Write( s );
+                                 }
                             </td>
                         </tr>
                     }

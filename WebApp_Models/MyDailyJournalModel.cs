@@ -36,7 +36,6 @@ namespace WebAppMVC_Models
         [DisplayName("Статус выполнения")]
         public MyDailyJournal_ExecutionStatus ExecutionStatus { get; set; }
 
-         
 
     }
 }

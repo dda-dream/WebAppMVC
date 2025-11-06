@@ -14,5 +14,9 @@ namespace WebApp_DataAccess.Repository.IRepository
         void Add(MyDailyJournalModel model, ClaimsPrincipal user);
         void Update(MyDailyJournalModel model, ClaimsPrincipal user);
         void Remove(MyDailyJournalModel model, ClaimsPrincipal user);
+
+        //IEnumerable<LogTableModel> GetLogForId(int? id);
+
+
     }
 }

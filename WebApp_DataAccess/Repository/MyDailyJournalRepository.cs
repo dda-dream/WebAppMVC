@@ -68,5 +68,11 @@ namespace WebApp_DataAccess.Repository
             logTable.CreatedByUserId = user.Claims.FirstOrDefault().Value;
             db.LogTable.Add(logTable);
         }
+
+
+
+
+
+
     }
 }

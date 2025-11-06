@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 using WebApp_DataAccess.Data;
+using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Models;
 using WebAppMVC_Models.ViewModels;
@@ -16,42 +17,72 @@ namespace WebAppMVC.Controllers
 
         private readonly IProductRepository productRepository;
         private readonly ICategoryRepository categoryRepository;
+        private readonly IApplicationUserRepository applicationUserRepository;
 
 
-        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, ICategoryRepository categoryRepository)
+        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, ICategoryRepository categoryRepository,
+            IApplicationUserRepository applicationUserRepository )
         {
             _logger = logger;
             this.productRepository = productRepository;
             this.categoryRepository = categoryRepository;
+            this.applicationUserRepository = applicationUserRepository;
         }
          
 //---------------------------------------------------------------------------------------------------
 
         public IActionResult Index()
         {
-            var homeViewModel = new HomeViewModel();
-            homeViewModel.Products = productRepository.GetAll(includeProperties:"Category");//Eager loading - жадная загрузка.
-            homeViewModel.Categories = categoryRepository.GetAll();
-
             string headers="";
             foreach (var i in HttpContext.Request.Headers)
             {
-                headers = headers + $"\n{i.Key} = {i.Value}";
+                headers = headers + $"\n<br>{i.Key} ===> {i.Value}";
             }
 
-            _logger.LogInformation($"\n---------------------------{HttpContext.Connection.RemoteIpAddress} {HttpContext.Connection.RemotePort}" +
-                $"\nCookies count:{HttpContext.Request.Cookies.Count}" +
-                $"\nHeaders count:{HttpContext.Request.Headers.Count}" +
-                $"\n-----------------------------------------------------------" +
-                $"{headers}" +
-                $"\n-----------------------------------------------------------" +
-                $"\n");
+            _logger.LogInformation(
+                $"\n<br>---------------------------{HttpContext.Connection.RemoteIpAddress} {HttpContext.Connection.RemotePort}" +
+                $"\n<br>Cookies count:{HttpContext.Request.Cookies.Count}" +
+                $"\n<br>Headers count:{HttpContext.Request.Headers.Count}" +
+                $"\n<br>-----------------------------------------------------------" +
+                $"<br>{headers}" +
+                $"<br>\n-----------------------------------------------------------" +
+                $"<br>\n");
 
 
             var builder = LoggerFactory.Create(b => b.AddConsole());
 
             ILogger<string> logger1 = builder.CreateLogger<string>();
             logger1.LogInformation("testLogMessage");
+
+
+
+            //test
+            var claim = User.Claims.FirstOrDefault();
+            var userid = "70f806fa-3869-4eef-a9f2-6c0d3a54554e";//claim.Value; Admin Admin
+            var msgCount = applicationUserRepository.GetUserChatMessagesCount(userid);
+            var msgCountByDay = applicationUserRepository.GetUserChatMessagesCountByDay(userid);
+            //test
+
+            List<string> sList = new List<string>();
+            sList.Add("--- :HEADERS: ---");
+            sList.Add($"{headers}");
+            sList.Add("<br><br>--- :msgCountByDay: ---");
+            foreach(var i in msgCountByDay)
+            {
+                sList.Add($"<br>{i.Key} - {i.Value}");
+            }
+            sList.Add("--- :END: ---");
+            return View(sList);
+        } 
+
+
+
+
+        public IActionResult Shop()
+        {
+            var homeViewModel = new HomeViewModel();
+            homeViewModel.Products = productRepository.GetAll(includeProperties:"Category");//Eager loading - жадная загрузка.
+            homeViewModel.Categories = categoryRepository.GetAll();
 
             return View(homeViewModel);
         } 

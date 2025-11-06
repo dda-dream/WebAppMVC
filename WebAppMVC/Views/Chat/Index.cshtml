@@ -1,6 +1,5 @@
 ﻿@model ApplicationUser
 
-
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -39,10 +38,11 @@
 </audio>
 
 @section Scripts {
-    @* 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
-    *@
+
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    
     <script>
+
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/chathub")
             .build();
@@ -147,8 +147,6 @@
             }
         });
 
-
-        document.getElementById("userInput").value = @Html.Raw( Json.Serialize( Model.FullName ) );
-
+        document.getElementById("userInput").value = "@Html.Raw(Json.Serialize(Model.FullName))";
     </script>
 }

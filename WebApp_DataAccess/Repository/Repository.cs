@@ -71,16 +71,7 @@ namespace WebApp_DataAccess.Repository
             return query.ToList();
         }
 
-        public IEnumerable<LogTableModel> GetLogForId(int? id)
-        {
-            string tableName = typeof(T).Name;
 
-            var retVal = db.LogTable.Where(l => l.LogRecordId == id && l.LogTableName == tableName)
-                                    //.Where(q => q.LogTableName == tableName)
-                                    .OrderBy(l => l.CreatedDateTime)
-                                    .ToList();
-            return retVal;
-        }
 
         public void Add(T entity)
         {
@@ -102,5 +93,23 @@ namespace WebApp_DataAccess.Repository
         {
             dbSet.RemoveRange(entitys);
         }
+
+
+
+
+        public IEnumerable<LogTableModel> GetLogForId(int? id)
+        {
+            string tableName = typeof(T).Name;
+
+            var retVal = db.LogTable.Where(l => l.LogRecordId == id && l.LogTableName == tableName)
+                                    //.Where(q => q.LogTableName == tableName)
+                                    .OrderBy(l => l.CreatedDateTime)
+                                    .ToList();
+            return retVal;
+        }
+
+
+
+
     }
 }
