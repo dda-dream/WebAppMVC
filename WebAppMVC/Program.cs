@@ -32,16 +32,7 @@ namespace WebAppMVC
 
         public static void Main(string[] args)
         {
-
-            char[] buffer = new char[100]; // Исходный буфер            
-            buffer.AsSpan().Fill(' '); // Заполнение пробелами без копирования
-            ReadOnlySpan<char> slice = buffer.AsSpan(10, 20); // Срез без аллокации
-
-
-
-
             var builder = WebApplication.CreateBuilder(args);
-
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
             builder.Logging.AddDebug(); // для отладки
@@ -91,7 +82,6 @@ namespace WebAppMVC
             builder.Services.AddScoped<ISalesLineRepository, SalesLineRepository>();
 
 
-
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
   
@@ -106,14 +96,12 @@ namespace WebAppMVC
                     o.AppSecret = "b43805b8a2d103e715110cf5def93018";
                 });
 
-
-            
-
                        
             builder.Services.AddScoped<IMyDailyJournalRepository, MyDailyJournalRepository>();
             builder.Services.AddSignalR();
             builder.Services.AddSingleton<ChatHistoryService>();
             builder.Services.AddScoped<IChatRepository, ChatRepository>();
+            //builder.Services.AddScoped<IChatRepository, ChatRepository1>();
 
 
             Log.Logger = new LoggerConfiguration()
