@@ -15,10 +15,13 @@ namespace WebAppMVC.Controllers
     public class WebApiChatController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
+         
         public WebApiChatController(ApplicationDbContext context)
         {
             _context = context;
+
+
+
         }
 
         // GET: api/ChatModels

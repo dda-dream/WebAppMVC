@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace WebApp_DataAccess.Repository
 
         public void Add(LogTableModel model)
         { 
-
+            //db.LogTable.Include(c => c.Id).ThenInclude
             /*         
             LogTableModel logTable = new LogTableModel();
             logTable.CreatedDateTime = DateTime.Now;

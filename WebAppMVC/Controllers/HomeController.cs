@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Diagnostics;
@@ -31,6 +32,23 @@ namespace WebAppMVC.Controllers
          
 //---------------------------------------------------------------------------------------------------
 
+        
+        [HttpGet("{id}")]
+        public IActionResult Index(int id)
+        {
+            //FileStream fs = new FileStream("C:\\Temp\\test.txt", FileMode.Open, FileAccess.Read);
+            return Ok();
+        }
+
+        [HttpGet("Error404/{Id}")]
+        public IActionResult Error404(int Id)
+        {
+            //FileStream fs = new FileStream("C:\\Temp\\test.txt", FileMode.Open, FileAccess.Read);
+            return Ok();
+        }
+
+        
+        [HttpGet]
         public IActionResult Index()
         {
             string headers="";
@@ -77,7 +95,7 @@ namespace WebAppMVC.Controllers
 
 
 
-
+        [HttpGet("Shop")]
         public IActionResult Shop()
         {
             var homeViewModel = new HomeViewModel();
@@ -92,6 +110,7 @@ namespace WebAppMVC.Controllers
 //---------------------------------------------------------------------------------------------------
 
 
+        [HttpGet("Details")]
         public IActionResult Details(int id)
         {
 
@@ -139,7 +158,7 @@ namespace WebAppMVC.Controllers
         } 
 
 //---------------------------------------------------------------------------------------------------
-
+        [HttpGet("RemoveFromCart")]
         public IActionResult RemoveFromCart(int id)
         {   
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
@@ -160,6 +179,7 @@ namespace WebAppMVC.Controllers
 //---------------------------------------------------------------------------------------------------
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpGet("Error")]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

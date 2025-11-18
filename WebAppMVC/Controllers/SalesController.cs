@@ -18,6 +18,8 @@ namespace WebAppMVC.Controllers
         [BindProperty]
         public SalesLineListVM SalesLineListVM { get; set; }
 
+
+
         public SalesController(ISalesTableRepository _salesTableRepository, ISalesLineRepository _salesLineRepository,
             IBrainTreeGate _brainTreeGate)
         {

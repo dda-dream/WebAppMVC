@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi;
 using Serilog;
 using Serilog;
 using Serilog.Events;
@@ -89,6 +91,7 @@ namespace WebAppMVC
             builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("BrainTree"));
             builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
 
+
             //FACEBOOK
             builder.Services.AddAuthentication().AddFacebook(o =>
                 { 
@@ -121,10 +124,20 @@ namespace WebAppMVC
 
             builder.Host.UseSerilog(); // подключаем Serilog как источник логов
 
+            builder.Services.AddSwaggerGen();
 
             System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
             var app = builder.Build();
+            /*
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/hello", async context =>
+                {
+                    await context.Response.WriteAsync("Hello, HTTPS!");
+                });
+            });
+            */
             
             app.UseMiddleware<AnomalyLoggingMiddleware>();
             app.UseExceptionHandler(errorApp =>
@@ -137,15 +150,13 @@ namespace WebAppMVC
                     if (exceptionHandlerPathFeature?.Error != null)
                     {
                         logger.LogError(exceptionHandlerPathFeature.Error,
-                            "❌ Необработанное исключение на {Path}", exceptionHandlerPathFeature.Path);
+                            "NEOBRABOTANNOE ISKLUCHENIE: {Path}", exceptionHandlerPathFeature.Path);
                     }
 
                     context.Response.StatusCode = 500;
-                    await context.Response.WriteAsync("Произошла ошибка.");
+                    await context.Response.WriteAsync("!!!ERROR!!! 500.");
                 });
             });
-
-
 
             using (var scope = app.Services.CreateScope())
             {
@@ -159,12 +170,20 @@ namespace WebAppMVC
                 //app.UseHsts();
             }
 
+           /*
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".7z"] = "application/x-7z-compressed";
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                ContentTypeProvider = provider
-            });
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    ContentTypeProvider = provider
+                });
+            */
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>() { { ".7z", "application/x-7z-compressed" } } )
+                });
 
 
 
@@ -174,9 +193,28 @@ namespace WebAppMVC
             app.UseSession();
             app.MapRazorPages();
 
+            app.MapSwagger();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            
+
+            /*
             app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                name: "default0",
+                pattern: "{controller=Home}/{action=Index}/{id}",
+                defaults: new { controller = "Home", action = "Index" });
+            */
+
+            app.MapControllerRoute(
+                name: "default1",
+                pattern: "{controller=Home}/{action=Index}");
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default2",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            } );
 
             app.MapHub<ChatHub>("/chathub");
 
@@ -186,18 +224,7 @@ namespace WebAppMVC
                     await c.Response.WriteAsync("XXX"); 
                 } );
 
-            /*
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/test", async context =>
-                {
-                    await context.Response.WriteAsync("Hello, HTTPS!");
-                });
-            });
-            */
-
             app.Run();
-
         }
     }
 }
