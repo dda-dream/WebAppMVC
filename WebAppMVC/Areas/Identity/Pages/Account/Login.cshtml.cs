@@ -2,18 +2,19 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using WebApp_DataAccess.Data;
 
 namespace WebAppMVC.Areas.Identity.Pages.Account
 {
@@ -21,11 +22,13 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, ApplicationDbContext applicationDbContext)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _applicationDbContext = applicationDbContext;
         }
 
         /// <summary>
@@ -53,6 +56,13 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
         /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
+
+
+
+        [Display(Name = "AwailableLogins")]
+        public IEnumerable<string> AwailableLogins { get; set; } = new List<string> { "aaaaaaaa", "bbbbbbbbb" };
+
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -86,8 +96,6 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            //ExternalLogins1.
-
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
@@ -99,6 +107,11 @@ namespace WebAppMVC.Areas.Identity.Pages.Account
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            
+
+            var listOfLogins = _applicationDbContext.Users.ToList();
+            AwailableLogins = listOfLogins.Select(u => u.UserName).ToList();
 
             ReturnUrl = returnUrl;
         }

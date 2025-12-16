@@ -32,7 +32,7 @@ namespace WebAppMVC.Controllers
          
 //---------------------------------------------------------------------------------------------------
 
-        
+/*        
         [HttpGet("{id}")]
         public IActionResult Index(int id)
         {
@@ -46,21 +46,33 @@ namespace WebAppMVC.Controllers
             //FileStream fs = new FileStream("C:\\Temp\\test.txt", FileMode.Open, FileAccess.Read);
             return Ok();
         }
-
+*/
         
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int? id)
         {
-            string headers="";
+            string headers="", cookies="";
             foreach (var i in HttpContext.Request.Headers)
             {
-                headers = headers + $"\n<br>{i.Key} ===> {i.Value}";
+                foreach (var y in i.Value.ToString().Split(";"))
+                {
+                    headers = headers + $"<br><b>{i.Key}</b> ===> {y}";
+                }
+            }
+            foreach (var i in HttpContext.Request.Cookies)
+            {
+                foreach (var y in i.Value.ToString().Split(";"))
+                {
+                    cookies = cookies + $"<br><b>{i.Key}</b> ===> {y}";
+                }
             }
 
             _logger.LogInformation(
                 $"\n<br>---------------------------{HttpContext.Connection.RemoteIpAddress} {HttpContext.Connection.RemotePort}" +
                 $"\n<br>Cookies count:{HttpContext.Request.Cookies.Count}" +
                 $"\n<br>Headers count:{HttpContext.Request.Headers.Count}" +
+                $"\n<br>-----------------------------------------------------------" +
+                $"<br>{cookies}" +
                 $"\n<br>-----------------------------------------------------------" +
                 $"<br>{headers}" +
                 $"<br>\n-----------------------------------------------------------" +
@@ -73,23 +85,28 @@ namespace WebAppMVC.Controllers
             logger1.LogInformation("testLogMessage");
 
 
+            
 
             //test
-            var claim = User.Claims.FirstOrDefault();
-            var userid = "70f806fa-3869-4eef-a9f2-6c0d3a54554e";//claim.Value; Admin Admin
-            var msgCount = applicationUserRepository.GetUserChatMessagesCount(userid);
-            var msgCountByDay = applicationUserRepository.GetUserChatMessagesCountByDay(userid);
+            //var claim = User.Claims.FirstOrDefault();
+            //var userid = "70f806fa-3869-4eef-a9f2-6c0d3a54554e";//claim.Value; Admin Admin
+            //var msgCount = applicationUserRepository.GetUserChatMessagesCount(userid);
+            //var msgCountByDay = applicationUserRepository.GetUserChatMessagesCountByDay(userid);
             //test
-
             List<string> sList = new List<string>();
             sList.Add("--- :HEADERS: ---");
             sList.Add($"{headers}");
+            sList.Add("--- :COOKIES: ---");
+            sList.Add($"{cookies}");
+            /*
             sList.Add("<br><br>--- :msgCountByDay: ---");
             foreach(var i in msgCountByDay)
             {
                 sList.Add($"<br>{i.Key} - {i.Value}");
             }
+            */
             sList.Add("--- :END: ---");
+            
             return View(sList);
         } 
 

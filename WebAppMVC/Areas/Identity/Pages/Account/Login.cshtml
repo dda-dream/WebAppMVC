@@ -1,6 +1,19 @@
 ﻿@page
 @model LoginModel
 <div id="logreg-forms">
+
+    <div>
+        <h1>Список доступных логинов:</h1>
+        <ul>
+        @{
+            foreach(var login in Model.AwailableLogins)
+            {
+                <li> @login </li>
+            }
+        }
+        </ul>
+    </div>
+
     <h1 class="h3 mb-3 font-weight-normal text-info pt-4" style="text-align:center;">Sign In</h1>
     @if ((Model.ExternalLogins?.Count ?? 0) == 0)
     {

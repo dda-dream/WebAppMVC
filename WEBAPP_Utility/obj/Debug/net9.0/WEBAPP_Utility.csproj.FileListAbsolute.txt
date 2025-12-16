@@ -36,3 +36,16 @@ E:\Users\User\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Util
 E:\Users\User\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\refint\WebApp_Utility.dll
 E:\Users\User\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Utility.pdb
 E:\Users\User\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\ref\WebApp_Utility.dll
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\bin\Debug\net9.0\WebApp_Utility.deps.json
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\bin\Debug\net9.0\WebApp_Utility.dll
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\bin\Debug\net9.0\WebApp_Utility.pdb
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Utility.csproj.AssemblyReference.cache
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Utility.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Utility.AssemblyInfoInputs.cache
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Utility.AssemblyInfo.cs
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Utility.csproj.CoreCompileInputs.cache
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Utility.sourcelink.json
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Utility.dll
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\refint\WebApp_Utility.dll
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\WebApp_Utility.pdb
+C:\Users\d\source\repos\WebAppMVC\WEBAPP_Utility\obj\Debug\net9.0\ref\WebApp_Utility.dll

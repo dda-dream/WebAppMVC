@@ -6,15 +6,21 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using Microsoft.OpenApi;
 using Serilog;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 using System;
+using System.Buffers;
+using System.Linq.Expressions;
+using System.Text;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Initializer;
 using WebApp_DataAccess.Repository;
@@ -28,13 +34,20 @@ using WebAppMVC_Utility;
 
 namespace WebAppMVC
 {
+
     public class Program
     {
-        static Func<int, int, string> ppp;
+
+
+
 
         public static void Main(string[] args)
         {
+
+
             var builder = WebApplication.CreateBuilder(args);
+            var configuration = builder.Configuration;
+
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
             builder.Logging.AddDebug(); // для отладки
@@ -124,6 +137,8 @@ namespace WebAppMVC
 
             builder.Host.UseSerilog(); // подключаем Serilog как источник логов
 
+
+
             builder.Services.AddSwaggerGen();
 
             System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
@@ -154,7 +169,7 @@ namespace WebAppMVC
                     }
 
                     context.Response.StatusCode = 500;
-                    await context.Response.WriteAsync("!!!ERROR!!! 500.");
+                    await context.Response.WriteAsync("!!!ERROR!!! 500. v UseExceptionHandler Prorgam.cs");
                 });
             });
 
@@ -170,7 +185,7 @@ namespace WebAppMVC
                 //app.UseHsts();
             }
 
-           /*
+            /* 
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".7z"] = "application/x-7z-compressed";
             app.UseStaticFiles(
@@ -180,13 +195,13 @@ namespace WebAppMVC
                 });
             */
             app.UseStaticFiles(
-                new StaticFileOptions
-                {
-                    ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>() { { ".7z", "application/x-7z-compressed" } } )
-                });
+               new StaticFileOptions
+               {
+                   ContentTypeProvider = new FileExtensionContentTypeProvider() { Mappings = { { ".7z", "application/x-7z-compressed" } } }
+               });
 
 
-
+            
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -196,33 +211,64 @@ namespace WebAppMVC
             app.MapSwagger();
             app.UseSwagger();
             app.UseSwaggerUI();
-            
 
+
+
+
+
+
+
+            
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}",
+                defaults: new { controller = "Home", action = "Index" });
+            
             /*
+            app.MapControllerRoute(
+                name: "default1",
+                pattern: "{controller=Home}/{action=Index}");
+            */
+/*
             app.MapControllerRoute(
                 name: "default0",
                 pattern: "{controller=Home}/{action=Index}/{id}",
                 defaults: new { controller = "Home", action = "Index" });
-            */
+*/
 
-            app.MapControllerRoute(
-                name: "default1",
-                pattern: "{controller=Home}/{action=Index}");
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default2",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            } );
 
             app.MapHub<ChatHub>("/chathub");
 
-            app.MapGet("/test", 
-                async c => 
-                { 
-                    await c.Response.WriteAsync("XXX"); 
-                } );
+            app.MapGet("/_debug/routes/details", (IEnumerable<EndpointDataSource> endpointSources) =>
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine("Registered Routes:");
+                sb.AppendLine("==================");
+
+                foreach (var endpoint in endpointSources.SelectMany(x => x.Endpoints))
+                {
+                    if (endpoint is RouteEndpoint routeEndpoint)
+                    {
+                        sb.AppendLine($"DisplayName: {routeEndpoint.DisplayName}");
+                        sb.AppendLine($"Pattern: {routeEndpoint.RoutePattern.RawText}");
+                        sb.AppendLine($"Order: {routeEndpoint.Order}");
+
+                        var httpMethods = routeEndpoint.Metadata
+                            .OfType<HttpMethodMetadata>()
+                            .FirstOrDefault()?.HttpMethods;
+
+                        if (httpMethods != null)
+                        {
+                            sb.AppendLine($"Methods: {string.Join(", ", httpMethods)}");
+                        }
+
+                        sb.AppendLine("---");
+                    }
+                }
+
+                return Results.Text(sb.ToString(), "text/plain");
+            });
+
 
             app.Run();
         }

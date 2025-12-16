@@ -21,7 +21,7 @@ namespace WebAppMVC.Controllers
             this.chatRepository = chatRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Chat()
         {
             var userClaim = User.Claims.FirstOrDefault();
             var user = applicationUserRepository.FirstOrDefault(q => q.Id == userClaim.Value);
