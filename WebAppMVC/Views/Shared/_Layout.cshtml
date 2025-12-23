@@ -74,8 +74,6 @@
 				</button>
 
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-
-
 					<ul class="navbar-nav flex-grow-1">
 
 						<li class="nav-item">
@@ -84,7 +82,6 @@
 						<li class="nav-item">
 							<a class="nav-link text-danger bg-light" asp-area="" asp-controller="MyDailyJournal" asp-action="Index">Ежедневник</a>
 						</li>
-
 						<li class="nav-item">
 							<a class="nav-link text-danger bg-light" asp-area="" asp-controller="Chat" asp-action="Chat">Чат</a>
 						</li>
@@ -99,10 +96,10 @@
 									Редактор магазина
 								</a>
 								<ul class="dropdown-menu">
-									<a class="dropdown-item text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
-									<a class="dropdown-item text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item text-dark" asp-area="Identity" asp-page="/Account/Register"> Create Admin User</a>
+									<li><a class="dropdown-item text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a></li>
+									<li><a class="dropdown-item text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a></li>
+									<li><hr class="dropdown-divider"></li>
+									<li><a class="dropdown-item text-dark" asp-area="Identity" asp-page="/Account/Register"> Create Admin User</a></li>
 								</ul>
 							</li>
 

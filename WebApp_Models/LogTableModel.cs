@@ -35,5 +35,8 @@ namespace WebAppMVC_Models
         public string CreatedByUserId { get; set; } = "";
 
 
+        [DisplayName("IP:")]
+        public string? _IP_ { get; set; }
+
     }
 }

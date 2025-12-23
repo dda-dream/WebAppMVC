@@ -19,6 +19,7 @@ using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 using System;
 using System.Buffers;
+using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Text;
 using WebApp_DataAccess.Data;
@@ -37,13 +38,17 @@ namespace WebAppMVC
 
     public class Program
     {
+        static void method()
+        {
+            var pool = ArrayPool<int>.Shared;
+            var intArr = pool.Rent(100);
+            pool.Return(intArr);
 
-
-
+        }
 
         public static void Main(string[] args)
         {
-
+            Program.method();
 
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
@@ -180,10 +185,10 @@ namespace WebAppMVC
             }
 
            if (!app.Environment.IsDevelopment())
-            {
+           {
                 app.UseExceptionHandler("/Home/Error");
                 //app.UseHsts();
-            }
+           }
 
             /* 
             var provider = new FileExtensionContentTypeProvider();
