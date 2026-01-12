@@ -66,7 +66,7 @@
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-gradient border-bottom box-shadow mb-3">
 			<div class="container-fluid">
 
-				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">-=My Site (home)=-</a>
+				<a class="navbar-brand text-primary" asp-area="" asp-controller="Home" asp-action="Index">MY</a>
 
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
 						aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,6 +99,8 @@
 									<li><a class="dropdown-item text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a></li>
 									<li><a class="dropdown-item text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a></li>
 									<li><hr class="dropdown-divider"></li>
+									<li><a class="dropdown-item text-dark" asp-area="" asp-controller="Product" asp-action="ProductSelector">.Product Selector.</a></li>
+									<li><hr class="dropdown-divider"></li>
 									<li><a class="dropdown-item text-dark" asp-area="Identity" asp-page="/Account/Register"> Create Admin User</a></li>
 								</ul>
 							</li>
@@ -115,7 +117,7 @@
 						}
 
 						<li>
-							@if (HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null)
+							@if (HttpContextAccessor.HttpContext != null && HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null)
 							{
 								<a asp-action="Index" asp-controller="Cart" class="nav-link">
 									@{
