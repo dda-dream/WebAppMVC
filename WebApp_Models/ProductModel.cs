@@ -34,4 +34,5 @@ namespace WebAppMVC_Models
         [Range(1,10000, ErrorMessage = "Количество дожно быть указано")]
         public int TempQty {get; set;}
     }
+
 }

@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Repository;
+using WebApp_DataAccess.Repository.DTO;
 using WebApp_DataAccess.Repository.IRepository;
 using WebAppMVC_Models;
 using WebAppMVC_Models.ViewModels;
@@ -30,38 +32,39 @@ namespace WebAppMVC.Controllers
         {            
             
             IEnumerable<ProductModel> products = productRepository.GetAll(includeProperties:"Category");
-
-            /*
-            foreach (ProductModel obj in products)
-            {
-                obj.Category = productRepository.FirstOrDefault(u => u.Id == obj.CategoryId);
-            }
-            */
             
             return View(products);
         }
-        
-//---------------------------------------------------------------------------------------------------
+
+
+
+
+        public IActionResult ProductSelector()
+        {
+            List<ProductModel> allProducts = productRepository.GetAll().ToList();
+
+            return View(allProducts);
+        }
+
+
+        [HttpGet]
+        public JsonResult ProductSelector_GetData(string searchPattern)
+        {
+            var allProducts = productRepository.GetProductListByPattern(searchPattern);
+            var result = allProducts.ToJson();
+            
+            Console.Write(result.ToString());
+            
+            return Json(allProducts);
+        }
+
+
+
+        //---------------------------------------------------------------------------------------------------
 
         //GET - для UPDATEORINSERT
         public IActionResult UpdateOrInsert(int? id)
         {
-            /*
-            IEnumerable<SelectListItem> CategoryDropDown = _db.Category.Select(i => new SelectListItem
-            {
-                Text = i.Name,
-                Value = i.Id.ToString(),
-            });
-            ViewBag.CategoryDropDown = CategoryDropDown;
-            var list = CategoryDropDown.ToList();
-            ViewBag.CategoryDropDown_List = list;
-            ViewBag.CategoryDropDown_List1 = CategoryDropDown.ToList();
-
-            ViewData["CategoryDropDown"] = CategoryDropDown;
-            TempData["CategoryDropDown"] = CategoryDropDown;
-            */
-
-            //ProductModel productModel = new ProductModel();
             ProductViewModel productViewModel = new ProductViewModel();
             productViewModel.Product = new ProductModel();
             productViewModel.CategorySelectList = productRepository.GetCategoryDropDownList();

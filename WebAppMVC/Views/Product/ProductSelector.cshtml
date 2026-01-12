@@ -1,0 +1,83 @@
+﻿@using WebAppMVC_Models
+@model List<ProductModel>
+
+<p> *Product Selector* </p>
+<p>Поиск продуктов по мере набора их в строке поиска - 1</p>
+
+
+<input type="text" id="productSearch" placeholder="Вводите название продукта." />
+<br />
+<br />
+<br />
+<div id="ListProducts">
+</div>
+
+<br />
+--------------------------------------------------------------------------------------------------------------
+<br>
+<div id="debug_debug">
+    _debug_
+</div>
+--------------------------------------------------------------------------------------------------------------
+<br>
+
+<b>DataTable</b>
+<br />
+<div id="DataTable">
+    ===
+</div>
+
+
+
+<script>
+    async function prodSearch()
+    {
+        const searchText = document.getElementById('productSearch').value;
+        document.getElementById('debug_debug').innerText = searchText;
+
+        const params = new URLSearchParams({ searchPattern: searchText, });
+
+        const URL = '/Product/ProductSelector_GetData'+'?'+params.toString();
+        let response = await fetch( URL,
+                                    { method: 'GET' }
+                                  );
+        let parsedData = await response.json();
+
+        renderTable(parsedData);
+    }
+
+
+
+
+    function renderTable( data_in )  
+    {
+        let html = '<table border="1"><thead><tr><th>ID</th><th>Наименование</th><th>Short Descr</th></tr></thead><tbody>';
+
+        if (typeof data_in === 'string') {
+            data = JSON.parse(data_in); 
+        } else {
+            data = data_in;
+        }
+
+        data.forEach(item => {
+            html += `<tr>
+                <td>${item.id}</td>
+                <td>${item.name}</td>
+                <td>${item.shortDesc}</td>
+                <td>${item.price}</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        document.getElementById('DataTable').innerHTML = html;
+    }
+
+</script>
+
+
+<script>
+    // GLOBAL SCRIPTS
+       const prodSearchInput = document.getElementById('productSearch');
+       prodSearchInput.addEventListener('input', prodSearch);
+    // GLOBAL SCRIPTS
+</script>
