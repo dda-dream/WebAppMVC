@@ -203,9 +203,10 @@ namespace WebAppMVC
                     ContentTypeProvider = provider
                 });
             */
-            app.UseStaticFiles(
+            app.UseStaticFiles( 
                new StaticFileOptions
                {
+                   ServeUnknownFileTypes = true,
                    ContentTypeProvider = new FileExtensionContentTypeProvider() { Mappings = { { ".7z", "application/x-7z-compressed" } } }
                });
 
