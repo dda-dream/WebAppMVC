@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using Microsoft.OpenApi;
 using Serilog;
-using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 using System;
@@ -33,8 +32,13 @@ using WebAppMVC.Middleware;
 using WebAppMVC.Views.Services;
 using WebAppMVC_Utility;
 
+
 namespace WebAppMVC
 {
+
+
+
+
 
     public class Program
     {

@@ -19,6 +19,10 @@ namespace WebAppMVC.Controllers
     [Authorize]
     public class CartController : Controller
     {
+        [BindProperty]
+        public ProductUserViewModel? ProductUserViewModel { get; set; }
+
+
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailSender _emailSender;
 
@@ -31,8 +35,6 @@ namespace WebAppMVC.Controllers
         private readonly ISalesLineRepository salesLineRepository;
         private readonly IBrainTreeGate brainTreeGate;
 
-        [BindProperty]
-        public ProductUserViewModel? ProductUserViewModel { get; set; }
 
 
         public CartController(IApplicationUserRepository applicationUserRepository, IProductRepository productRepository,
@@ -52,7 +54,11 @@ namespace WebAppMVC.Controllers
             this.salesLineRepository = salesLineRepository;
             this.brainTreeGate = brainTreeGate;
         }
-//------------------------------//------------------------------//------------------------------//------------------------------//------------------------------
+
+
+
+
+
         public IActionResult Index() // GET
         {
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
@@ -74,6 +80,10 @@ namespace WebAppMVC.Controllers
 
             return View(prodList);
         }
+
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
