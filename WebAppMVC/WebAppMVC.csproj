@@ -11,7 +11,7 @@
   <ItemGroup>
     <Folder Include="Logs\" />
     <Folder Include="wwwroot\images\product\" />
-    <Folder Include="wwwroot\summernote\" />
+    <Folder Include="wwwroot\toastr\" />
   </ItemGroup>
 
   <ItemGroup>

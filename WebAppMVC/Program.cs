@@ -67,6 +67,7 @@ namespace WebAppMVC
                 options.Listen( System.Net.IPAddress.Any, 5055, listenOptions =>
                 {
                     listenOptions.UseHttps();
+                    //listenOptions.UseConnectionHandler<MyConnectionHandler>();
                 });
                 
                 
@@ -97,13 +98,14 @@ namespace WebAppMVC
             });
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IOrderTableRepository, OrderTableRepository>();
-            builder.Services.AddScoped<IOrderLineRepository, OrderLineRepository>();
-            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-            builder.Services.AddScoped<ISalesTableRepository, SalesTableRepository>();
-            builder.Services.AddScoped<ISalesLineRepository, SalesLineRepository>();
+
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>()
+                            .AddScoped<IProductRepository, ProductRepository>()
+                            .AddScoped<IOrderTableRepository, OrderTableRepository>()
+                            .AddScoped<IOrderLineRepository, OrderLineRepository>()
+                            .AddScoped<IApplicationUserRepository, ApplicationUserRepository>()
+                            .AddScoped<ISalesTableRepository, SalesTableRepository>()
+                            .AddScoped<ISalesLineRepository, SalesLineRepository>();
 
 
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
@@ -126,7 +128,6 @@ namespace WebAppMVC
             builder.Services.AddSignalR();
             builder.Services.AddSingleton<ChatHistoryService>();
             builder.Services.AddScoped<IChatRepository, ChatRepository>();
-            //builder.Services.AddScoped<IChatRepository, ChatRepository1>();
 
 
             Log.Logger = new LoggerConfiguration()
