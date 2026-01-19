@@ -56,18 +56,19 @@
 
 </form>
 
+<div id="emojiPicker" class="card" style="display:none; position:absolute; z-index:2000; padding:8px;">
+    <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">😀</span>
+    <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">😃</span>
+    <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">😂</span>
+    <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">😍</span>
+    <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">🤔</span>
+    <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">👍</span>
+    <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">🎉</span>
+</div>
+
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 
-
-    <script>
-
-        $(document).ready(function() {
-            $('.summernote').summernote({
-                height: 450
-            });
-
-        });
-
-    </script>
+    <script src="~/summernote/myScript.js"></script>
 }

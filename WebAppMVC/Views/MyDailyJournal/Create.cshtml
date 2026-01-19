@@ -23,7 +23,7 @@
                     <label asp-for="Text"></label>
                 </div>
                 <div class="col-8">
-                    <textarea asp-for="Text" class="form-control summernote"></textarea>
+                    <textarea id="summernote" asp-for="Text" class="form-control summernote"></textarea>
                     <span asp-validation-for="Text" class="text-danger"></span>
                 </div>
             </div>
@@ -43,9 +43,7 @@
     </div>
 </form>
 
-<!-- панель эмодзи (скрыта по умолчанию) -->
 <div id="emojiPicker" class="card" style="display:none; position:absolute; z-index:2000; padding:8px;">
-    <!-- небольшой набор эмодзи — добавьте любые -->
     <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">😀</span>
     <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">😃</span>
     <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">😂</span>
@@ -53,65 +51,11 @@
     <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">🤔</span>
     <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">👍</span>
     <span class="emoji" style="cursor:pointer; font-size:20px; margin:4px;">🎉</span>
-    <!-- можно добавить поиск/категории и т.д. -->
 </div>
 
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 
-    <script>
-        $(document).ready(function() {
-            $('.summernote').summernote({
-                height:150
-                ,
-            toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link', 'picture']],
-                ['mybutton', ['emojiButton']] // кастомная группа
-                ],
-            buttons: {
-                emojiButton: function(context) {
-                    var ui = $.summernote.ui;
-                    // кнопка с иконкой (вы можете использовать font-awesome)
-                    var button = ui.button({
-                        contents: '<span>😊</span>',
-                        tooltip: 'Вставить эмодзи',
-                        click: function() {
-                            // показать/скрыть панель эмодзи рядом с курсором
-                            var pos = $('.note-editor .note-toolbar').offset();
-                            var picker = $('#emojiPicker');
-
-                            // Позиционируем под тулбаром
-                            picker.css({
-                                top: (pos.top + $('.note-toolbar').outerHeight() + 6) + 'px',
-                                left: pos.left + 'px'
-                            }).toggle();
-                        }
-                    });
-                    return button.render();
-                    }
-                }
-            });
-        });
-
-
-        // Клик по эмодзи: вставить в Summernote
-        $('#emojiPicker').on('click', '.emoji', function (e) {
-            var emoji = $(this).text();
-            // summernote API: insertText или pasteHTML
-            $('#summernote').summernote('focus');
-            $('#summernote').summernote('pasteHTML', emoji); // вставляет как HTML (unicode символ)
-            // Скрываем picker (по желанию)
-            $('#emojiPicker').hide();
-        });
-
-        // Скрывать панель при клике вне её
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('#emojiPicker, .note-toolbar').length) {
-                $('#emojiPicker').hide();
-            }
-        });
-    </script>
+    <script src="~/summernote/myScript.js"></script>
 }

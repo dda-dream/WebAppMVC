@@ -16,11 +16,17 @@ namespace WebAppMVC.Controllers
     {
         private readonly IMyDailyJournalRepository myDailyJournalRepository;
         private readonly IApplicationUserRepository appUserRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private string ClientIP;
 
-        public MyDailyJournalController( IMyDailyJournalRepository repository, IApplicationUserRepository appUserRepository)
+        public MyDailyJournalController( IMyDailyJournalRepository repository, 
+                                         IApplicationUserRepository appUserRepository, 
+                                         IHttpContextAccessor httpContextAccessor)
         {
             this.myDailyJournalRepository = repository;
             this.appUserRepository = appUserRepository;
+            this.httpContextAccessor = httpContextAccessor;
+            ClientIP = this.httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? "";
         }   
 
 
@@ -51,8 +57,7 @@ namespace WebAppMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                myDailyJournalRepository.Add(obj, User);
+                myDailyJournalRepository.Add(obj, User, ClientIP);
                 myDailyJournalRepository.Save();
                 
                 TempData[WC.Success] = "Запись создана!";
@@ -63,7 +68,6 @@ namespace WebAppMVC.Controllers
 
 //---------------------------------------------------------------------------------------------------
 
-        //GET - для EDIT
         public IActionResult Edit(int? id)
         {
             if (id == null || id == 0)
@@ -80,14 +84,15 @@ namespace WebAppMVC.Controllers
             return View(obj);
         }
 
-        //POST - для EDIT
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(MyDailyJournalModel obj)
         {
             if (ModelState.IsValid)
             {
-                myDailyJournalRepository.Update(obj, User);
+                myDailyJournalRepository.Update(obj, User, ClientIP);
                 myDailyJournalRepository.Save();
 
                 TempData[WC.Success] = "Запись изменена!";
@@ -98,7 +103,6 @@ namespace WebAppMVC.Controllers
 
 //---------------------------------------------------------------------------------------------------
 
-        //GET - для DELETE
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
@@ -115,7 +119,6 @@ namespace WebAppMVC.Controllers
             return View(obj);
         }
 
-        //POST - для DELETE
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)

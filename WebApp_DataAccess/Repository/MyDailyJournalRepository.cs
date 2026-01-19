@@ -19,7 +19,7 @@ namespace WebApp_DataAccess.Repository
         }
 
 
-        public void Add(MyDailyJournalModel model, ClaimsPrincipal user)
+        public void Add(MyDailyJournalModel model, ClaimsPrincipal user, string ip)
         {
             model.CreatedDateTime = DateTime.Now;
             model.ModifiedDateTime = DateTime.Now;
@@ -34,9 +34,10 @@ namespace WebApp_DataAccess.Repository
             logTable.LogRecordId = model.Id;
             logTable.Message = model.Text;
             logTable.CreatedByUserId = user.Claims.FirstOrDefault().Value;
+            logTable._IP_ = ip;
             db.LogTable.Add(logTable);             
         }
-        public void Update(MyDailyJournalModel model, ClaimsPrincipal user)
+        public void Update(MyDailyJournalModel model, ClaimsPrincipal user, string ip)
         {
             var objPrev = this.FirstOrDefault( _ => _.Id == model.Id, isTracking: false);
             model.CreatedDateTime = objPrev.CreatedDateTime;
@@ -50,6 +51,7 @@ namespace WebApp_DataAccess.Repository
             logTable.LogRecordId = model.Id;
             logTable.Message = model.Text;
             logTable.CreatedByUserId = user.Claims.FirstOrDefault().Value;
+            logTable._IP_ = ip;
             db.LogTable.Add(logTable);
 
             db.MyDailyJournal.Update(model);

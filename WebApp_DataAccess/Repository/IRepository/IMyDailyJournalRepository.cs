@@ -11,12 +11,9 @@ namespace WebApp_DataAccess.Repository.IRepository
 {
     public interface IMyDailyJournalRepository : IRepository<MyDailyJournalModel>
     {
-        void Add(MyDailyJournalModel model, ClaimsPrincipal user);
-        void Update(MyDailyJournalModel model, ClaimsPrincipal user);
+        void Add(MyDailyJournalModel model, ClaimsPrincipal user, string ip);
+        void Update(MyDailyJournalModel model, ClaimsPrincipal user, string ip);
         void Remove(MyDailyJournalModel model, ClaimsPrincipal user);
-
-        //IEnumerable<LogTableModel> GetLogForId(int? id);
-
 
     }
 }
