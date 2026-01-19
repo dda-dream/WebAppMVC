@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
+    <Folder Include="wwwroot\bootstrap\fonts\" />
     <Folder Include="wwwroot\images\product\" />
     <Folder Include="wwwroot\toastr\" />
   </ItemGroup>
@@ -42,13 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\css\bootstrap-5-8-3.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\css\site.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\css\summernote.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\images\product\70615e33-7074-4e98-a68c-2de5342772b4.jpg">
