@@ -26,7 +26,6 @@ namespace WebAppMVC.Controllers
             var userClaim = User.Claims.FirstOrDefault();
             var user = applicationUserRepository.FirstOrDefault(q => q.Id == userClaim.Value);
 
-
             return View(user);
         }
 

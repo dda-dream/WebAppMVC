@@ -38,16 +38,6 @@ namespace WebAppMVC
 
     public class Program
     {
-        static void method()
-        {
-            var pool = ArrayPool<int>.Shared;
-            var intArr = pool.Rent(100);
-            pool.Return(intArr);
-
-            System.ValueType s;
-            int i;
-        }
-
         public static void Main(string[] args)
         {
             Program.method();
@@ -65,6 +55,7 @@ namespace WebAppMVC
                 options.Listen( System.Net.IPAddress.Any, 5055, listenOptions =>
                 {
                     listenOptions.UseHttps();
+                    //listenOptions.UseConnectionLogging();
                     //listenOptions.UseConnectionHandler<MyConnectionHandler>();
                 });
                 
@@ -72,7 +63,8 @@ namespace WebAppMVC
                 options.Listen( System.Net.IPAddress.Any, 5050, listenOptions =>
                 {
                     listenOptions.UseHttps();
-                    listenOptions.UseConnectionHandler<MyConnectionHandler>();
+                    //listenOptions.UseConnectionLogging();
+                    //listenOptions.UseConnectionHandler<MyConnectionHandler>();
                 });
                 
             });
@@ -161,7 +153,20 @@ namespace WebAppMVC
                 });
             });
             */
-            
+            app.Use(async (context, next) =>
+            {
+                Log.Logger.Information("-----------------");
+
+                var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+                var remoteIp = context.Connection.RemoteIpAddress;
+
+                string s = $" => CLIENT IP: {remoteIp}";
+                logger.LogInformation(s);
+                Console.WriteLine(s);
+                
+                await next();
+            });
+
             app.UseMiddleware<AnomalyLoggingMiddleware>();
             app.UseExceptionHandler(errorApp =>
             {
