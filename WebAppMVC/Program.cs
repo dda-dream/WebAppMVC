@@ -36,10 +36,6 @@ using WebAppMVC_Utility;
 namespace WebAppMVC
 {
 
-
-
-
-
     public class Program
     {
         static void method()
@@ -48,6 +44,8 @@ namespace WebAppMVC
             var intArr = pool.Rent(100);
             pool.Return(intArr);
 
+            System.ValueType s;
+            int i;
         }
 
         public static void Main(string[] args)

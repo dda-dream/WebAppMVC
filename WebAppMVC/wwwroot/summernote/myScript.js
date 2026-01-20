@@ -31,6 +31,17 @@ $(document).ready(function () {
                 });
                 return button.render();
             }
+        },
+        callbacks: {
+            onBlur: function () {
+                savedRange = $('#summernote').summernote('createRange');
+            },
+            onKeyup: function () {
+                savedRange = $('#summernote').summernote('createRange');
+            },
+            onMouseup: function () {
+                savedRange = $('#summernote').summernote('createRange');
+            }
         }
     });
 });
@@ -52,11 +63,3 @@ $('#emojiPicker').on('click', '.emoji', function (e) {
 
 
 
-
-$(document).on('click', function (e) {
-    savedRange = $('#summernote').summernote('createRange');
-
-    if (!$(e.target).closest('#emojiPicker, .note-toolbar').length) {
-        $('#emojiPicker').hide();
-    }
-});
