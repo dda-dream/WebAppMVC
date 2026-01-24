@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
+using Syncfusion.EJ2.Notifications;
+using System;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.DTO;
@@ -20,12 +22,15 @@ namespace WebAppMVC.Controllers
     {
         private readonly IProductRepository productRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ILogger logger;
 
-
-        public ProductController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment)
+        public ProductController(IProductRepository productRepository, 
+                                 IWebHostEnvironment webHostEnvironment,
+                                 ILogger<ProductController> logger)
         {
             this.productRepository = productRepository;
             _webHostEnvironment = webHostEnvironment;
+            this.logger = logger; 
         }
 //---------------------------------------------------------------------------------------------------
         public IActionResult Index()
@@ -52,9 +57,10 @@ namespace WebAppMVC.Controllers
         {
             var allProducts = productRepository.GetProductListByPattern(searchPattern);
             var result = allProducts.ToJson();
-            
-            Console.Write(result.ToString());
-            
+
+            //Console.Write(result.ToString());
+            logger.LogInformation("-*-*-*-*-* "+result.ToString());
+
             return Json(allProducts);
         }
 

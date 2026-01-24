@@ -1,0 +1,27 @@
+{
+  "rules": [
+    {
+      "name": " russian-comments",
+      "pattern": ".*",
+      "languages": ["csharp", "javascript", "typescript"],
+      "comments": {
+        "russian": true
+      }
+    },
+    {
+      "name": " security-checks",
+      "pattern": ".*",
+      "security": {
+        "level": "high"
+      }
+    },
+    {
+      "name": " code-style",
+      "pattern": ".*",
+      "style": {
+        "indentation": 2,
+        "lineLength": 120
+      }
+    }
+  ]
+}

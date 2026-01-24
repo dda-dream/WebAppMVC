@@ -40,8 +40,6 @@ namespace WebAppMVC
     {
         public static void Main(string[] args)
         {
-            Program.method();
-
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
 
@@ -68,6 +66,8 @@ namespace WebAppMVC
                 });
                 
             });
+
+            
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))  
@@ -101,7 +101,7 @@ namespace WebAppMVC
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
   
-            //https://sandbox.braintreegateway.com/
+            // https ://sandbox.braintreegateway.com/
             builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("BrainTree"));
             builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
 
@@ -231,7 +231,7 @@ namespace WebAppMVC
 
 
 
-
+            //app.MapGet()
             
             app.MapControllerRoute(
                 name: "default",

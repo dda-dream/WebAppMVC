@@ -24,14 +24,14 @@ namespace WebAppMVC.Controllers
 
         }
 
-        // GET: api/ChatModels
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ChatModel>>> GetChat()
         {
             return await _context.Chat.ToListAsync();
         }
 
-        // GET: api/ChatModels/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ChatModel>> GetChatModel(int id)
         {
@@ -45,8 +45,8 @@ namespace WebAppMVC.Controllers
             return chatModel;
         }
 
-        // PUT: api/ChatModels/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutChatModel(int id, ChatModel chatModel)
         {
@@ -76,8 +76,7 @@ namespace WebAppMVC.Controllers
             return NoContent();
         }
 
-        // POST: api/ChatModels
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
         public async Task<ActionResult<ChatModel>> PostChatModel(ChatModel chatModel)
         {
@@ -87,7 +86,9 @@ namespace WebAppMVC.Controllers
             return CreatedAtAction("GetChatModel", new { id = chatModel.Id }, chatModel);
         }
 
-        // DELETE: api/ChatModels/5
+
+
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteChatModel(int id)
         {

@@ -6,8 +6,8 @@
         public IEnumerable<CategoryModel> Categories { get; set; }
 
 
-        public ProductModel Product;
-        public CategoryModel Category;
+        public ProductModel Product { get; set; }
+        public CategoryModel Category { get; set; }
 
     }
 }
