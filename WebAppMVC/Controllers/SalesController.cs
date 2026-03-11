@@ -143,7 +143,7 @@ namespace WebAppMVC.Controllers
 
 
 
-        #region API CALLS
+
         [HttpGet]
         public IActionResult GetOrdersList()
         {
@@ -153,6 +153,7 @@ namespace WebAppMVC.Controllers
             var ret = Json(new { data = ot });
             return ret;
         }
-        #endregion
+
+
     }
 }

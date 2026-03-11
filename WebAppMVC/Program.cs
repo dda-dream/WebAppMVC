@@ -1,31 +1,17 @@
-﻿using Braintree;
-using Microsoft.AspNetCore.Connections;
+﻿using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Elfie.Diagnostics;
-using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
-using Microsoft.OpenApi;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
-using System;
-using System.Buffers;
-using System.Collections.Concurrent;
-using System.Linq.Expressions;
 using System.Text;
 using WebApp_DataAccess.Data;
 using WebApp_DataAccess.Initializer;
 using WebApp_DataAccess.Repository;
 using WebApp_DataAccess.Repository.IRepository;
-using WebApp_Utility;
 using WebApp_Utility.BrainTree;
 using WebAppMVC.Hubs;
 using WebAppMVC.Middleware;
@@ -38,6 +24,7 @@ namespace WebAppMVC
 
     public class Program
     {
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -140,6 +127,9 @@ namespace WebAppMVC
 
 
             builder.Services.AddSwaggerGen();
+            builder.Services.AddProblemDetails();
+
+
 
             System.Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
@@ -192,11 +182,8 @@ namespace WebAppMVC
                 dbInitializer.Initialize(); 
             }
 
-           if (!app.Environment.IsDevelopment())
-           {
-                app.UseExceptionHandler("/Home/Error");
-                //app.UseHsts();
-           }
+            app.UseDeveloperExceptionPage();
+            app.UseExceptionHandler("/error");
 
             /* 
             var provider = new FileExtensionContentTypeProvider();
@@ -222,17 +209,11 @@ namespace WebAppMVC
             app.UseSession();
             app.MapRazorPages();
 
-            app.MapSwagger();
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.MapSwagger();
 
 
-
-
-
-
-            //app.MapGet()
-            
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}",
