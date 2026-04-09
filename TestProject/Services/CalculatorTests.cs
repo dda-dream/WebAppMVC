@@ -1,4 +1,6 @@
-﻿namespace WebAppMVC.Services
+﻿using FluentAssertions;
+
+namespace WebAppMVC.Services
 {
     public class CalculatorTests
     {
@@ -22,7 +24,8 @@
 
             var result = calculator.IsEven(4);
 
-            Assert.True(result);
+            result.Should().BeTrue();
+            //Assert.True(result);
         }
     }
 }

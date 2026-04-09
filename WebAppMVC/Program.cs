@@ -122,7 +122,7 @@ namespace WebAppMVC
                 )
                 .CreateLogger();
 
-            builder.Host.UseSerilog(); // подключаем Serilog как источник логов
+            builder.Host.UseSerilog(); 
 
 
 
@@ -158,6 +158,7 @@ namespace WebAppMVC
             });
 
             app.UseMiddleware<AnomalyLoggingMiddleware>();
+
             app.UseExceptionHandler(errorApp =>
             {
                 errorApp.Run(async context =>
@@ -185,15 +186,7 @@ namespace WebAppMVC
             app.UseDeveloperExceptionPage();
             app.UseExceptionHandler("/error");
 
-            /* 
-            var provider = new FileExtensionContentTypeProvider();
-            provider.Mappings[".7z"] = "application/x-7z-compressed";
-            app.UseStaticFiles(
-                new StaticFileOptions
-                {
-                    ContentTypeProvider = provider
-                });
-            */
+            
             app.UseStaticFiles( 
                new StaticFileOptions
                {
@@ -219,18 +212,6 @@ namespace WebAppMVC
                 pattern: "{controller=Home}/{action=Index}/{id?}",
                 defaults: new { controller = "Home", action = "Index" });
             
-            /*
-            app.MapControllerRoute(
-                name: "default1",
-                pattern: "{controller=Home}/{action=Index}");
-            */
-/*
-            app.MapControllerRoute(
-                name: "default0",
-                pattern: "{controller=Home}/{action=Index}/{id}",
-                defaults: new { controller = "Home", action = "Index" });
-*/
-
 
             app.MapHub<ChatHub>("/chathub");
 
