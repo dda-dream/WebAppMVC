@@ -43,15 +43,6 @@ namespace WebAppMVC
                     //listenOptions.UseConnectionLogging();
                     //listenOptions.UseConnectionHandler<MyConnectionHandler>();
                 });
-                
-                
-                options.Listen( System.Net.IPAddress.Any, 5050, listenOptions =>
-                {
-                    listenOptions.UseHttps();
-                    //listenOptions.UseConnectionLogging();
-                    //listenOptions.UseConnectionHandler<MyConnectionHandler>();
-                });
-                
             });
 
             

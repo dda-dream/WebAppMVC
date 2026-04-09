@@ -38,12 +38,12 @@ namespace WebApp_DataAccess.Initializer
                 _roleManager.CreateAsync(new IdentityRole { Id = WC.AdminRole, Name = WC.AdminRole }).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole { Id = WC.CustomerRole, Name = WC.CustomerRole }).GetAwaiter().GetResult();
                 _userManager.CreateAsync(new ApplicationUser { 
-                    UserName = "admin@admin.com", 
-                    Email = "admin@admin.com", 
-                    FullName = "ADMIN",
-                    EmailConfirmed = true, 
-                    PhoneNumber = "11111111111"},
-                    "-Qweqwe123"
+                        UserName = "admin@admin.com", 
+                        Email = "admin@admin.com", 
+                        FullName = "ADMIN",
+                        EmailConfirmed = true, 
+                        PhoneNumber = "11111111111"},
+                    password: "-Qweqwe123"
                 ).GetAwaiter().GetResult();
 
                 var adminUser = _db.Users.Where(u => u.UserName == "admin@admin.com").FirstOrDefault();
