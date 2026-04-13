@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
@@ -17,7 +18,6 @@ using WebAppMVC.Hubs;
 using WebAppMVC.Middleware;
 using WebAppMVC.Views.Services;
 using WebAppMVC_Utility;
-
 
 namespace WebAppMVC
 {
@@ -48,8 +48,15 @@ namespace WebAppMVC
             
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))  
-            );
+                options.UseNpgsql(
+                        builder.Configuration.GetConnectionString("DefaultConnection"),
+                        npgsqlOptions =>
+                        {
+                            npgsqlOptions.EnableRetryOnFailure();        // полезно для облачных БД
+                            // npgsqlOptions.CommandTimeout(60);         // если нужны долгие запросы
+                        }
+                    )
+                );
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                             .AddDefaultTokenProviders()
@@ -102,6 +109,7 @@ namespace WebAppMVC
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .WriteTo.File("Logs/app-.log", rollingInterval: RollingInterval.Day)
+                /*
                 .WriteTo.MSSqlServer(
                     connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
                     sinkOptions: new MSSqlServerSinkOptions
@@ -111,6 +119,8 @@ namespace WebAppMVC
                     },
                     restrictedToMinimumLevel: LogEventLevel.Information
                 )
+                */
+                //TODO: подключить логгирование через PostgreSQL
                 .CreateLogger();
 
             builder.Host.UseSerilog(); 
@@ -175,7 +185,7 @@ namespace WebAppMVC
             }
 
             app.UseDeveloperExceptionPage();
-            app.UseExceptionHandler("/error");
+            //app.UseExceptionHandler("/error");
 
             
             app.UseStaticFiles( 

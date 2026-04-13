@@ -13,6 +13,36 @@ namespace WebApp_DataAccess.Data
         {
 
         }
+        /*
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            foreach (var entity in builder.Model.GetEntityTypes())
+            {
+                // Таблицы в lowercase
+                entity.SetTableName(entity.GetTableName().ToLower());
+
+                // Колонки в lowercase
+                foreach (var property in entity.GetProperties())
+                {
+                    property.SetColumnName(property.GetColumnName().ToLower());
+                }
+
+                // Первичные ключи
+                foreach (var key in entity.GetKeys())
+                {
+                    key.SetName(key.GetName().ToLower());
+                }
+
+                // Индексы
+                foreach (var index in entity.GetIndexes())
+                {
+                    index.SetDatabaseName(index.GetDatabaseName().ToLower());
+                }
+            }
+        }
+        */
 
 
         public DbSet<CategoryModel> Category { get; set; }
