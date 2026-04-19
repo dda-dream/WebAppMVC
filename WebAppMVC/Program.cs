@@ -160,6 +160,8 @@ namespace WebAppMVC
 
             app.UseMiddleware<AnomalyLoggingMiddleware>();
 
+            //app.UseExceptionHandler();
+
             app.UseExceptionHandler(errorApp =>
             {
                 errorApp.Run(async context =>
